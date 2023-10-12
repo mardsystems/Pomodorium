@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "WebAssembly",
+            "type": "blazorwasm",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/src/Server"
+        },
+        {
+            "name": "Docker",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "netCore": {
+                "appProject": "${workspaceFolder}/src/Server/Pomodorium.Server.csproj"
+            }
+        }
+    ]
+}
