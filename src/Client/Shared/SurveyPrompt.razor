@@ -1,12 +1,14 @@
-﻿<div class="alert alert-secondary mt-4">
-    <span class="oi oi-pencil me-2" aria-hidden="true"></span>
-    <strong>@Title</strong>
-
-    <span class="text-nowrap">
+﻿<div class="prompt">
+    <div style="display:flex; align-items:center">
+        @* For below code to work, first install the Microsoft.Fast.Components.FluentUI.Icons nuget package *@
+        @* <FluentIcon Icon="Icons.Regular.Size32.Info" Color="@Color.Neutral" /> *@
+        <strong>@Title</strong>
+    </div>
+    <p class="text-nowrap">
         Please take our
-        <a target="_blank" class="font-weight-bold link-dark" href="https://go.microsoft.com/fwlink/?linkid=2186157">brief survey</a>
-    </span>
-    and tell us what you think.
+        <FluentAnchor Href="https://go.microsoft.com/fwlink/?linkid=2149017" Appearance=Appearance.Hypertext>brief survey</FluentAnchor>
+        and tell us what you think.
+    </p>
 </div>
 
 @code {
