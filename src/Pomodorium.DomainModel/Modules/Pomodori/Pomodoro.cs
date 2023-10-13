@@ -1,4 +1,5 @@
-using Pomodorium.EventStore;
+using System.DomainModel;
+using System.DomainModel.EventStore;
 
 namespace Pomodorium.Modules.Pomodori;
 
@@ -14,7 +15,7 @@ public class Pomodoro : AggregateRoot
 
     public Pomodoro(PomodoroId id, DateTime startDateTime, string description)
     {
-        Apply(new PomodoroCreated(id, description));
+        Apply(new PomodoroCreated(id, startDateTime, description));
     }
 
     public void When(PomodoroCreated e)
@@ -59,11 +60,15 @@ public class PomodoroCreated : Event
 {
     public PomodoroId Id { get; }
 
+    public DateTime StartDateTime { get; }
+
     public string? Description { get; }
 
-    public PomodoroCreated(PomodoroId id, string description)
+    public PomodoroCreated(PomodoroId id, DateTime startDateTime, string description)
     {
         Id = id;
+
+        StartDateTime = startDateTime;
 
         Description = description;
     }

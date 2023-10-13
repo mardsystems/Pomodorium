@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.DomainModel.EventStore;
 
-namespace Pomodorium.EventStore;
+namespace Pomodorium.Data;
 
 public class EventStoreDbContext : DbContext
 {

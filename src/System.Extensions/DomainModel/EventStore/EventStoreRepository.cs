@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
-using System.Runtime.Serialization.Formatters.Binary;
+﻿using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Pomodorium.EventStore;
+namespace System.DomainModel.EventStore;
 
 public class EventStoreRepository
 {
@@ -9,19 +8,19 @@ public class EventStoreRepository
 
     private readonly BinaryFormatter formatter = new BinaryFormatter();
 
-    private readonly HubConnection connection;
+    //private readonly HubConnection connection;
 
     public event Action<Event> NewEvent;
 
-    public EventStoreRepository(IAppendOnlyStore appendOnlyStore, HubConnection connection)
+    public EventStoreRepository(IAppendOnlyStore appendOnlyStore)
     {
         this.appendOnlyStore = appendOnlyStore;
 
-        this.connection = connection;
+        //this.connection = connection;
 
-        connection.On<string, DateTime, byte[], long>("Append", Append);
+        //connection.On<string, DateTime, byte[], long>("Append", Append);
 
-        connection.StartAsync();
+        //connection.StartAsync();
     }
 
     private void Append(string name, DateTime date, byte[] data, long expectedVersion)
@@ -102,7 +101,7 @@ public class EventStoreRepository
         {
             var data = SerializeEvent(@event);
 
-            connection.SendAsync("Append", name, @event.Date, data, expectedVersion);
+            //connection.SendAsync("Append", name, @event.Date, data, expectedVersion);
 
             try
             {
@@ -136,31 +135,5 @@ public class EventStoreRepository
     private string IdentityToString(IIdentity id)
     {
         return id.ToString();
-    }
-}
-
-public class AppendOnlyStoreConcurrencyException : Exception
-{
-    public long Version { get; }
-
-    public long ExpectedVersion { get; }
-
-    public string Name { get; }
-
-    public AppendOnlyStoreConcurrencyException(long version, long expectedVersion, string name)
-    {
-        Version = version;
-
-        ExpectedVersion = expectedVersion;
-
-        Name = name;
-    }
-}
-
-public class OptimisticConcurrencyException : Exception
-{
-    public static OptimisticConcurrencyException Create(long serverVersion, long expectedVersion, IIdentity id, IEnumerable<Event> serverEvents)
-    {
-        return new OptimisticConcurrencyException();
     }
 }

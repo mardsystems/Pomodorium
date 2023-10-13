@@ -1,4 +1,4 @@
-﻿namespace Pomodorium.EventStore;
+﻿namespace System.DomainModel.EventStore;
 
 public class MemoryStore : IAppendOnlyStore
 {

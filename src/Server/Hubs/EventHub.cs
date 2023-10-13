@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using Pomodorium.EventStore;
+using System.DomainModel.EventStore;
 
 namespace Pomodorium.Hubs
 {

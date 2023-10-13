@@ -1,14 +1,17 @@
 ﻿@page "/pomodori"
 @using Pomodorium.Modules.Pomodori;
 @using Pomodorium.Shared
-@using Pomodorium.EventStore
-@inject EventStoreRepository EventStore;
+@using System.DomainModel;
+@using System.DomainModel.EventStore;
+@using System.Collections.ObjectModel;
+@inject PomodoroQueryDbService PomodoroQueryService;
+@inject PomodoroRepository PomodoroRepository;
 
 <PageTitle>Pomodori</PageTitle>
 
 <h1>Pomodori</h1>
 
-<p role="status">Current count: @currentCount</p>
+<p role="status">Current count: @pomodori.Count</p>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
@@ -40,73 +43,21 @@ else
 }
 
 @code {
-    private int currentCount = 0;
-
-    private IEnumerable<Event>? events;
-
-    private IList<Pomodoro>? pomodori;
+    private ObservableCollection<PomodoroQueryItem>? pomodori;
 
     protected override async Task OnInitializedAsync()
     {
-        pomodori = new List<Pomodoro>();
-
-        events = EventStore.LoadAllEvents();
-
-        foreach (var @event in events)
-        {
-            try
-            {
-                if (@event is PomodoroCreated)
-                {
-                    var pomodoro = new Pomodoro(new[] { @event });
-
-                    pomodori.Add(pomodoro);
-                }
-            }
-            catch (Exception)
-            {
-
-            }
-        }
+        pomodori = await PomodoroQueryService.QueryPomodori();
     }
 
-    private void IncrementCount()
+    private async Task IncrementCount()
     {
-        currentCount++;
-
         var id = new PomodoroId(Guid.NewGuid().ToString());
 
         var now = DateTime.Now;
 
         var pomodoro = new Pomodoro(id, now, null);
 
-        pomodori.Add(pomodoro);
-
-        try
-        {
-            EventStore.AppendToStream(pomodoro.Id, pomodoro.OriginalVersion, pomodoro.Changes);
-        }
-        catch (EventStoreConcurrencyException ex)
-        {
-            foreach (var failedEvent in pomodoro.Changes)
-            {
-                foreach (var succededEvent in ex.StoreEvents)
-                {
-                    if (ConflictsWith(failedEvent, succededEvent))
-                    {
-                        var message = $"Conflict between ${failedEvent} and {succededEvent}";
-
-                        throw new RealConcurrencyException(ex);
-                    }
-                }
-            }
-
-            EventStore.AppendToStream(pomodoro.Id, ex.StoreVersion, pomodoro.Changes);
-        }
-    }
-
-    private bool ConflictsWith(Event event1, Event event2)
-    {
-        return event1.GetType() == event2.GetType();
+        await PomodoroRepository.Add(pomodoro);
     }
 }

@@ -1,5 +1,6 @@
-using Pomodorium.EventStore;
+using Pomodorium;
 using Pomodorium.Hubs;
+using System.DomainModel.EventStore;
 
 var builder = WebApplication.CreateBuilder(args);
 

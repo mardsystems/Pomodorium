@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
+using System.DomainModel.EventStore;
 
-namespace Pomodorium.EventStore;
+namespace Pomodorium.Data;
 
 public class IndexDbStore : IAppendOnlyStore
 {

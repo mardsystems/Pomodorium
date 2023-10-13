@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pomodorium.EventStore;
+namespace System.DomainModel.EventStore;
 
 public class EventStoreConcurrencyException : Exception
 {

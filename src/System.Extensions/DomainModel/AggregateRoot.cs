@@ -1,4 +1,4 @@
-﻿namespace Pomodorium;
+﻿namespace System.DomainModel;
 
 public abstract class AggregateRoot : Entity
 {

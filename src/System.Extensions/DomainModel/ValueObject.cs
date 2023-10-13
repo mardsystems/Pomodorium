@@ -1,4 +1,4 @@
-﻿namespace Pomodorium;
+﻿namespace System.DomainModel;
 
 /// <summary>
 /// Base class for Value Objects.

@@ -1,8 +1,9 @@
-﻿namespace Pomodorium;
+﻿using MediatR;
+
+namespace System.DomainModel;
 
 [Serializable]
-
-public abstract class Event
+public abstract class Event : INotification
 {
     [NonSerialized]
     private long version;
