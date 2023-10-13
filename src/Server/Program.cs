@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.ResponseCompression;
+using Pomodorium.EventStore;
+using Pomodorium.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddSignalR();
+
+builder.Services.AddScoped<EventStoreRepository>();
+
+builder.Services.AddSingleton<IAppendOnlyStore>(factory => new MemoryStore(@"Data Source=EventStore.db"));
 
 var app = builder.Build();
 
@@ -31,6 +38,9 @@ app.UseRouting();
 
 app.MapRazorPages();
 app.MapControllers();
+
+app.MapHub<EventHub>("/events");
+
 app.MapFallbackToFile("index.html");
 
 app.Run();

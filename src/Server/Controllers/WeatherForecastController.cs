@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Pomodorium.Shared;
+using Pomodorium.Models;
 
-namespace Pomodorium.Server.Controllers;
+namespace Pomodorium.Controllers;
 
 [ApiController]
 [Route("[controller]")]

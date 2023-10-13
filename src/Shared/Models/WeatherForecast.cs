@@ -1,4 +1,4 @@
-namespace Pomodorium.Shared;
+namespace Pomodorium.Models;
 
 public class WeatherForecast
 {
