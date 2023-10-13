@@ -6,6 +6,17 @@ namespace System.DomainModel;
 public abstract class Event : INotification
 {
     [NonSerialized]
+    private bool isHandled;
+    public bool IsHandled
+    {
+        get { return isHandled; }
+        set
+        {
+            isHandled = value;
+        }
+    }
+
+    [NonSerialized]
     private long version;
     public long Version
     {

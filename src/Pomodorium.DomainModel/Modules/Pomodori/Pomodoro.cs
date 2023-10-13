@@ -22,6 +22,8 @@ public class Pomodoro : AggregateRoot
     {
         Id = e.Id;
 
+        StartDateTime = e.StartDateTime;
+
         Description = e.Description;
     }
 
@@ -58,11 +60,11 @@ public class PomodoroId : IIdentity
 [Serializable]
 public class PomodoroCreated : Event
 {
-    public PomodoroId Id { get; }
+    public PomodoroId Id { get; internal set; }
 
-    public DateTime StartDateTime { get; }
+    public DateTime StartDateTime { get; internal set; }
 
-    public string? Description { get; }
+    public string? Description { get; internal set; }
 
     public PomodoroCreated(PomodoroId id, DateTime startDateTime, string description)
     {

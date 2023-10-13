@@ -8,30 +8,9 @@ public class EventStoreRepository
 
     private readonly BinaryFormatter formatter = new BinaryFormatter();
 
-    //private readonly HubConnection connection;
-
-    public event Action<Event> NewEvent;
-
     public EventStoreRepository(IAppendOnlyStore appendOnlyStore)
     {
         this.appendOnlyStore = appendOnlyStore;
-
-        //this.connection = connection;
-
-        //connection.On<string, DateTime, byte[], long>("Append", Append);
-
-        //connection.StartAsync();
-    }
-
-    private void Append(string name, DateTime date, byte[] data, long expectedVersion)
-    {
-        var @event = DesserializeEvent(data);
-
-        @event.Version = expectedVersion;
-
-        @event.Date = date;
-
-        NewEvent?.Invoke(@event);
     }
 
     public IEnumerable<Event> LoadAllEvents()
@@ -86,7 +65,7 @@ public class EventStoreRepository
         }
     }
 
-    public void AppendToStream(IIdentity id, long originalVersion, IEnumerable<Event> events)
+    public void AppendToStream(IIdentity id, long originalVersion, params Event[] events)
     {
         if (!events.Any())
         {
@@ -100,8 +79,6 @@ public class EventStoreRepository
         foreach (var @event in events)
         {
             var data = SerializeEvent(@event);
-
-            //connection.SendAsync("Append", name, @event.Date, data, expectedVersion);
 
             try
             {

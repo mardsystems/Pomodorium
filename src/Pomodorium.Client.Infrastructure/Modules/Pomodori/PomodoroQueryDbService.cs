@@ -1,6 +1,5 @@
 ﻿using Pomodorium.Data;
 using System.Collections.ObjectModel;
-using System.Reactive.Linq;
 
 namespace Pomodorium.Modules.Pomodori;
 
@@ -13,7 +12,7 @@ public class PomodoroQueryDbService
         _db = db;
     }
 
-    public async Task<ObservableCollection<PomodoroQueryItem>> QueryPomodori()
+    public async Task<ObservableCollection<PomodoroQueryItem>> QueryPomodoroItems()
     {
         var items = _db.PomodoroQueryItems;
 

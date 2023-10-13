@@ -64,7 +64,7 @@ public class PomodoroRepository
                 }
             }
 
-            _eventStore.AppendToStream(pomodoro.Id, ex.StoreVersion, pomodoro.Changes);
+            _eventStore.AppendToStream(pomodoro.Id, ex.StoreVersion, pomodoro.Changes.ToArray());
         }
 
         foreach (var @event in pomodoro.Changes)
