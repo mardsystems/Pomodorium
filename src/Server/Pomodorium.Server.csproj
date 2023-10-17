@@ -12,11 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
+    <ProjectReference Include="..\ApplicationModel\Pomodorium.ApplicationModel.csproj" />
     <ProjectReference Include="..\Client\Pomodorium.Client.csproj" />
-    <ProjectReference Include="..\Pomodorium.ApplicationModel\Pomodorium.ApplicationModel.csproj" />
-    <ProjectReference Include="..\Pomodorium.DomainModel\Pomodorium.DomainModel.csproj" />
     <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
-    <ProjectReference Include="..\System.Extensions\System.Extensions.csproj" />
   </ItemGroup>
 
 

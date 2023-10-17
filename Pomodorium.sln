@@ -8,11 +8,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.Client", "src\Cl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.Shared", "src\Shared\Pomodorium.Shared.csproj", "{F63FB81D-C1E4-4842-975A-4519D5BAE9A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodorium.DomainModel", "src\Pomodorium.DomainModel\Pomodorium.DomainModel.csproj", "{5F9330E2-E3A7-498B-8F53-5DE63A3B07A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodorium.DomainModel", "src\DomainModel\Pomodorium.DomainModel.csproj", "{5F9330E2-E3A7-498B-8F53-5DE63A3B07A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodorium.ApplicationModel", "src\Pomodorium.ApplicationModel\Pomodorium.ApplicationModel.csproj", "{AEA1E42E-4D42-4210-9618-3A6E40263715}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodorium.ApplicationModel", "src\ApplicationModel\Pomodorium.ApplicationModel.csproj", "{AEA1E42E-4D42-4210-9618-3A6E40263715}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Extensions", "src\System.Extensions\System.Extensions.csproj", "{6B2303A3-5733-46E6-9395-32AA5A64EE67}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Extensions", "packages\System.Extensions\System.Extensions.csproj", "{6B2303A3-5733-46E6-9395-32AA5A64EE67}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Presentation", "1 - Presentation", "{361D4A0B-E63F-43B9-8DAD-BB16C6604867}"
 EndProject
@@ -26,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Cross-Cutting", "5 - Cr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6 - External Dependencies", "6 - External Dependencies", "{E3C57D58-4D80-4579-AC9A-F0CD6F3F9983}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodorium.Client.Infrastructure", "src\Pomodorium.Client.Infrastructure\Pomodorium.Client.Infrastructure.csproj", "{A75ED41D-64F0-4BBD-AAA1-519DFAB7D9CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodorium.Client.Infrastructure", "src\Client.Infrastructure\Pomodorium.Client.Infrastructure.csproj", "{A75ED41D-64F0-4BBD-AAA1-519DFAB7D9CD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
