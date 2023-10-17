@@ -8,12 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="12.1.1" />
+    <PackageReference Include="System.Reactive" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
     <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
-    <ProjectReference Include="..\System.Extensions\System.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

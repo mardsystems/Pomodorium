@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <SupportedPlatform Include="browser" />
+    <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\System.Extensions\System.Extensions.csproj" />
+    <SupportedPlatform Include="browser" />
   </ItemGroup>
 </Project>
