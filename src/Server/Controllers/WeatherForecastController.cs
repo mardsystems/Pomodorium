@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using Pomodorium.Shared;
+using Pomodorium.Models;
 
-namespace Pomodorium.Server.Controllers;
+namespace Pomodorium.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -26,7 +26,8 @@ public class WeatherForecastController : ControllerBase
         {
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+            Summary = Summaries[Random.Shared.Next(Summaries.Length)],
+            MachineName = Environment.MachineName
         })
         .ToArray();
     }

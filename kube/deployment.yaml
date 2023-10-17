@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pomodorium
+spec:
+  #replicas: 2
+  selector:
+    matchLabels:
+      app: pomodorium
+  template:
+    metadata:
+      labels:
+        app: pomodorium
+    spec:
+      containers:
+      - name: pomodorium
+        image: mardsystems/pomodorium
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5174
