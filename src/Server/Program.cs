@@ -1,6 +1,8 @@
 using Pomodorium;
+using Pomodorium.Handlers;
 using Pomodorium.Hubs;
 using System.DomainModel.EventStore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,11 @@ builder.Services.AddSignalR();
 builder.Services.AddScoped<EventStoreRepository>();
 
 builder.Services.AddSingleton<IAppendOnlyStore>(factory => new MemoryStore(@"Data Source=EventStore.db"));
+
+builder.Services.AddMediatR(config =>
+{
+    config.RegisterServicesFromAssembly(typeof(EventHubHandler).Assembly);
+});
 
 var app = builder.Build();
 

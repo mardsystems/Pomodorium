@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization.Formatters.Binary;
+﻿using MediatR;
+using ProtoBuf;
 
 namespace System.DomainModel.EventStore;
 
@@ -6,11 +7,13 @@ public class EventStoreRepository
 {
     private readonly IAppendOnlyStore appendOnlyStore;
 
-    private readonly BinaryFormatter formatter = new BinaryFormatter();
+    private readonly IMediator _mediator;
 
-    public EventStoreRepository(IAppendOnlyStore appendOnlyStore)
+    public EventStoreRepository(IAppendOnlyStore appendOnlyStore, IMediator mediator)
     {
         this.appendOnlyStore = appendOnlyStore;
+
+        _mediator = mediator;
     }
 
     public IEnumerable<Event> LoadAllEvents()
@@ -21,7 +24,9 @@ public class EventStoreRepository
 
         foreach (var tapeRecord in records)
         {
-            var @event = DesserializeEvent(tapeRecord.Data);
+            var type = Type.GetType(tapeRecord.TypeName);
+
+            var @event = DesserializeEvent(type, tapeRecord.Data);
 
             @event.Version = tapeRecord.Version;
 
@@ -43,7 +48,9 @@ public class EventStoreRepository
 
         foreach (var tapeRecord in records)
         {
-            var @event = DesserializeEvent(tapeRecord.Data);
+            var type = Type.GetType(tapeRecord.TypeName);
+
+            var @event = DesserializeEvent(type, tapeRecord.Data);
 
             @event.Version = tapeRecord.Version;
 
@@ -55,17 +62,26 @@ public class EventStoreRepository
         return events;
     }
 
-    private Event DesserializeEvent(byte[] data)
+    public static Event DesserializeEvent(Type type, byte[] data)
     {
         using (var stream = new MemoryStream(data))
         {
-#pragma warning disable SYSLIB0011 // Type or member is obsolete
-            return (Event)formatter.Deserialize(stream);
-#pragma warning restore SYSLIB0011 // Type or member is obsolete
+            try
+            {
+                var eventData = Serializer.Deserialize(type, stream);
+
+                var @event = (Event)eventData;
+
+                return @event;
+            }
+            catch (Exception _)
+            {
+                throw;
+            }
         }
     }
 
-    public void AppendToStream(IIdentity id, long originalVersion, params Event[] events)
+    public async Task AppendToStream(IIdentity id, long originalVersion, params Event[] events)
     {
         if (!events.Any())
         {
@@ -82,9 +98,11 @@ public class EventStoreRepository
 
             try
             {
-                appendOnlyStore.Append(name, @event.Date, data, expectedVersion);
+                var eventRecord = appendOnlyStore.Append(name, @event.GetType().AssemblyQualifiedName, @event.Date, data, expectedVersion);
 
                 expectedVersion++;
+
+                await _mediator.Publish(eventRecord);
             }
             catch (AppendOnlyStoreConcurrencyException ex)
             {
@@ -97,19 +115,24 @@ public class EventStoreRepository
         }
     }
 
-    private byte[] SerializeEvent(Event @event)
+    public static byte[] SerializeEvent(Event @event)
     {
         using (var stream = new MemoryStream())
         {
-#pragma warning disable SYSLIB0011 // Type or member is obsolete
-            formatter.Serialize(stream, @event);
-#pragma warning restore SYSLIB0011 // Type or member is obsolete
+            try
+            {
+                Serializer.Serialize(stream, @event);
+            }
+            catch (Exception _)
+            {
+                throw;
+            }
 
             return stream.ToArray();
         }
     }
 
-    private string IdentityToString(IIdentity id)
+    public static string IdentityToString(IIdentity id)
     {
         return id.ToString();
     }

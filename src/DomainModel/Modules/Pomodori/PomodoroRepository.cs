@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.DomainModel;
 using System.DomainModel.EventStore;
+using System.Xml.Linq;
 
 namespace Pomodorium.Modules.Pomodori;
 
@@ -47,7 +48,7 @@ public class PomodoroRepository
     {
         try
         {
-            //_eventStore.AppendToStream(pomodoro.Id, pomodoro.OriginalVersion, pomodoro.Changes);
+            await _eventStore.AppendToStream(pomodoro.Id, pomodoro.OriginalVersion, pomodoro.Changes.ToArray());
         }
         catch (EventStoreConcurrencyException ex)
         {
@@ -64,7 +65,7 @@ public class PomodoroRepository
                 }
             }
 
-            _eventStore.AppendToStream(pomodoro.Id, ex.StoreVersion, pomodoro.Changes.ToArray());
+            await _eventStore.AppendToStream(pomodoro.Id, ex.StoreVersion, pomodoro.Changes.ToArray());
         }
 
         foreach (var @event in pomodoro.Changes)
