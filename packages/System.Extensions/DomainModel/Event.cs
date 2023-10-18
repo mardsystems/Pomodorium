@@ -1,11 +1,12 @@
 ﻿using MediatR;
+using System.Runtime.Serialization;
 
 namespace System.DomainModel;
 
-[Serializable]
+//[DataContract]
 public abstract class Event : INotification
 {
-    [NonSerialized]
+    [IgnoreDataMember]
     private bool isHandled;
     public bool IsHandled
     {
@@ -16,7 +17,18 @@ public abstract class Event : INotification
         }
     }
 
-    [NonSerialized]
+    [IgnoreDataMember]
+    private string name;
+    public string Name
+    {
+        get { return name; }
+        set
+        {
+            name = value;
+        }
+    }
+
+    [IgnoreDataMember]
     private long version;
     public long Version
     {
@@ -27,7 +39,7 @@ public abstract class Event : INotification
         }
     }
 
-    [NonSerialized]
+    [IgnoreDataMember]
     private DateTime date;
     public DateTime Date
     {

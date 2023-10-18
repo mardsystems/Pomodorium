@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MediatR;
 
 namespace System.DomainModel.EventStore;
 
-public class EventRecord
+public class EventRecord : IIdentity, INotification
 {
     public string Name { get; }
+
+    public string TypeName { get; }
 
     public long Version { get; }
 
@@ -16,15 +14,22 @@ public class EventRecord
 
     public byte[] Data { get; }
 
-    public EventRecord(string name, long version, DateTime date, byte[] data)
+    public EventRecord(string name, string typeName, long version, DateTime date, byte[] data)
     {
         Name = name;
+
+        TypeName = typeName;
 
         Version = version;
 
         Date = date;
 
         Data = data;
+    }
+
+    public override string ToString()
+    {
+        return Name;
     }
 
     private EventRecord()

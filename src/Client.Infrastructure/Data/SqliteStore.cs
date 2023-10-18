@@ -12,7 +12,7 @@ public class SqliteStore : IAppendOnlyStore
         _connectionString = connectionString;
     }
 
-    public void Append(string name, DateTime date, byte[] data, long expectedVersion = -1)
+    public EventRecord Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
     {
         using (var connection = new SqliteConnection(_connectionString))
         {
@@ -43,6 +43,13 @@ VALUES(@name, @version, @date, @data)
                 transaction.Commit();
             }
         }
+
+        return null;
+    }
+
+    public void Append(EventRecord tapeRecord)
+    {
+        throw new NotImplementedException();
     }
 
     private static long GetMaxVersion(string name, long expectedVersion, SqliteConnection connection, SqliteTransaction transaction)
@@ -96,13 +103,15 @@ LIMIT 0, @take
                 {
                     while (reader.Read())
                     {
+                        var typeName = reader["TypeName"].ToString();
+
                         var version = (long)reader["Version"];
 
                         var date = (DateTime)reader["Date"];
 
                         var data = (byte[])reader["Data"];
 
-                        yield return new EventRecord(name, version, date, data);
+                        yield return new EventRecord(name, typeName, version, date, data);
                     }
                 }
             }
@@ -134,6 +143,8 @@ LIMIT 0, @take
                     {
                         var name = reader["Name"].ToString();
 
+                        var typeName = reader["TypeName"].ToString();
+
                         var version = (long)reader["Version"];
 
                         var dateString = reader["Date"].ToString();
@@ -142,7 +153,7 @@ LIMIT 0, @take
 
                         var data = (byte[])reader["Data"];
 
-                        yield return new EventRecord(name, version, date, data);
+                        yield return new EventRecord(name, typeName, version, date, data);
                     }
                 }
             }

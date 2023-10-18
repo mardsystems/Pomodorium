@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace System.DomainModel.EventStore;
+﻿namespace System.DomainModel.EventStore;
 
 public interface IAppendOnlyStore : IDisposable
 {
-    void Append(string name, DateTime date, byte[] data, long expectedVersion = -1);
+    EventRecord Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1);
+
+    void Append(EventRecord tapeRecord);
 
     IEnumerable<EventRecord> ReadRecords(string name, long afterVersion, long maxCount);
 

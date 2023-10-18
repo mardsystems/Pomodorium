@@ -13,11 +13,22 @@ public class MemoryStore : IAppendOnlyStore
         _events = new List<EventRecord>();
     }
 
-    public void Append(string name, DateTime date, byte[] data, long expectedVersion = -1)
+    public EventRecord Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
     {
         var version = GetMaxVersion(name, expectedVersion);
 
-        var @event = new EventRecord(name, version + 1, date, data);
+        var @event = new EventRecord(name, typeName, version + 1, date, data);
+
+        _events.Add(@event);
+
+        return @event;
+    }
+
+    public void Append(EventRecord tapeRecord)
+    {
+        var version = GetMaxVersion(tapeRecord.Name, -1);
+
+        var @event = new EventRecord(tapeRecord.Name, tapeRecord.TypeName, version + 1, tapeRecord.Date, tapeRecord.Data);
 
         _events.Add(@event);
     }

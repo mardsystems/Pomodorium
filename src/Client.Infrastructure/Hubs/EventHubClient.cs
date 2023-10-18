@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR.Client;
-using Pomodorium.Modules.Pomodori;
 using System.DomainModel;
 using System.DomainModel.EventStore;
 
@@ -20,20 +19,22 @@ public class EventHubClient
     {
         _connection = connection;
 
-        connection.On<PomodoroCreated>("OnPomodoroCreated", OnPomodoroCreated);
-
-        connection.On<string, DateTime, byte[], long>("Append", Append);
+        connection.On<EventRecord>("Append", Append);
 
         _mediator = mediator;
 
         _eventStore = eventStore;
     }
 
-    private async Task OnPomodoroCreated(PomodoroCreated @event)
+    private async Task Append(EventRecord tapeRecord)
     {
+        var type = Type.GetType(tapeRecord.TypeName);
+
+        var @event = EventStoreRepository.DesserializeEvent(type, tapeRecord.Data);
+
         try
         {
-            //_eventStore.AppendToStream(@event.Id, @event.Version, @event);
+            await _eventStore.AppendToStream(tapeRecord, -1, @event); //
         }
         catch (EventStoreConcurrencyException ex)
         {
@@ -49,10 +50,10 @@ public class EventHubClient
                 }
             }
 
-            //_eventStore.AppendToStream(@event.Id, ex.StoreVersion, @event);
+            await _eventStore.AppendToStream(tapeRecord, ex.StoreVersion, @event);
         }
 
-        @event.IsHandled = true;
+        //@event.IsHandled = true;
 
         await _mediator.Publish(@event);
     }
@@ -60,17 +61,6 @@ public class EventHubClient
     private bool ConflictsWith(Event event1, Event event2)
     {
         return event1.GetType() == event2.GetType();
-    }
-
-    private void Append(string name, DateTime date, byte[] data, long expectedVersion)
-    {
-        //var @event = DesserializeEvent(data);
-
-        //@event.Version = expectedVersion;
-
-        //@event.Date = date;
-
-        //NewEvent?.Invoke(@event);
     }
 
     public HubConnection Connection { get => _connection; }

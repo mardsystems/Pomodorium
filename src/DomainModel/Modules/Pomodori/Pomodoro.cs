@@ -1,5 +1,6 @@
 using System.DomainModel;
 using System.DomainModel.EventStore;
+using System.Runtime.Serialization;
 
 namespace Pomodorium.Modules.Pomodori;
 
@@ -36,10 +37,11 @@ public class Pomodoro : AggregateRoot
     }
 }
 
-[Serializable]
+[DataContract]
 public class PomodoroId : IIdentity
 {
-    public string Value { get; internal set; }
+    [DataMember(Order = 1)]
+    public string Value { get; private set; }
 
     public PomodoroId(string value)
     {
@@ -51,20 +53,23 @@ public class PomodoroId : IIdentity
         return $"Pomodoro-{Value}";
     }
 
-    public PomodoroId()
+    private PomodoroId()
     {
-
+        
     }
 }
 
-[Serializable]
+[DataContract]
 public class PomodoroCreated : Event
 {
-    public PomodoroId Id { get; internal set; }
+    [DataMember(Order = 1)]
+    public PomodoroId Id { get; private set; }
 
-    public DateTime StartDateTime { get; internal set; }
+    [DataMember(Order = 2)]
+    public DateTime StartDateTime { get; private set; }
 
-    public string? Description { get; internal set; }
+    [DataMember(Order = 3)]
+    public string? Description { get; private set; }
 
     public PomodoroCreated(PomodoroId id, DateTime startDateTime, string description)
     {
@@ -73,5 +78,10 @@ public class PomodoroCreated : Event
         StartDateTime = startDateTime;
 
         Description = description;
+    }
+
+    private PomodoroCreated()
+    {
+            
     }
 }
