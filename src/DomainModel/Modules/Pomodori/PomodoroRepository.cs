@@ -44,7 +44,46 @@ public class PomodoroRepository
         return await Task.FromResult(pomodori);
     }
 
+    public async Task<Pomodoro> GetPomodoroById(PomodoroId id)
+    {
+        var events = _eventStore.LoadEvents(id, 0, long.MaxValue);
+
+        var pomodoro = new Pomodoro(events);
+
+        return await Task.FromResult(pomodoro);
+    }
+
     public async Task Add(Pomodoro pomodoro)
+    {
+        try
+        {
+            await _eventStore.AppendToStream(pomodoro.Id, pomodoro.OriginalVersion, pomodoro.Changes.ToArray());
+        }
+        catch (EventStoreConcurrencyException ex)
+        {
+            foreach (var failedEvent in pomodoro.Changes)
+            {
+                foreach (var succededEvent in ex.StoreEvents)
+                {
+                    if (ConflictsWith(failedEvent, succededEvent))
+                    {
+                        var message = $"Conflict between ${failedEvent} and {succededEvent}";
+
+                        throw new RealConcurrencyException(ex);
+                    }
+                }
+            }
+
+            await _eventStore.AppendToStream(pomodoro.Id, ex.StoreVersion, pomodoro.Changes.ToArray());
+        }
+
+        foreach (var @event in pomodoro.Changes)
+        {
+            await _mediator.Publish(@event);
+        }
+    }
+
+    public async Task Update(Pomodoro pomodoro)
     {
         try
         {

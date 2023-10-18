@@ -19,12 +19,22 @@ public class Pomodoro : AggregateRoot
         Apply(new PomodoroCreated(id, startDateTime, description));
     }
 
+    public void ChangeDescription(string description)
+    {
+        Apply(new PomodoroDescriptionChanged(Id, description));
+    }
+
     public void When(PomodoroCreated e)
     {
         Id = e.Id;
 
         StartDateTime = e.StartDateTime;
 
+        Description = e.Description;
+    }
+
+    public void When(PomodoroDescriptionChanged e)
+    {
         Description = e.Description;
     }
 
@@ -35,6 +45,15 @@ public class Pomodoro : AggregateRoot
             Mutate(@event);
         }
     }
+}
+
+public class Interval
+{
+    public DateTime StartDateTime { get; private set; }
+
+    public DateTime? EndDateTime { get; private set; }
+
+    public string? Description { get; private set; }
 }
 
 [DataContract]
@@ -55,7 +74,7 @@ public class PomodoroId : IIdentity
 
     private PomodoroId()
     {
-        
+
     }
 }
 
@@ -82,6 +101,28 @@ public class PomodoroCreated : Event
 
     private PomodoroCreated()
     {
-            
+
+    }
+}
+
+[DataContract]
+public class PomodoroDescriptionChanged : Event
+{
+    [DataMember(Order = 1)]
+    public PomodoroId Id { get; private set; }
+
+    [DataMember(Order = 2)]
+    public string? Description { get; private set; }
+
+    public PomodoroDescriptionChanged(PomodoroId id, string description)
+    {
+        Id = id;
+
+        Description = description;
+    }
+
+    private PomodoroDescriptionChanged()
+    {
+
     }
 }
