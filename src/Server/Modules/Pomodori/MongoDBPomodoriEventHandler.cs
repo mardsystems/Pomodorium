@@ -1,16 +1,16 @@
 ﻿using MediatR;
-using Pomodorium.Data;
+using MongoDB.Driver;
 
 namespace Pomodorium.Modules.Pomodori;
 
 public class MongoDBPomodoriEventHandler :
     INotificationHandler<PomodoroCreated>
 {
-    private readonly PomodoriumDbContext _db;
+    private readonly MongoClient _mongoClient;
 
-    public MongoDBPomodoriEventHandler(PomodoriumDbContext db)
+    public MongoDBPomodoriEventHandler(MongoClient mongoClient)
     {
-        _db = db;
+        _mongoClient = mongoClient;
     }
 
     public async Task Handle(PomodoroCreated request, CancellationToken cancellationToken)
@@ -22,8 +22,8 @@ public class MongoDBPomodoriEventHandler :
             Description = request.Description
         };
 
-        _db.PomodoroQueryItems.Add(pomodoroQueryItem);
+        var collection = _mongoClient.GetDatabase("Pomodorium").GetCollection<PomodoroQueryItem>("PomodoroDetails");
 
-        await Task.CompletedTask;
+        await collection.InsertOneAsync(pomodoroQueryItem);
     }
 }

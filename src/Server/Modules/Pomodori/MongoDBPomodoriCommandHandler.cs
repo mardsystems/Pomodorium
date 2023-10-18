@@ -1,23 +1,28 @@
 ﻿using MediatR;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using Pomodorium.Data;
 
 namespace Pomodorium.Modules.Pomodori
 {
-    public class MongoDBPomodoriCommandHandler : 
+    public class MongoDBPomodoriCommandHandler :
         IRequestHandler<GetPomodoriRequest, GetPomodoriResponse>,
         IRequestHandler<GetPomodoroRequest, GetPomodoroResponse>
     {
-        private readonly PomodoriumDbContext _db;
+        private readonly MongoClient _mongoClient;
 
-        public MongoDBPomodoriCommandHandler(PomodoriumDbContext db)
+        public MongoDBPomodoriCommandHandler(MongoClient mongoClient)
         {
-            _db = db;
+            _mongoClient = mongoClient;
         }
 
         public async Task<GetPomodoriResponse> Handle(GetPomodoriRequest request, CancellationToken cancellationToken)
         {
-            var pomodoroQueryItems = _db.PomodoroQueryItems
-                .ToArray();
+            var collection = _mongoClient.GetDatabase("Pomodorium").GetCollection<PomodoroQueryItem>("PomodoroDetails");
+
+            var filter = Builders<PomodoroQueryItem>.Filter.Empty;
+
+            var pomodoroQueryItems = await collection.Find(filter).ToListAsync();
 
             var response = new GetPomodoriResponse(request.GetCorrelationId()) { PomodoroQueryItems = pomodoroQueryItems };
 
@@ -26,8 +31,11 @@ namespace Pomodorium.Modules.Pomodori
 
         public async Task<GetPomodoroResponse> Handle(GetPomodoroRequest request, CancellationToken cancellationToken)
         {
-            var pomodoroDetails = _db.PomodoroDetails
-                .FirstOrDefault(x => x.Id == request.Id);
+            var collection = _mongoClient.GetDatabase("Pomodorium").GetCollection<PomodoroDetails>("PomodoroDetails");
+
+            var filter = Builders<PomodoroDetails>.Filter.Eq(x => x.Id, request.Id);
+
+            var pomodoroDetails = await collection.Find(filter).FirstAsync();
 
             if (pomodoroDetails == null)
             {
@@ -36,7 +44,7 @@ namespace Pomodorium.Modules.Pomodori
 
             var response = new GetPomodoroResponse(request.GetCorrelationId()) { PomodoroDetails = pomodoroDetails };
 
-            return await Task.FromResult(response);
+            return response;
         }
     }
 }

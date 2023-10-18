@@ -10,10 +10,10 @@ public class GetPomodoriResponse : Response
 
     }
 
-    public PomodoroQueryItem[] PomodoroQueryItems { get; set; }
+    public IEnumerable<PomodoroQueryItem> PomodoroQueryItems { get; set; }
 
     public GetPomodoriResponse()
     {
-        
+
     }
 }
