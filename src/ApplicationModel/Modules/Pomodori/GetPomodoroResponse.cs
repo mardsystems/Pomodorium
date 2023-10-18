@@ -9,4 +9,9 @@ public class GetPomodoroResponse : Response
     }
 
     public PomodoroDetails PomodoroDetails { get; set; }
+
+    public GetPomodoroResponse()
+    {
+        
+    }
 }

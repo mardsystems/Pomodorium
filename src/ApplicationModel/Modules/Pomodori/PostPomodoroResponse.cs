@@ -7,4 +7,9 @@ public class PostPomodoroResponse : Response
     {
 
     }
+
+    public PostPomodoroResponse()
+    {
+        
+    }
 }
