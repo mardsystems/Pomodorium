@@ -1,6 +1,8 @@
 using Pomodorium;
+using Pomodorium.Data;
 using Pomodorium.Handlers;
 using Pomodorium.Hubs;
+using Pomodorium.Modules.Pomodori;
 using System.DomainModel.EventStore;
 using System.Reflection;
 
@@ -13,13 +15,19 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddSignalR();
 
+builder.Services.AddScoped<PomodoroQueryDbService>();
+
+builder.Services.AddScoped<PomodoroRepository>();
+
 builder.Services.AddScoped<EventStoreRepository>();
 
 builder.Services.AddSingleton<IAppendOnlyStore>(factory => new MemoryStore(@"Data Source=EventStore.db"));
 
+builder.Services.AddSingleton<PomodoriumDbContext>();
+
 builder.Services.AddMediatR(config =>
 {
-    config.RegisterServicesFromAssembly(typeof(EventHubHandler).Assembly);
+    config.RegisterServicesFromAssembly(typeof(PomodoroEventHandler).Assembly);
 });
 
 var app = builder.Build();

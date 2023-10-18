@@ -1,4 +1,4 @@
-﻿@page "/pomodori"
+﻿@page "/pomodori/{id}"
 @using Pomodorium.Modules.Pomodori;
 @using Pomodorium.Shared
 @using System.DomainModel;
@@ -8,53 +8,26 @@
 @using System.Reactive.Linq;
 @using System.Reactive.Threading.Tasks;
 @inject HttpClient Http
-@* @inject PomodoroQueryDbService PomodoroQueryDbService; *@
-@* @inject PomodoroRepository PomodoroRepository; *@
 @inject IStringLocalizer<SharedResource> SharedResource;
 
-<PageTitle>Pomodori</PageTitle>
+<PageTitle>Pomodoro</PageTitle>
 
-<h1>Pomodori</h1>
+<h1>Pomodoro</h1>
 
-<p role="status">Total: @_pomodori?.Count</p>
+<button class="btn btn-primary" @onclick="Save">@SharedResource["Save"]</button>
 
-<a class="btn btn-primary" href="pomodori/new">@SharedResource["Add New"]</a>
-
-@if (_pomodori == null)
-{
-    <p><em>@SharedResource["Loading"]...</em></p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Start Date Time</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var pomodoro in _pomodori)
-            {
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>@pomodoro.StartDateTime</td>
-                    <td>@pomodoro.Description</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
 
 @code {
-    private ICollection<PomodoroQueryItem>? _pomodori;
+    [Parameter]
+    public string? Id { get; set; }
+
+    private PomodoroDetails? _pomodoro;
 
     protected override async Task OnInitializedAsync()
     {
         var response = await Http.GetFromJsonAsync<GetPomodoriResponse>("api/pomodori");
 
-        _pomodori = response.PomodoroQueryItems;
+        // _pomodori = response.PomodoroQueryItems;
 
         // _pomodori = await PomodoroQueryDbService.QueryPomodoroItems();
 
@@ -66,7 +39,7 @@ else
         //     });
     }
 
-    private async Task AddNew()
+    private async Task Save()
     {
         var now = DateTime.Now;
 
