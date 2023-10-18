@@ -62,9 +62,16 @@ else
                 StateHasChanged();
             });
 
+        await Refresh();
+    }
+
+    private async Task Refresh()
+    {
         var request = new GetPomodoriRequest { };
 
         var response = await Mediator.Send<GetPomodoriResponse>(request);
+
+        _pomodori.Clear();
 
         foreach (var item in response.PomodoroQueryItems)
         {
@@ -83,5 +90,7 @@ else
             };
 
         var response = await Mediator.Send<PostPomodoroResponse>(request);
+
+        await Refresh();
     }
 }
