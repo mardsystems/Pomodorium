@@ -1,6 +1,6 @@
 ﻿namespace Pomodorium;
 
-public class PostPomodoroRequest : Request
+public class PostPomodoroRequest : Request<PostPomodoroResponse>
 {
     public DateTime StartDateTime { get; set; }
 

@@ -7,6 +7,9 @@ public class DeletePomodoroResponse : Response
     {
 
     }
-    
-    public PomodoroDetails PomodoroDetails { get; set; }
+
+    public DeletePomodoroResponse()
+    {
+        
+    }
 }

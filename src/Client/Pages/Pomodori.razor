@@ -1,4 +1,5 @@
 ﻿@page "/pomodori"
+@using MediatR;
 @using Pomodorium.Modules.Pomodori;
 @using Pomodorium.Shared
 @using System.DomainModel;
@@ -7,9 +8,7 @@
 @using System.Collections.Specialized;
 @using System.Reactive.Linq;
 @using System.Reactive.Threading.Tasks;
-@inject HttpClient Http
-@* @inject PomodoroQueryDbService PomodoroQueryDbService; *@
-@* @inject PomodoroRepository PomodoroRepository; *@
+@inject IMediator Mediator
 @inject IStringLocalizer<SharedResource> SharedResource;
 
 <PageTitle>Pomodori</PageTitle>
@@ -19,6 +18,8 @@
 <p role="status">Total: @_pomodori?.Count</p>
 
 <a class="btn btn-primary" href="pomodori/new">@SharedResource["Add New"]</a>
+
+<button class="btn btn-primary" @onclick="Add">@SharedResource["Add"]</button>
 
 @if (_pomodori == null)
 {
@@ -48,25 +49,30 @@ else
 }
 
 @code {
-    private ICollection<PomodoroQueryItem>? _pomodori;
+    private ObservableCollection<PomodoroQueryItem>? _pomodori;
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await Http.GetFromJsonAsync<GetPomodoriResponse>("api/pomodori");
+        _pomodori = new ObservableCollection<PomodoroQueryItem>();
 
-        _pomodori = response.PomodoroQueryItems;
+        var x = Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(h => _pomodori.CollectionChanged += h, h => _pomodori.CollectionChanged -= h)
+            .Throttle(TimeSpan.FromSeconds(1))
+            .Subscribe((x) =>
+            {
+                StateHasChanged();
+            });
 
-        // _pomodori = await PomodoroQueryDbService.QueryPomodoroItems();
+        var request = new GetPomodoriRequest { };
 
-        // var x = Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(h => _pomodori.CollectionChanged += h, h => _pomodori.CollectionChanged -= h)
-        //     .Throttle(TimeSpan.FromSeconds(1))
-        //     .Subscribe((x) =>
-        //     {
-        //         StateHasChanged();
-        //     });
+        var response = await Mediator.Send<GetPomodoriResponse>(request);
+
+        foreach (var item in response.PomodoroQueryItems)
+        {
+            _pomodori.Add(item);
+        }
     }
 
-    private async Task AddNew()
+    private async Task Add()
     {
         var now = DateTime.Now;
 
@@ -76,14 +82,6 @@ else
                 Description = Guid.NewGuid().ToString()
             };
 
-        await Http.PostAsJsonAsync<PostPomodoroRequest>("api/Pomodori", request, CancellationToken.None);
-
-        // var id = new PomodoroId(Guid.NewGuid().ToString());
-
-        // var now = DateTime.Now;
-
-        // var pomodoro = new Pomodoro(id, now, id.ToString());
-
-        // await PomodoroRepository.Add(pomodoro);
+        var response = await Mediator.Send<PostPomodoroResponse>(request);
     }
 }

@@ -27,7 +27,7 @@ builder.Services.AddSingleton<PomodoriumDbContext>();
 
 builder.Services.AddMediatR(config =>
 {
-    config.RegisterServicesFromAssembly(typeof(PomodoroEventHandler).Assembly);
+    config.RegisterServicesFromAssembly(typeof(MongoDBPomodoriEventHandler).Assembly);
 });
 
 var app = builder.Build();

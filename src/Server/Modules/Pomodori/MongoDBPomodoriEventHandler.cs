@@ -3,12 +3,12 @@ using Pomodorium.Data;
 
 namespace Pomodorium.Modules.Pomodori;
 
-public class PomodoroEventHandler :
+public class MongoDBPomodoriEventHandler :
     INotificationHandler<PomodoroCreated>
 {
     private readonly PomodoriumDbContext _db;
 
-    public PomodoroEventHandler(PomodoriumDbContext db)
+    public MongoDBPomodoriEventHandler(PomodoriumDbContext db)
     {
         _db = db;
     }

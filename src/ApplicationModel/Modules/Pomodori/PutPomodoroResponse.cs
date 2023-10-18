@@ -6,5 +6,10 @@ public class PutPomodoroResponse : Response
         : base(correlationId)
     {
 
-    }    
+    }
+
+    public PutPomodoroResponse()
+    {
+
+    }
 }
