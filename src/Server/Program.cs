@@ -1,22 +1,20 @@
-using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
-using Pomodorium;
 using Pomodorium.Data;
-using Pomodorium.Handlers;
 using Pomodorium.Hubs;
 using Pomodorium.Modules.Pomodori;
 using System.DomainModel.EventStore;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddScoped<IAppendOnlyStore>(factory => new MemoryStore(@"Data Source=EventStore.db"));
+var readDatabaseConnectionString = builder.Configuration.GetConnectionString("ReadDatabase");
 
-var connectionString = builder.Configuration.GetConnectionString("MONGODB_URI");
+builder.Services.AddScoped(factory => new MongoClient(readDatabaseConnectionString));
 
-builder.Services.AddScoped(factory => new MongoClient(connectionString));
+var writeDatabaseConnectionString = builder.Configuration.GetConnectionString("WriteDatabase");
+
+builder.Services.AddScoped<IAppendOnlyStore, MongoDBStore>(factory => new MongoDBStore(new MongoClient(writeDatabaseConnectionString)));
 
 builder.Services.AddControllersWithViews();
 
@@ -27,8 +25,6 @@ builder.Services.AddSignalR();
 builder.Services.AddScoped<PomodoroRepository>();
 
 builder.Services.AddScoped<EventStoreRepository>();
-
-builder.Services.AddScoped<IAppendOnlyStore, MongoDBStore>();
 
 builder.Services.AddMediatR(config =>
 {
