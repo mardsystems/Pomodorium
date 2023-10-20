@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pomodorium
+spec:
+  selector:
+    matchLabels:
+      app: pomodorium
+  serviceName: "pomodorium"
+  #replicas: 2
+  template:
+    metadata:
+      labels:
+        app: pomodorium
+    spec:
+      containers:
+      - name: pomodorium
+        image: mardsystems/pomodorium:v1.0.0-alpha.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5174
+        volumeMounts:
+        - mountPath: "/data"
+          name: pvc-10gb
+  volumeClaimTemplates:
+  - metadata:
+      name: pvc-10gb
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 2Gi
+      storageClassName: do-block-storage 

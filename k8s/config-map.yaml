@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pomodorium
+data:
+  read-database-uri: read-database
+  write-database-uri: write-database

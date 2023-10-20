@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pomodorium
+spec:
+  serviceName: "pomodorium"
+  selector:
+    matchLabels:
+      app: pomodorium
+  #replicas: 2
+  template:
+    metadata:
+      labels:
+        app: pomodorium
+    spec:
+      containers:
+      - name: pomodorium
+        image: mardsystems/pomodorium:v1.0.0-alpha.0
+        ports:
+        - containerPort: 5174
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        # volumeMounts:
+        # - mountPath: "/data"
+        #   name: pvc-10gb
+        env:
+          - name: MONGODB_URI
+            valueFrom:
+              configMapKeyRef:
+                name: pomodorium
+                key: read-database-uri
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pomodorium
+spec:
+  selector:
+    app: pomodorium
+  type: NodePort
+  ports:
+  - name: http    
+    protocol: TCP
+    port: 80
+    targetPort: 5174
+    nodePort: 30000
