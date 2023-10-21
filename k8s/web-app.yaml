@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: pomodorium-web
-        image: mardsystems/pomodorium:v1.0.0-alpha.0
+        image: mardsystems/pomodorium:v1.0.0-alpha.2
         ports:
         - containerPort: 5174
         resources:
@@ -46,6 +46,10 @@ spec:
               configMapKeyRef:
                 name: main-config-map
                 key: read-database-uri
+          - name: ConnectionStrings__ReadDatabase
+            value: mongodb://read-database:27017
+          - name: ConnectionStrings__WriteDatabase
+            value: mongodb://write-database:27017
       volumes:
         - name: web-app-volume
           persistentVolumeClaim:
