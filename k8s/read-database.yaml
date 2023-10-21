@@ -1,3 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: read-database
+spec:
+  selector:
+    database: read
+  ports:
+  - name: mongodb    
+    protocol: TCP
+    port: 27017
+    targetPort: 27017
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,44 +19,50 @@ spec:
   #replicas: 2
   selector:
     matchLabels:
-      app: read-database
+      database: read
   template:
     metadata:
       labels:
-        app: read-database
+        database: read
     spec:
       containers:
-      - name: read-database
+      - name: mongo-read
         image: mongo:3.6
         ports:
         - containerPort: 27017
         resources:
           limits:
             memory: "128Mi"
-            cpu: "500m"
+            cpu: "50m"
+        volumeMounts:
+        - mountPath: "/data"
+          name: read-database-volume
         env:
           - name: MONGO_INITDB_ROOT_USERNAME
             valueFrom:
               secretKeyRef:
-                name: pomodorium
+                name: main-secret
                 key: read-database-username
           - name: MONGO_INITDB_ROOT_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: pomodorium
+                name: main-secret
                 key: read-database-password
           - name: MONGO_INITDB_DATABASE
             value: pomodorium
+      volumes:
+        - name: read-database-volume
+          persistentVolumeClaim:
+            claimName: read-database-pvc             
 ---
 apiVersion: v1
-kind: Service
+kind: PersistentVolumeClaim
 metadata:
-  name: read-database
+  name: read-database-pvc
 spec:
-  selector:
-    app: read-database
-  ports:
-  - name: mongodb    
-    protocol: TCP
-    port: 27017
-    targetPort: 27017
+  #storageClassName: do-block-storage
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi

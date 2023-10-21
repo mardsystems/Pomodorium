@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-app
+spec:
+  selector:
+    app: web
+  type: NodePort
+  ports:
+  - name: http    
+    protocol: TCP
+    port: 80
+    targetPort: 5174
+    nodePort: 30000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+spec:
+  #serviceName: pomodorium
+  selector:
+    matchLabels:
+      app: web
+  #replicas: 2
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: pomodorium-web
+        image: mardsystems/pomodorium:v1.0.0-alpha.0
+        ports:
+        - containerPort: 5174
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "50m"
+        volumeMounts:
+        - mountPath: "/data"
+          name: web-app-volume
+        env:
+          - name: MONGODB_URI
+            valueFrom:
+              configMapKeyRef:
+                name: main-config-map
+                key: read-database-uri
+      volumes:
+        - name: web-app-volume
+          persistentVolumeClaim:
+            claimName: web-app-pvc             
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: web-app-pvc
+spec:
+  #storageClassName: do-block-storage
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
