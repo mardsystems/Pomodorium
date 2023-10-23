@@ -2,16 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
     <RootNamespace>Pomodorium</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
+    <PackageReference Include="MediatR" Version="12.1.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <SupportedPlatform Include="browser" />
+    <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
+    <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
   </ItemGroup>
+
 </Project>

@@ -1,0 +1,50 @@
+﻿@page "/pomodori/{id}"
+@using MediatR;
+@using Pomodorium.Modules.Pomodori;
+@using Pomodorium.Shared
+@using System.DomainModel;
+@using System.DomainModel.EventStore;
+@using System.Collections.ObjectModel;
+@using System.Collections.Specialized;
+@using System.Reactive.Linq;
+@using System.Reactive.Threading.Tasks;
+@inject IMediator Mediator
+@inject IStringLocalizer<SharedResource> SharedResource;
+
+<PageTitle>Pomodoro</PageTitle>
+
+<h1>Pomodoro</h1>
+
+
+
+<button class="btn btn-primary" @onclick="Save">@SharedResource["Save"]</button>
+
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+
+    private PomodoroDetails? _pomodoro;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = new GetPomodoroRequest { };
+
+        var response = await Mediator.Send<GetPomodoroResponse>(request);
+
+        _pomodoro = response.PomodoroDetails;
+    }
+
+    private async Task Save()
+    {
+        var now = DateTime.Now;
+
+        var request = new PostPomodoroRequest
+            {
+                StartDateTime = now,
+                Description = Guid.NewGuid().ToString()
+            };
+
+        var response = await Mediator.Send<PostPomodoroResponse>(request);
+    }
+}

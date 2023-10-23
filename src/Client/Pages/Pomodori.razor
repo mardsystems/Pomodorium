@@ -1,4 +1,5 @@
 ﻿@page "/pomodori"
+@using MediatR;
 @using Pomodorium.Modules.Pomodori;
 @using Pomodorium.Shared
 @using System.DomainModel;
@@ -7,17 +8,18 @@
 @using System.Collections.Specialized;
 @using System.Reactive.Linq;
 @using System.Reactive.Threading.Tasks;
-@inject PomodoroQueryDbService PomodoroQueryDbService;
-@inject PomodoroRepository PomodoroRepository;
+@inject IMediator Mediator
 @inject IStringLocalizer<SharedResource> SharedResource;
 
 <PageTitle>Pomodori</PageTitle>
 
 <h1>Pomodori</h1>
 
-<p role="status">Total: @_pomodori.Count</p>
+<p role="status">Total: @_pomodori?.Count</p>
 
-<button class="btn btn-primary" @onclick="AddNew">@SharedResource["Add New"]</button>
+<a class="btn btn-primary" href="pomodori/new">@SharedResource["Add New"]</a>
+
+<button class="btn btn-primary" @onclick="Add">@SharedResource["Add"]</button>
 
 @if (_pomodori == null)
 {
@@ -51,7 +53,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _pomodori = await PomodoroQueryDbService.QueryPomodoroItems();
+        _pomodori = new ObservableCollection<PomodoroQueryItem>();
 
         var x = Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(h => _pomodori.CollectionChanged += h, h => _pomodori.CollectionChanged -= h)
             .Throttle(TimeSpan.FromSeconds(1))
@@ -59,16 +61,36 @@ else
             {
                 StateHasChanged();
             });
+
+        await Refresh();
     }
 
-    private async Task AddNew()
+    private async Task Refresh()
     {
-        var id = new PomodoroId(Guid.NewGuid().ToString());
+        var request = new GetPomodoriRequest { };
 
+        var response = await Mediator.Send<GetPomodoriResponse>(request);
+
+        _pomodori.Clear();
+
+        foreach (var item in response.PomodoroQueryItems)
+        {
+            _pomodori.Add(item);
+        }
+    }
+
+    private async Task Add()
+    {
         var now = DateTime.Now;
 
-        var pomodoro = new Pomodoro(id, now, id.ToString());
+        var request = new PostPomodoroRequest
+            {
+                StartDateTime = now,
+                Description = Guid.NewGuid().ToString()
+            };
 
-        await PomodoroRepository.Add(pomodoro);
+        var response = await Mediator.Send<PostPomodoroResponse>(request);
+
+        await Refresh();
     }
 }
