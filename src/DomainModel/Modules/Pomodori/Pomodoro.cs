@@ -1,5 +1,5 @@
 using System.DomainModel;
-using System.DomainModel.EventStore;
+using System.DomainModel.Storage;
 using System.Runtime.Serialization;
 
 namespace Pomodorium.Modules.Pomodori;
@@ -22,6 +22,11 @@ public class Pomodoro : AggregateRoot
     public void ChangeDescription(string description)
     {
         Apply(new PomodoroDescriptionChanged(Id, description));
+    }
+
+    public void Archive()
+    {
+        Apply(new PomodoroArchived(Id));
     }
 
     public void When(PomodoroCreated e)
@@ -122,6 +127,23 @@ public class PomodoroDescriptionChanged : Event
     }
 
     private PomodoroDescriptionChanged()
+    {
+
+    }
+}
+
+[DataContract]
+public class PomodoroArchived : Event
+{
+    [DataMember(Order = 1)]
+    public PomodoroId Id { get; private set; }
+
+    public PomodoroArchived(PomodoroId id)
+    {
+        Id = id;
+    }
+
+    private PomodoroArchived()
     {
 
     }

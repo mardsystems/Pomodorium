@@ -1,15 +1,16 @@
 ﻿using MediatR;
+using System.DomainModel;
 
 namespace Pomodorium.Modules.Pomodori
 {
-    public class DomainPomodoriCommandHandler : 
+    public class PomodoroApplication :
         IRequestHandler<PostPomodoroRequest, PostPomodoroResponse>,
         IRequestHandler<PutPomodoroRequest, PutPomodoroResponse>,
         IRequestHandler<DeletePomodoroRequest, DeletePomodoroResponse>
     {
         private readonly PomodoroRepository _pomodoroRepository;
 
-        public DomainPomodoriCommandHandler(PomodoroRepository pomodoroRepository)
+        public PomodoroApplication(PomodoroRepository pomodoroRepository)
         {
             _pomodoroRepository = pomodoroRepository;
         }
@@ -22,7 +23,7 @@ namespace Pomodorium.Modules.Pomodori
 
             var pomodoro = new Pomodoro(pomodoroId, request.StartDateTime, request.Description);
 
-            await _pomodoroRepository.Add(pomodoro);
+            await _pomodoroRepository.Save(pomodoro, -1);
 
             var response = new PostPomodoroResponse(request.GetCorrelationId()) { };
 
@@ -35,14 +36,14 @@ namespace Pomodorium.Modules.Pomodori
 
             var pomodoro = await _pomodoroRepository.GetPomodoroById(pomodoroId);
 
-            //if (pomodoro == null)
-            //{
-            //    return NotFound();
-            //}
+            if (pomodoro == null)
+            {
+                throw new EntityNotFoundException();
+            }
 
             pomodoro.ChangeDescription(request.Description);
 
-            await _pomodoroRepository.Update(pomodoro);
+            await _pomodoroRepository.Save(pomodoro, request.Version);
 
             var response = new PutPomodoroResponse(request.GetCorrelationId()) { };
 
@@ -55,14 +56,16 @@ namespace Pomodorium.Modules.Pomodori
 
             var pomodoro = await _pomodoroRepository.GetPomodoroById(pomodoroId);
 
-            //if (pomodoro == null)
-            //{
-            //    return NotFound();
-            //}
+            if (pomodoro == null)
+            {
+                throw new EntityNotFoundException();
+            }
 
-            //await _pomodoroRepository.Delete(pomodoro);
+            pomodoro.Archive();
 
-            var response = new DeletePomodoroResponse(request.GetCorrelationId()) {  };
+            await _pomodoroRepository.Save(pomodoro, request.Version);
+
+            var response = new DeletePomodoroResponse(request.GetCorrelationId()) { };
 
             return response;
         }

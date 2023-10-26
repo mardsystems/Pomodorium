@@ -6,7 +6,7 @@ using Pomodorium.Data;
 using Pomodorium.Handlers;
 using Pomodorium.Hubs;
 using Pomodorium.Modules.Pomodori;
-using System.DomainModel.EventStore;
+using System.DomainModel.Storage;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -30,7 +30,7 @@ builder.Services.AddScoped(sp =>
 
 //builder.Services.AddScoped<PomodoroRepository>();
 
-builder.Services.AddScoped<EventStoreRepository>();
+builder.Services.AddScoped<EventStore>();
 
 builder.Services.AddScoped<IAppendOnlyStore>(factory => new MemoryStore(@"Data Source=EventStore.db"));
 

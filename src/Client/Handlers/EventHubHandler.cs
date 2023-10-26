@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Pomodorium.Hubs;
 using Pomodorium.Modules.Pomodori;
 using System.DomainModel;
-using System.DomainModel.EventStore;
+using System.DomainModel.Storage;
 
 namespace Pomodorium.Handlers;
 

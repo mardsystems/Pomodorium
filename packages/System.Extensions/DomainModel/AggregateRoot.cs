@@ -2,14 +2,11 @@
 
 public abstract class AggregateRoot : Entity
 {
-
     public string Id { get; internal protected set; }
 
     public string UserId { get; private set; }
 
-    public long OriginalVersion { get; set; }
-
-    public long CurrentVersion { get; set; }
+    public long Version { get; internal set; }
 
     public ICollection<Event> Changes { get; private set; }
 
@@ -39,9 +36,7 @@ public abstract class AggregateRoot : Entity
     {
         Mutate(e);
 
-        OriginalVersion = e.Version;
-
-        CurrentVersion = OriginalVersion;
+        //Version = e.Version;
     }
 
     protected void Apply(Event e)
@@ -50,11 +45,11 @@ public abstract class AggregateRoot : Entity
 
         Mutate(e);
 
-        CurrentVersion++;
+        //Version++;
 
-        e.Version = CurrentVersion;
+        //e.Version = Version;
 
-        e.Date = DateTime.Now;
+        //e.Date = DateTime.Now;
     }
 
     protected void Mutate(Event e)
@@ -62,8 +57,8 @@ public abstract class AggregateRoot : Entity
         ((dynamic)this).When((dynamic)e);
     }
 
-    public void OnSave()
-    {
-        OriginalVersion = CurrentVersion;
-    }
+    //public void OnSave()
+    //{
+    //    OriginalVersion = Version;
+    //}
 }

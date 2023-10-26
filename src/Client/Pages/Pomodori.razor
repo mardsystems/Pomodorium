@@ -3,7 +3,7 @@
 @using Pomodorium.Modules.Pomodori;
 @using Pomodorium.Shared
 @using System.DomainModel;
-@using System.DomainModel.EventStore;
+@using System.DomainModel.Storage;
 @using System.Collections.ObjectModel;
 @using System.Collections.Specialized;
 @using System.Reactive.Linq;
@@ -39,7 +39,9 @@ else
             @foreach (var pomodoro in _pomodori)
             {
                 <tr>
-                    <td>&nbsp;</td>
+                    <td>
+                        <a class="btn btn-primary" href=@($"pomodori/{pomodoro.Id}")>@SharedResource["Details"]</a>
+                    </td>
                     <td>@pomodoro.StartDateTime</td>
                     <td>@pomodoro.Description</td>
                 </tr>

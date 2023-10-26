@@ -1,10 +1,10 @@
 version: '3.4'
 
-volumes:
-  read_volume:
-    external: false
-  write_volume:
-    external: false
+# volumes:
+#   read_volume:
+#     external: false
+#   write_volume:
+#     external: false
 
 services:
   # message_broker:
@@ -17,13 +17,15 @@ services:
 
   read_database:
     volumes:
-      - read_volume:/data/db
+      - ./data/read_database:/data/db
+      # - read_volume:/data/db
     #ports:
     #  - "27017:27017"
 
   write_database:
     volumes:
-      - write_volume:/data/db
+      - ./data/write_database:/data/db
+      # - write_volume:/data/db
     #ports:
     #  - "27017:27017"
 

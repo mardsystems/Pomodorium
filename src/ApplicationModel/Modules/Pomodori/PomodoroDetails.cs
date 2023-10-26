@@ -3,7 +3,12 @@
 public class PomodoroDetails
 {
     public string Id { get; set; }
-    public string BuyerId { get; set; }
-    public int TotalQuantity { get; set; }
-    //public CartItemDetails[] Items { get; set; }
+
+    public DateTime StartDateTime { get; set; }
+
+    public DateTime? EndDateTime { get; set; }
+
+    public string? Description { get; set; }
+
+    public long Version { get; set; }
 }

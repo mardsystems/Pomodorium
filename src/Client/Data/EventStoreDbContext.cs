@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.DomainModel.EventStore;
+using System.DomainModel.Storage;
 
 namespace Pomodorium.Data;
 

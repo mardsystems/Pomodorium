@@ -1,5 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
-using System.DomainModel.EventStore;
+using System.DomainModel.Storage;
 
 namespace Pomodorium.Data;
 

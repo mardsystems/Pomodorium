@@ -1,4 +1,4 @@
-﻿namespace System.DomainModel.EventStore;
+﻿namespace System.DomainModel.Storage;
 
 public class OptimisticConcurrencyException : Exception
 {

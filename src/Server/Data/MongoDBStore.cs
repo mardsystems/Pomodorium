@@ -1,6 +1,6 @@
 ﻿using MongoDB.Driver;
 using Pomodorium.Modules.Pomodori;
-using System.DomainModel.EventStore;
+using System.DomainModel.Storage;
 using System.Xml.Linq;
 
 namespace Pomodorium.Data;

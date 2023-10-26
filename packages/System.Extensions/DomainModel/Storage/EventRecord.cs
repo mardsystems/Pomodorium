@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace System.DomainModel.EventStore;
+namespace System.DomainModel.Storage;
 
 public class EventRecord : IIdentity, INotification
 {

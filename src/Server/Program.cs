@@ -2,7 +2,7 @@ using MongoDB.Driver;
 using Pomodorium.Data;
 using Pomodorium.Hubs;
 using Pomodorium.Modules.Pomodori;
-using System.DomainModel.EventStore;
+using System.DomainModel.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,11 +24,11 @@ builder.Services.AddSignalR();
 
 builder.Services.AddScoped<PomodoroRepository>();
 
-builder.Services.AddScoped<EventStoreRepository>();
+builder.Services.AddScoped<EventStore>();
 
 builder.Services.AddMediatR(config =>
 {
-    config.RegisterServicesFromAssembly(typeof(MongoDBPomodoriEventHandler).Assembly);
+    config.RegisterServicesFromAssembly(typeof(MongoDBPomodoroQueryItemsProjection).Assembly);
 });
 
 var app = builder.Build();

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using System.DomainModel;
-using System.DomainModel.EventStore;
+using System.DomainModel.Storage;
 
 namespace Pomodorium.Hubs
 {
@@ -28,7 +28,7 @@ namespace Pomodorium.Hubs
 
             var type = Type.GetType(tapeRecord.TypeName);
 
-            var @event = EventStoreRepository.DesserializeEvent(type, tapeRecord.Data);
+            var @event = EventStore.DesserializeEvent(type, tapeRecord.Data);
 
             @event.Version = tapeRecord.Version;
 

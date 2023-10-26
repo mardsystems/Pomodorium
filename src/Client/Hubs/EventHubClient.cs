@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR.Client;
 using System.DomainModel;
-using System.DomainModel.EventStore;
+using System.DomainModel.Storage;
 
 namespace Pomodorium.Hubs;
 
@@ -9,13 +9,13 @@ public class EventHubClient
 {
     private readonly HubConnection _connection;
 
-    private readonly EventStoreRepository _eventStore;
+    private readonly EventStore _eventStore;
 
     private readonly IMediator _mediator;
 
     public event Action<Event> NewEvent;
 
-    public EventHubClient(HubConnection connection, IMediator mediator, EventStoreRepository eventStore)
+    public EventHubClient(HubConnection connection, IMediator mediator, EventStore eventStore)
     {
         _connection = connection;
 
@@ -30,7 +30,7 @@ public class EventHubClient
     {
         var type = Type.GetType(tapeRecord.TypeName);
 
-        var @event = EventStoreRepository.DesserializeEvent(type, tapeRecord.Data);
+        var @event = EventStore.DesserializeEvent(type, tapeRecord.Data);
 
         try
         {

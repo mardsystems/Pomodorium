@@ -4,15 +4,16 @@ using System.Text.Json;
 
 namespace Pomodorium.Modules.Pomodori
 {
-    public class HttpClientPomodoriCommandHandler :
+    public class HttpClientPomodoroCommandHandler :
         IRequestHandler<GetPomodoriRequest, GetPomodoriResponse>,
         IRequestHandler<GetPomodoroRequest, GetPomodoroResponse>,
         IRequestHandler<PostPomodoroRequest, PostPomodoroResponse>,
-        IRequestHandler<PutPomodoroRequest, PutPomodoroResponse>
+        IRequestHandler<PutPomodoroRequest, PutPomodoroResponse>,
+        IRequestHandler<DeletePomodoroRequest, DeletePomodoroResponse>
     {
         private readonly HttpClient _httpClient;
 
-        public HttpClientPomodoriCommandHandler(HttpClient httpClient)
+        public HttpClientPomodoroCommandHandler(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
@@ -45,6 +46,13 @@ namespace Pomodorium.Modules.Pomodori
             var httpResponse = await _httpClient.PutAsJsonAsync($"api/pomodori/{request.Id}", request, cancellationToken);
 
             var response = await httpResponse.Content.ReadFromJsonAsync<PutPomodoroResponse>(JsonSerializerOptions.Default, cancellationToken);
+
+            return response;
+        }
+
+        public async Task<DeletePomodoroResponse> Handle(DeletePomodoroRequest request, CancellationToken cancellationToken)
+        {
+            var response = await _httpClient.DeleteFromJsonAsync<DeletePomodoroResponse>($"api/pomodori/{request.Id}?version={request.Version}", cancellationToken);
 
             return response;
         }

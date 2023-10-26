@@ -1,24 +1,24 @@
 ﻿using MediatR;
 using ProtoBuf;
 
-namespace System.DomainModel.EventStore;
+namespace System.DomainModel.Storage;
 
-public class EventStoreRepository
+public class EventStore
 {
-    private readonly IAppendOnlyStore appendOnlyStore;
+    private readonly IAppendOnlyStore _appendOnlyStore;
 
     private readonly IMediator _mediator;
 
-    public EventStoreRepository(IAppendOnlyStore appendOnlyStore, IMediator mediator)
+    public EventStore(IAppendOnlyStore appendOnlyStore, IMediator mediator)
     {
-        this.appendOnlyStore = appendOnlyStore;
+        _appendOnlyStore = appendOnlyStore;
 
         _mediator = mediator;
     }
 
     public IEnumerable<Event> LoadAllEvents()
     {
-        var records = appendOnlyStore.ReadRecords(0, long.MaxValue);
+        var records = _appendOnlyStore.ReadRecords(0, long.MaxValue);
 
         var events = new List<Event>();
 
@@ -38,11 +38,11 @@ public class EventStoreRepository
         return events;
     }
 
-    public IEnumerable<Event> LoadEvents(IIdentity id, long skip, long take)
+    public IEnumerable<Event> GetEventsForAggregate(IIdentity id, long skip, long take)
     {
         var name = IdentityToString(id);
 
-        var records = appendOnlyStore.ReadRecords(name, skip, take).ToList();
+        var records = _appendOnlyStore.ReadRecords(name, skip, take).ToList();
 
         var events = new List<Event>();
 
@@ -94,19 +94,21 @@ public class EventStoreRepository
 
         foreach (var @event in events)
         {
+            expectedVersion++;
+
+            @event.Version = expectedVersion;
+
             var data = SerializeEvent(@event);
 
             try
             {
-                var eventRecord = appendOnlyStore.Append(name, @event.GetType().AssemblyQualifiedName, @event.Date, data, expectedVersion);
-
-                expectedVersion++;
+                var eventRecord = _appendOnlyStore.Append(name, @event.GetType().AssemblyQualifiedName, @event.Date, data, expectedVersion);
 
                 await _mediator.Publish(eventRecord);
             }
             catch (AppendOnlyStoreConcurrencyException ex)
             {
-                var serverEvents = LoadEvents(id, 0, long.MaxValue);
+                var serverEvents = GetEventsForAggregate(id, 0, long.MaxValue);
 
                 var lastEvent = serverEvents.Last();
 
