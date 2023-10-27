@@ -1,6 +1,5 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.SignalR;
-using System.DomainModel;
+﻿using Microsoft.AspNetCore.SignalR;
+using Pomodorium.Modules.Pomodori;
 using System.DomainModel.EventStore;
 
 namespace Pomodorium.Hubs
@@ -9,32 +8,21 @@ namespace Pomodorium.Hubs
     {
         private readonly IAppendOnlyStore appendOnlyStore;
 
-        private readonly IMediator _mediator;
-
-        public EventHub(IAppendOnlyStore appendOnlyStore, IMediator mediator)
+        public EventHub(IAppendOnlyStore appendOnlyStore)
         {
             this.appendOnlyStore = appendOnlyStore;
-
-            _mediator = mediator;
         }
 
-        public async Task Append(EventRecord tapeRecord)
+        public void OnPomodoroCreated(PomodoroCreated @event)
         {
-            appendOnlyStore.Append(tapeRecord);
+            Clients.Others.SendAsync("OnPomodoroCreated", @event);
+        }
 
-            await Clients.Others.SendAsync("Append", tapeRecord);
+        public void Append(string name, DateTime date, byte[] data, long expectedVersion)
+        {
+            appendOnlyStore.Append(name, date, data, expectedVersion);
 
-            //
-
-            var type = Type.GetType(tapeRecord.TypeName);
-
-            var @event = EventStoreRepository.DesserializeEvent(type, tapeRecord.Data);
-
-            @event.Version = tapeRecord.Version;
-
-            @event.Date = tapeRecord.Date;
-
-            await _mediator.Publish(@event);
+            Clients.Others.SendAsync("Append", name, date, data, expectedVersion);
         }
     }
 }
