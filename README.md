@@ -17,6 +17,3 @@
 
 * Install dotnet
 > https://learn.microsoft.com/en-us/dotnet/core/install/linux-ubuntu-2204
-
-* Hash Base64
-> `echo -n 'username' | base64`

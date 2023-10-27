@@ -1,108 +1,12 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
 version: '3.4'
 
-networks:
-  # message_broker_network:
-  read_network:
-  write_network:
-  public_network:
-
 services:
-  # message_broker:
-  #   container_name: message_broker
-  #   restart: always
-  #   image: rabbitmq:3-management
-  #   networks:
-  #     - message_broker_network
-
-  read_database:
-    container_name: read_database
-    restart: always
-    image: mongo:3.6
-    networks:
-      - read_network
-
-  write_database:
-    container_name: write_database
-    restart: always
-    image: mongo:3.6
-    networks:
-      - write_network
-
-  # write_database:
-  #   container_name: write_database
-  #   restart: always
-  #   image: mcr.microsoft.com/mssql/server:2019-latest
-  #   hostname: write_database
-  #   networks:
-  #     - write_network
-
-  pomodorium.server:
-    image: ${DOCKER_REGISTRY-}pomodoriumserver
+  pomodoriumserver:
+    image: pomodoriumserver
     build:
       context: .
       dockerfile: src/Server/Dockerfile
-    depends_on:
-      - read_database
-      - write_database
-    networks:
-      - public_network
-      - read_network
-      - write_network
-
-  # fluxodecaixa.lancamentos.api:
-  #   image: ${DOCKER_REGISTRY-}fluxodecaixalancamentosapi
-  #   build:
-  #     context: .
-  #     dockerfile: src/FluxoDeCaixa.Lancamentos.Api/Dockerfile
-  #   depends_on:
-  #     - message_broker
-  #   networks:
-  #     - public_network
-  #     - message_broker_network
-
-  # fluxodecaixa.lancamentos.workers:
-  #   image: ${DOCKER_REGISTRY-}fluxodecaixalancamentosworkers
-  #   build:
-  #     context: .
-  #     dockerfile: src/FluxoDeCaixa.Lancamentos.Workers/Dockerfile
-  #   depends_on:
-  #     - message_broker
-  #     - write_database
-  #   networks:
-  #     - message_broker_network
-  #     - write_network
-
-  # fluxodecaixa.fluxos.workers:
-  #   image: ${DOCKER_REGISTRY-}fluxodecaixafluxosworkers
-  #   build:
-  #     context: .
-  #     dockerfile: src/FluxoDeCaixa.Fluxos.Workers/Dockerfile
-  #   depends_on:
-  #     - message_broker
-  #     - read_database
-  #   networks:
-  #     - message_broker_network
-  #     - read_network
-
-  # fluxodecaixa.fluxos.api:
-  #   image: ${DOCKER_REGISTRY-}fluxodecaixafluxosapi
-  #   build:
-  #     context: .
-  #     dockerfile: src/FluxoDeCaixa.Fluxos.Api/Dockerfile
-  #   depends_on:
-  #     - read_database
-  #   networks:
-  #     - public_network
-  #     - read_network
-
-  # fluxodecaixa.politicas.workers:
-  #   image: ${DOCKER_REGISTRY-}fluxodecaixapoliticasworkers
-  #   build:
-  #     context: .
-  #     dockerfile: src/FluxoDeCaixa.Politicas.Workers/Dockerfile
-  #   depends_on:
-  #     - message_broker
-  #     - write_database
-  #   networks:
-  #     - message_broker_network
-  #     - write_network
+    ports:
+      - 5174:5174

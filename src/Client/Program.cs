@@ -26,9 +26,9 @@ builder.Services.AddScoped(sp =>
     return connection;
 });
 
-//builder.Services.AddScoped<PomodoroQueryDbService>();
+builder.Services.AddScoped<PomodoroQueryDbService>();
 
-//builder.Services.AddScoped<PomodoroRepository>();
+builder.Services.AddScoped<PomodoroRepository>();
 
 builder.Services.AddScoped<EventStoreRepository>();
 
