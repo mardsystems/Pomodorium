@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: write-database
+spec:
+  selector:
+    database: write
+  ports:
+  - name: mongodb    
+    protocol: TCP
+    port: 27017
+    targetPort: 27017
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: write-database
+spec:
+  #replicas: 2
+  selector:
+    matchLabels:
+      database: write
+  template:
+    metadata:
+      labels:
+        database: write
+    spec:
+      containers:
+      - name: mongo-write
+        image: mongo:3.6
+        ports:
+        - containerPort: 27017
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "50m"
+        volumeMounts:
+        - mountPath: "/data"
+          name: write-database-volume
+        # env:
+        #   - name: MONGO_INITDB_ROOT_USERNAME
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: main-secret
+        #         key: write-database-username
+        #   - name: MONGO_INITDB_ROOT_PASSWORD
+        #     valueFrom:
+        #       secretKeyRef:
+        #         name: main-secret
+        #         key: write-database-password
+        #   - name: MONGO_INITDB_DATABASE
+        #     value: pomodorium
+      volumes:
+        - name: write-database-volume
+          persistentVolumeClaim:
+            claimName: write-database-pvc             
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: write-database-pvc
+spec:
+  #storageClassName: do-block-storage
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi

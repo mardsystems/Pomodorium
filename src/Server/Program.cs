@@ -1,19 +1,38 @@
-using Pomodorium;
+using MongoDB.Driver;
+using Pomodorium.Data;
 using Pomodorium.Hubs;
-using System.DomainModel.EventStore;
+using Pomodorium.Modules.Pomodori;
+using System.DomainModel.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+var readDatabaseConnectionString = builder.Configuration.GetConnectionString("ReadDatabase");
+
+builder.Services.AddScoped(factory => new MongoClient(readDatabaseConnectionString));
+
+var writeDatabaseConnectionString = builder.Configuration.GetConnectionString("WriteDatabase");
+
+builder.Services.AddScoped<IAppendOnlyStore, MongoDBStore>(factory =>
+    new MongoDBStore(
+        new MongoClient(writeDatabaseConnectionString),
+        factory.GetRequiredService<ILogger<MongoDBStore>>()));
+
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddRazorPages();
 
 builder.Services.AddSignalR();
 
-builder.Services.AddScoped<EventStoreRepository>();
+builder.Services.AddScoped<PomodoroRepository>();
 
-builder.Services.AddSingleton<IAppendOnlyStore>(factory => new MemoryStore(@"Data Source=EventStore.db"));
+builder.Services.AddScoped<EventStore>();
+
+builder.Services.AddMediatR(config =>
+{
+    config.RegisterServicesFromAssembly(typeof(MongoDBPomodoroQueryItemsProjection).Assembly);
+});
 
 var app = builder.Build();
 

@@ -1,0 +1,91 @@
+version: '3.4'
+
+# volumes:
+#   read_volume:
+#     external: false
+#   write_volume:
+#     external: false
+
+services:
+  # message_broker:
+  #   #volumes:
+  #   #  - ./data/message_broker:/var/lib/rabbitmq/mnesia/
+  #   #ports:
+  #   #  - "5672:5672"
+  #   ports:
+  #     - "15672:15672"
+
+  read_database:
+    volumes:
+      - ./data/read_database:/data/db
+      # - read_volume:/data/db
+    ports:
+     - "27019:27017"
+
+  write_database:
+    volumes:
+      - ./data/write_database:/data/db
+      # - write_volume:/data/db
+    ports:
+     - "27018:27017"
+
+  # write_database:
+  #   #volumes:
+  #   #  - ./data/write_database:/var/opt/mssql/data
+  #   #  - ./data/write_database/log:/var/opt/mssql/log
+  #   #  - ./data/write_database/secrets:/var/opt/mssql/secrets
+  #   environment:
+  #     ACCEPT_EULA: "Y"
+  #     SA_PASSWORD: "BigPassw0rd"
+  #     MSSQL_AGENT_ENABLED: "true"
+  #   #ports:
+  #   #  - "1433:1433"
+
+  pomodorium.server:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:7070;http://+:5174
+      - ConnectionStrings__ReadDatabase=mongodb://read_database:27017
+      - ConnectionStrings__WriteDatabase=mongodb://write_database:27017
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=12345
+    ports:
+      - "7070"
+      - "5174"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  # fluxodecaixa.lancamentos.api:
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_URLS=https://+:443;http://+:80
+  #   ports:
+  #     - 8000:80
+  #     - 8001:443
+  #   volumes:
+  #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  #     - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  # fluxodecaixa.lancamentos.workers:
+  #   volumes:
+  #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+  # fluxodecaixa.fluxos.workers:
+  #   volumes:
+  #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+  # fluxodecaixa.politicas.workers:
+  #   volumes:
+  #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+
+  # fluxodecaixa.fluxos.api:
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_URLS=https://+:443;http://+:80
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   volumes:
+  #     - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+  #     - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
