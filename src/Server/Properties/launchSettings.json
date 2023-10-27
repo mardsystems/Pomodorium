@@ -38,10 +38,15 @@
     },
     "Docker": {
       "commandName": "Docker",
+      "dotnetRunMessages": true,
       "launchBrowser": true,
+      "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
       "environmentVariables": {
-        "ASPNETCORE_URLS": "http://+:5174"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "https://+:7070;http://+:5174",
+        "ASPNETCORE_Kestrel__Certificates__Default__Path": "aspnetapp.pfx",
+        "ASPNETCORE_Kestrel__Certificates__Default__Password": "12345"
       },
       "publishAllPorts": true,
       "useSSL": true

@@ -43,6 +43,11 @@ public class Pomodoro : AggregateRoot
         Description = e.Description;
     }
 
+    public void When(PomodoroArchived e)
+    {
+        
+    }
+
     public Pomodoro(IEnumerable<Event> events)
     {
         foreach (var @event in events)
@@ -62,19 +67,14 @@ public class Interval
 }
 
 [DataContract]
-public class PomodoroId : IIdentity
+public class PomodoroId
 {
     [DataMember(Order = 1)]
-    public string Value { get; private set; }
+    public Guid Value { get; private set; }
 
-    public PomodoroId(string value)
+    public PomodoroId(Guid value)
     {
         Value = value;
-    }
-
-    public override string ToString()
-    {
-        return $"Pomodoro-{Value}";
     }
 
     private PomodoroId()

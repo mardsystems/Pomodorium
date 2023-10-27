@@ -28,13 +28,15 @@ public class EventHubClient
 
     private async Task Append(EventRecord tapeRecord)
     {
+        var id = Guid.Parse(tapeRecord.Name);
+
         var type = Type.GetType(tapeRecord.TypeName);
 
         var @event = EventStore.DesserializeEvent(type, tapeRecord.Data);
 
         try
         {
-            await _eventStore.AppendToStream(tapeRecord, -1, @event); //
+            await _eventStore.AppendToStream(id, -1, @event); //
         }
         catch (EventStoreConcurrencyException ex)
         {
@@ -50,7 +52,7 @@ public class EventHubClient
                 }
             }
 
-            await _eventStore.AppendToStream(tapeRecord, ex.StoreVersion, @event);
+            await _eventStore.AppendToStream(id, ex.StoreVersion, @event);
         }
 
         //@event.IsHandled = true;

@@ -3,8 +3,13 @@
     "Docker Compose": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
+      "composeLaunchAction": "LaunchBrowser",
+      "composeLaunchServiceName": "pomodorium.server",
+      "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
       "serviceActions": {
-        "pomodorium.server": "StartDebugging"
+        "pomodorium.server": "StartDebugging",
+        "read_database": "StartWithoutDebugging",
+        "write_database": "StartWithoutDebugging"
       }
     }
   }

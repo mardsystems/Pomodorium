@@ -40,7 +40,7 @@ public class PomodoriController : ControllerBase
 
     [HttpGet("{id}", Name = "GetPomodoro")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetPomodoroResponse))]
-    public async Task<GetPomodoroResponse> GetPomodoro(string id)
+    public async Task<GetPomodoroResponse> GetPomodoro(Guid id)
     {
         var request = new GetPomodoroRequest { Id = id };
 
@@ -51,7 +51,7 @@ public class PomodoriController : ControllerBase
 
     [HttpPut("{id}", Name = "PutPomodoro")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PutPomodoroResponse))]
-    public async Task<PutPomodoroResponse> PutPomodoro(string id, PutPomodoroRequest request)
+    public async Task<PutPomodoroResponse> PutPomodoro(Guid id, PutPomodoroRequest request)
     {
         request.Id = id;
 
@@ -62,9 +62,9 @@ public class PomodoriController : ControllerBase
 
     [HttpDelete("{id}", Name = "DeletePomodoro")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DeletePomodoroResponse))]
-    public async Task<DeletePomodoroResponse> DeletePomodoro(string id)
+    public async Task<DeletePomodoroResponse> DeletePomodoro(Guid id, long version)
     {
-        var request = new DeletePomodoroRequest { Id = id };
+        var request = new DeletePomodoroRequest { Id = id, Version = version };
 
         var response = await _mediator.Send<DeletePomodoroResponse>(request);
 

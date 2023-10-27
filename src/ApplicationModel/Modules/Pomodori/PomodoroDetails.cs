@@ -2,7 +2,7 @@
 
 public class PomodoroDetails
 {
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
     public DateTime StartDateTime { get; set; }
 

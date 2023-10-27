@@ -36,7 +36,7 @@ public class MongoDBPomodoroQueryItemsProjection :
     {
         var pomodoroQueryItem = new PomodoroQueryItem
         {
-            Id = request.Id.ToString(),
+            Id = request.Id.Value,
             StartDateTime = request.StartDateTime,
             Description = request.Description
         };
@@ -46,7 +46,7 @@ public class MongoDBPomodoroQueryItemsProjection :
 
     public async Task Handle(PomodoroDescriptionChanged notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<PomodoroQueryItem>.Filter.Eq(x => x.Id, notification.Id.ToString());
+        var filter = Builders<PomodoroQueryItem>.Filter.Eq(x => x.Id, notification.Id.Value);
 
         var pomodoroQueryItem = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
 
@@ -65,7 +65,7 @@ public class MongoDBPomodoroQueryItemsProjection :
 
     public async Task Handle(PomodoroArchived notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<PomodoroQueryItem>.Filter.Eq(x => x.Id, notification.Id.ToString());
+        var filter = Builders<PomodoroQueryItem>.Filter.Eq(x => x.Id, notification.Id.Value);
 
         var pomodoroQueryItem = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
 

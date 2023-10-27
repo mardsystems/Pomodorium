@@ -2,7 +2,7 @@
 
 public abstract class AggregateRoot : Entity
 {
-    public string Id { get; internal protected set; }
+    public Guid Id { get; internal protected set; }
 
     public string UserId { get; private set; }
 
@@ -10,7 +10,7 @@ public abstract class AggregateRoot : Entity
 
     public ICollection<Event> Changes { get; private set; }
 
-    public AggregateRoot(string id, string userId)
+    public AggregateRoot(Guid id, string userId)
     {
         Id = id;
 

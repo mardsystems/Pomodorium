@@ -45,7 +45,7 @@ public class PomodoroRepository
 
     public async Task<Pomodoro> GetPomodoroById(PomodoroId id)
     {
-        var events = _eventStore.GetEventsForAggregate(id, 0, long.MaxValue);
+        var events = _eventStore.GetEventsForAggregate(id.Value, 0, long.MaxValue);
 
         var pomodoro = new Pomodoro(events);
 
@@ -56,7 +56,7 @@ public class PomodoroRepository
     {
         try
         {
-            await _eventStore.AppendToStream(pomodoro.Id, originalVersion, pomodoro.Changes.ToArray());
+            await _eventStore.AppendToStream(pomodoro.Id.Value, originalVersion, pomodoro.Changes.ToArray());
         }
         catch (EventStoreConcurrencyException ex)
         {
@@ -73,7 +73,7 @@ public class PomodoroRepository
                 }
             }
 
-            await _eventStore.AppendToStream(pomodoro.Id, ex.StoreVersion, pomodoro.Changes.ToArray());
+            await _eventStore.AppendToStream(pomodoro.Id.Value, ex.StoreVersion, pomodoro.Changes.ToArray());
         }
 
         foreach (var @event in pomodoro.Changes)

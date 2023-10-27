@@ -14,7 +14,10 @@ builder.Services.AddScoped(factory => new MongoClient(readDatabaseConnectionStri
 
 var writeDatabaseConnectionString = builder.Configuration.GetConnectionString("WriteDatabase");
 
-builder.Services.AddScoped<IAppendOnlyStore, MongoDBStore>(factory => new MongoDBStore(new MongoClient(writeDatabaseConnectionString)));
+builder.Services.AddScoped<IAppendOnlyStore, MongoDBStore>(factory =>
+    new MongoDBStore(
+        new MongoClient(writeDatabaseConnectionString),
+        factory.GetRequiredService<ILogger<MongoDBStore>>()));
 
 builder.Services.AddControllersWithViews();
 

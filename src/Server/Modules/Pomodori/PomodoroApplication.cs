@@ -19,7 +19,7 @@ namespace Pomodorium.Modules.Pomodori
         {
             var correlationId = request.GetCorrelationId();
 
-            var pomodoroId = new PomodoroId(correlationId.ToString());
+            var pomodoroId = new PomodoroId(correlationId);
 
             var pomodoro = new Pomodoro(pomodoroId, request.StartDateTime, request.Description);
 

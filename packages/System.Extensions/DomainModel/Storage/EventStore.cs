@@ -38,9 +38,9 @@ public class EventStore
         return events;
     }
 
-    public IEnumerable<Event> GetEventsForAggregate(IIdentity id, long skip, long take)
+    public IEnumerable<Event> GetEventsForAggregate(Guid id, long skip, long take)
     {
-        var name = IdentityToString(id);
+        var name = id.ToString();
 
         var records = _appendOnlyStore.ReadRecords(name, skip, take).ToList();
 
@@ -81,28 +81,28 @@ public class EventStore
         }
     }
 
-    public async Task AppendToStream(IIdentity id, long originalVersion, params Event[] events)
+    public async Task AppendToStream(Guid id, long originalVersion, params Event[] events)
     {
         if (!events.Any())
         {
             return;
         }
 
-        var name = IdentityToString(id);
+        var name = id.ToString();
 
-        var expectedVersion = originalVersion;
+        var version = originalVersion;
 
         foreach (var @event in events)
         {
-            expectedVersion++;
+            version++;
 
-            @event.Version = expectedVersion;
+            @event.Version = version;
 
             var data = SerializeEvent(@event);
 
             try
             {
-                var eventRecord = _appendOnlyStore.Append(name, @event.GetType().AssemblyQualifiedName, @event.Date, data, expectedVersion);
+                var eventRecord = _appendOnlyStore.Append(name, @event.GetType().AssemblyQualifiedName, @event.Date, data, originalVersion);
 
                 await _mediator.Publish(eventRecord);
             }
@@ -132,10 +132,5 @@ public class EventStore
 
             return stream.ToArray();
         }
-    }
-
-    public static string IdentityToString(IIdentity id)
-    {
-        return id.ToString();
     }
 }

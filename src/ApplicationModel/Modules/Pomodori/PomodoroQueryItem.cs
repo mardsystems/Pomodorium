@@ -2,7 +2,7 @@ namespace Pomodorium.Modules.Pomodori;
 
 public class PomodoroQueryItem
 {
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
     public DateTime StartDateTime { get; set; }
 

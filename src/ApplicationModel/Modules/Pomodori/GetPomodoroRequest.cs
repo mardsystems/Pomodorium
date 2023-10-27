@@ -2,5 +2,5 @@
 
 public class GetPomodoroRequest : Request<GetPomodoroResponse>
 {
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 }

@@ -19,15 +19,15 @@ services:
     volumes:
       - ./data/read_database:/data/db
       # - read_volume:/data/db
-    #ports:
-    #  - "27017:27017"
+    ports:
+     - "27019:27017"
 
   write_database:
     volumes:
       - ./data/write_database:/data/db
       # - write_volume:/data/db
-    #ports:
-    #  - "27017:27017"
+    ports:
+     - "27018:27017"
 
   # write_database:
   #   #volumes:
@@ -44,10 +44,13 @@ services:
   pomodorium.server:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:5174
+      - ASPNETCORE_URLS=http://+:7070;http://+:5174
       - ConnectionStrings__ReadDatabase=mongodb://read_database:27017
       - ConnectionStrings__WriteDatabase=mongodb://write_database:27017
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=12345
     ports:
+      - "7070"
       - "5174"
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro

@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: pomodorium-web
-        image: mardsystems/pomodorium:v1.0.0-alpha.2
+        image: mardsystems/pomodorium:v1.0.0-alpha.3
         ports:
         - containerPort: 5174
         resources:

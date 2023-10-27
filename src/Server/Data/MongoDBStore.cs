@@ -1,7 +1,5 @@
 ﻿using MongoDB.Driver;
-using Pomodorium.Modules.Pomodori;
 using System.DomainModel.Storage;
-using System.Xml.Linq;
 
 namespace Pomodorium.Data;
 
@@ -9,9 +7,17 @@ public class MongoDBStore : IAppendOnlyStore
 {
     private readonly MongoClient _mongoClient;
 
-    public MongoDBStore(MongoClient mongoClient)
+    private readonly IMongoCollection<EventRecord> _mongoCollection;
+
+    private readonly ILogger<MongoDBStore> _logger;
+
+    public MongoDBStore(MongoClient mongoClient, ILogger<MongoDBStore> logger)
     {
         _mongoClient = mongoClient;
+
+        _mongoCollection = _mongoClient.GetDatabase("Pomodorium").GetCollection<EventRecord>("EventStore");
+
+        _logger = logger;
     }
 
     public EventRecord Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
@@ -20,9 +26,7 @@ public class MongoDBStore : IAppendOnlyStore
 
         var @event = new EventRecord(name, typeName, version + 1, date, data);
 
-        var collection = _mongoClient.GetDatabase("Pomodorium").GetCollection<EventRecord>("EventStore");
-
-        collection.InsertOne(@event);
+        _mongoCollection.InsertOne(@event);
 
         return @event;
     }
@@ -33,15 +37,11 @@ public class MongoDBStore : IAppendOnlyStore
 
         var @event = new EventRecord(tapeRecord.Name, tapeRecord.TypeName, version + 1, tapeRecord.Date, tapeRecord.Data);
 
-        var collection = _mongoClient.GetDatabase("Pomodorium").GetCollection<EventRecord>("EventStore");
-
-        collection.InsertOne(@event);
+        _mongoCollection.InsertOne(@event);
     }
 
     private long GetMaxVersion(string name, long expectedVersion)
     {
-        var collection = _mongoClient.GetDatabase("Pomodorium").GetCollection<EventRecord>("EventStore");
-
         var builder = Builders<EventRecord>.Filter;
 
         var filter = builder.Eq(x => x.Name, name);
@@ -54,7 +54,16 @@ public class MongoDBStore : IAppendOnlyStore
             .Match(filter)
             .Group(x => x.Name, g => g.Max(x => x.Version));
 
-        var version = collection.Aggregate(pipeline).FirstOrDefault();
+        long version;
+
+        try
+        {
+            version = _mongoCollection.Aggregate(pipeline).Single();
+        }
+        catch (Exception)
+        {
+            version = -1;
+        }
 
         //var version = _events
         //    .Where(x => x.Name == name)
@@ -86,17 +95,24 @@ public class MongoDBStore : IAppendOnlyStore
             count = (int)maxCount;
         }
 
-        var collection = _mongoClient.GetDatabase("Pomodorium").GetCollection<EventRecord>("EventStore");
-
         var builder = Builders<EventRecord>.Filter;
 
-        var filter = builder.Eq(x => x.Name, name) & builder.Gt(x => x.Version, afterVersion);
+        var filter = builder.Eq(x => x.Name, name) & builder.Gte(x => x.Version, afterVersion);
 
         var sort = Builders<EventRecord>.Sort.Ascending(x => x.Version);
 
-        var events = collection.Find(filter).Sort(sort).ToList();
+        try
+        {
+            var events = _mongoCollection.Find(filter).Sort(sort).ToList();
 
-        return events;
+            return events;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(new EventId(), ex, "ReadRecords");
+
+            throw;
+        }
     }
 
     public IEnumerable<EventRecord> ReadRecords(long afterVersion, long maxCount)
@@ -112,15 +128,13 @@ public class MongoDBStore : IAppendOnlyStore
             count = (int)maxCount;
         }
 
-        var collection = _mongoClient.GetDatabase("Pomodorium").GetCollection<EventRecord>("EventStore");
-
         var builder = Builders<EventRecord>.Filter;
 
         var filter = builder.Gt(x => x.Version, afterVersion);
 
         var sort = Builders<EventRecord>.Sort.Ascending(x => x.Version);
 
-        var events = collection.Find(filter).Sort(sort).ToList();
+        var events = _mongoCollection.Find(filter).Sort(sort).ToList();
 
         return events;
     }

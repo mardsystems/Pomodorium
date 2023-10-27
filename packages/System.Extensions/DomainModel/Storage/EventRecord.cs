@@ -1,9 +1,14 @@
 ﻿using MediatR;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace System.DomainModel.Storage;
 
-public class EventRecord : IIdentity, INotification
+public class EventRecord : INotification
 {
+    [BsonId]
+    public ObjectId Id { get; }
+
     public string Name { get; }
 
     public string TypeName { get; }
@@ -16,6 +21,8 @@ public class EventRecord : IIdentity, INotification
 
     public EventRecord(string name, string typeName, long version, DateTime date, byte[] data)
     {
+        Id = ObjectId.GenerateNewId();
+
         Name = name;
 
         TypeName = typeName;
@@ -25,11 +32,6 @@ public class EventRecord : IIdentity, INotification
         Date = date;
 
         Data = data;
-    }
-
-    public override string ToString()
-    {
-        return Name;
     }
 
     private EventRecord()
