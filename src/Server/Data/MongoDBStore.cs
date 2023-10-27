@@ -20,27 +20,86 @@ public class MongoDBStore : IAppendOnlyStore
         _logger = logger;
     }
 
-    public EventRecord Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
+    public async Task<IEnumerable<EventRecord>> ReadRecords(long maxCount)
     {
-        var version = GetMaxVersion(name, expectedVersion);
+        int count;
 
-        var @event = new EventRecord(name, typeName, version + 1, date, data);
+        if (maxCount > int.MaxValue)
+        {
+            count = int.MaxValue;
+        }
+        else
+        {
+            count = (int)maxCount;
+        }
 
-        _mongoCollection.InsertOne(@event);
+        var builder = Builders<EventRecord>.Filter;
+
+        var filter = builder.Empty;
+
+        var sort = Builders<EventRecord>.Sort
+            .Ascending(x => x.Name)
+            .Ascending(x => x.Version);
+
+        var events = await _mongoCollection.Find(filter).Sort(sort).ToListAsync();
+
+        return events;
+    }
+
+    public async Task<IEnumerable<EventRecord>> ReadRecords(string name, long afterVersion, long maxCount)
+    {
+        int count;
+
+        if (maxCount > int.MaxValue)
+        {
+            count = int.MaxValue;
+        }
+        else
+        {
+            count = (int)maxCount;
+        }
+
+        var builder = Builders<EventRecord>.Filter;
+
+        var filter = builder.Eq(x => x.Name, name) & builder.Gte(x => x.Version, afterVersion);
+
+        var sort = Builders<EventRecord>.Sort.Ascending(x => x.Version);
+
+        try
+        {
+            var events = await _mongoCollection.Find(filter).Sort(sort).ToListAsync();
+
+            return events;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(new EventId(), ex, "ReadRecords");
+
+            throw;
+        }
+    }
+
+    public async Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
+    {
+        var version = await GetMaxVersion(name, expectedVersion);
+
+        var @event = new EventRecord(name, version + 1, date, typeName, data);
+
+        await _mongoCollection.InsertOneAsync(@event);
 
         return @event;
     }
 
-    public void Append(EventRecord tapeRecord)
+    public async Task Append(EventRecord tapeRecord)
     {
-        var version = GetMaxVersion(tapeRecord.Name, -1);
+        var version = await GetMaxVersion(tapeRecord.Name, -1);
 
-        var @event = new EventRecord(tapeRecord.Name, tapeRecord.TypeName, version + 1, tapeRecord.Date, tapeRecord.Data);
+        var @event = new EventRecord(tapeRecord.Name, version + 1, tapeRecord.Date, tapeRecord.TypeName, tapeRecord.Data);
 
-        _mongoCollection.InsertOne(@event);
+        await _mongoCollection.InsertOneAsync(@event);
     }
 
-    private long GetMaxVersion(string name, long expectedVersion)
+    private async Task<long> GetMaxVersion(string name, long expectedVersion)
     {
         var builder = Builders<EventRecord>.Filter;
 
@@ -58,7 +117,7 @@ public class MongoDBStore : IAppendOnlyStore
 
         try
         {
-            version = _mongoCollection.Aggregate(pipeline).Single();
+            version = await _mongoCollection.Aggregate(pipeline).SingleAsync();
         }
         catch (Exception)
         {
@@ -80,63 +139,6 @@ public class MongoDBStore : IAppendOnlyStore
         }
 
         return version;
-    }
-
-    public IEnumerable<EventRecord> ReadRecords(string name, long afterVersion, long maxCount)
-    {
-        int count;
-
-        if (maxCount > int.MaxValue)
-        {
-            count = int.MaxValue;
-        }
-        else
-        {
-            count = (int)maxCount;
-        }
-
-        var builder = Builders<EventRecord>.Filter;
-
-        var filter = builder.Eq(x => x.Name, name) & builder.Gte(x => x.Version, afterVersion);
-
-        var sort = Builders<EventRecord>.Sort.Ascending(x => x.Version);
-
-        try
-        {
-            var events = _mongoCollection.Find(filter).Sort(sort).ToList();
-
-            return events;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(new EventId(), ex, "ReadRecords");
-
-            throw;
-        }
-    }
-
-    public IEnumerable<EventRecord> ReadRecords(long afterVersion, long maxCount)
-    {
-        int count;
-
-        if (maxCount > int.MaxValue)
-        {
-            count = int.MaxValue;
-        }
-        else
-        {
-            count = (int)maxCount;
-        }
-
-        var builder = Builders<EventRecord>.Filter;
-
-        var filter = builder.Gt(x => x.Version, afterVersion);
-
-        var sort = Builders<EventRecord>.Sort.Ascending(x => x.Version);
-
-        var events = _mongoCollection.Find(filter).Sort(sort).ToList();
-
-        return events;
     }
 
     public void Close()

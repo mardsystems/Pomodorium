@@ -17,6 +17,10 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+builder.Services.AddScoped<IndexedDBAccessor>();
+
+builder.Services.AddScoped<IAppendOnlyStore, IndexedDBStore>();
+
 builder.Services.AddScoped(sp =>
 {
     var hubConnectionBuilder = new HubConnectionBuilder();
@@ -26,21 +30,25 @@ builder.Services.AddScoped(sp =>
     return connection;
 });
 
-//builder.Services.AddScoped<PomodoroQueryDbService>();
+builder.Services.AddScoped<EventHubClient>();
 
-//builder.Services.AddScoped<PomodoroRepository>();
+builder.Services.AddScoped<PomodoroRepository>();
 
 builder.Services.AddScoped<EventStore>();
 
-builder.Services.AddScoped<IAppendOnlyStore>(factory => new MemoryStore(@"Data Source=EventStore.db"));
-
-builder.Services.AddScoped<PomodoriumDbContext>();
-
-builder.Services.AddScoped<EventHubClient>();
-
 builder.Services.AddMediatR(config =>
 {
-    config.RegisterServicesFromAssembly(typeof(EventHubHandler).Assembly);
+    config.RegisterServicesFromAssemblies(typeof(EventHubHandler).Assembly, typeof(PomodoroApplication).Assembly);
 });
 
-await builder.Build().RunAsync();
+var host = builder.Build();
+
+using var scope = host.Services.CreateScope();
+await using var indexedDB = scope.ServiceProvider.GetService<IndexedDBAccessor>();
+
+if (indexedDB is not null)
+{
+    await indexedDB.InitializeAsync();
+}
+
+await host.RunAsync();

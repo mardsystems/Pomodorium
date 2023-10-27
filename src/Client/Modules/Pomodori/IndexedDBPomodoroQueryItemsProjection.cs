@@ -1,31 +1,25 @@
 ﻿using MediatR;
-using MongoDB.Driver;
+using Pomodorium.Data;
 using System.DomainModel;
 
 namespace Pomodorium.Modules.Pomodori;
 
-public class MongoDBPomodoroQueryItemsProjection :
+public class IndexedDBPomodoroQueryItemsProjection :
     IRequestHandler<GetPomodoriRequest, GetPomodoriResponse>,
     INotificationHandler<PomodoroCreated>,
     INotificationHandler<PomodoroDescriptionChanged>,
     INotificationHandler<PomodoroArchived>
 {
-    private readonly MongoClient _mongoClient;
+    private readonly IndexedDBAccessor _db;
 
-    private readonly IMongoCollection<PomodoroQueryItem> _mongoCollection;
-
-    public MongoDBPomodoroQueryItemsProjection(MongoClient mongoClient)
+    public IndexedDBPomodoroQueryItemsProjection(IndexedDBAccessor db)
     {
-        _mongoClient = mongoClient;
-
-        _mongoCollection = _mongoClient.GetDatabase("Pomodorium").GetCollection<PomodoroQueryItem>("PomodoroQueryItems");
+        _db = db;
     }
 
     public async Task<GetPomodoriResponse> Handle(GetPomodoriRequest request, CancellationToken cancellationToken)
     {
-        var filter = Builders<PomodoroQueryItem>.Filter.Empty;
-
-        var pomodoroQueryItems = await _mongoCollection.Find(filter).ToListAsync(cancellationToken);
+        var pomodoroQueryItems = await _db.GetAllAsync<PomodoroQueryItem>("PomodoroQueryItems");
 
         var response = new GetPomodoriResponse(request.GetCorrelationId()) { PomodoroQueryItems = pomodoroQueryItems };
 
@@ -41,14 +35,12 @@ public class MongoDBPomodoroQueryItemsProjection :
             Description = request.Description
         };
 
-        await _mongoCollection.InsertOneAsync(pomodoroQueryItem, null, cancellationToken);
+        await _db.PutAsync("PomodoroQueryItems", pomodoroQueryItem);
     }
 
     public async Task Handle(PomodoroDescriptionChanged notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<PomodoroQueryItem>.Filter.Eq(x => x.Id, notification.Id.Value);
-
-        var pomodoroQueryItem = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
+        var pomodoroQueryItem = await _db.GetAsync<PomodoroQueryItem>("PomodoroQueryItems", notification.Id.Value);
 
         if (pomodoroQueryItem == null)
         {
@@ -57,23 +49,18 @@ public class MongoDBPomodoroQueryItemsProjection :
 
         pomodoroQueryItem.Description = notification.Description;
 
-        var update = Builders<PomodoroQueryItem>.Update
-            .Set(x => x.Description, notification.Description);
-
-        await _mongoCollection.UpdateOneAsync(filter, update, null, cancellationToken);
+        await _db.PutAsync("PomodoroQueryItems", pomodoroQueryItem);
     }
 
     public async Task Handle(PomodoroArchived notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<PomodoroQueryItem>.Filter.Eq(x => x.Id, notification.Id.Value);
-
-        var pomodoroQueryItem = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
+        var pomodoroQueryItem = await _db.GetAsync<PomodoroDetails>("PomodoroQueryItems", notification.Id.Value);
 
         if (pomodoroQueryItem == null)
         {
             throw new EntityNotFoundException();
         }
 
-        await _mongoCollection.DeleteOneAsync(filter, cancellationToken);
+        await _db.RemoveAsync("PomodoroQueryItems", notification.Id.Value);
     }
 }

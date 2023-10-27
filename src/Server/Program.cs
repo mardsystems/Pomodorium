@@ -31,7 +31,7 @@ builder.Services.AddScoped<EventStore>();
 
 builder.Services.AddMediatR(config =>
 {
-    config.RegisterServicesFromAssembly(typeof(MongoDBPomodoroQueryItemsProjection).Assembly);
+    config.RegisterServicesFromAssemblies(typeof(MongoDBPomodoroQueryItemsProjection).Assembly, typeof(PomodoroApplication).Assembly);
 });
 
 var app = builder.Build();

@@ -21,7 +21,7 @@ public class PomodoroRepository
     {
         var pomodori = new ObservableCollection<Pomodoro>();
 
-        var events = _eventStore.LoadAllEvents();
+        var events = await _eventStore.LoadAllEvents();
 
         foreach (var @event in events)
         {
@@ -45,7 +45,7 @@ public class PomodoroRepository
 
     public async Task<Pomodoro> GetPomodoroById(PomodoroId id)
     {
-        var events = _eventStore.GetEventsForAggregate(id.Value, 0, long.MaxValue);
+        var events = await _eventStore.GetEventsForAggregate(id.Value, 0, long.MaxValue);
 
         var pomodoro = new Pomodoro(events);
 

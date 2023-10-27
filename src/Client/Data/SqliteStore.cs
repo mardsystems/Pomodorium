@@ -12,74 +12,53 @@ public class SqliteStore : IAppendOnlyStore
         _connectionString = connectionString;
     }
 
-    public EventRecord Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
+    public async Task<IEnumerable<EventRecord>> ReadRecords(long maxCount)
     {
+        var records = new List<EventRecord>();
+
         using (var connection = new SqliteConnection(_connectionString))
         {
             connection.Open();
 
-            using (var transaction = connection.BeginTransaction())
-            {
-                var version = GetMaxVersion(name, expectedVersion, connection, transaction);
-
-                const string sql = @"
-INSERT INTO EventStore (Name, Version, Date, Data)
-VALUES(@name, @version, @date, @data)
+            const string sql = @"
+SELECT Name, Version, Date, Data FROM EventStore
+ORDER BY Name, Version
+LIMIT 0, @take
 ";
 
-                using (var command = new SqliteCommand(sql, connection, transaction))
+            using (var command = new SqliteCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@take", maxCount);
+
+                using (var reader = await command.ExecuteReaderAsync())
                 {
-                    command.Parameters.AddWithValue("@name", name);
+                    while (reader.Read())
+                    {
+                        var name = reader["Name"].ToString();
 
-                    command.Parameters.AddWithValue("@version", version + 1);
+                        var typeName = reader["TypeName"].ToString();
 
-                    command.Parameters.AddWithValue("@date", date);
+                        var version = (long)reader["Version"];
 
-                    command.Parameters.AddWithValue("@data", data);
+                        var dateString = reader["Date"].ToString();
 
-                    command.ExecuteNonQuery();
+                        var date = Convert.ToDateTime(dateString);
+
+                        var data = (byte[])reader["Data"];
+
+                        records.Add(new EventRecord(name, version, date, typeName, data));
+                    }
                 }
-
-                transaction.Commit();
             }
         }
 
-        return null;
+        return records;
     }
 
-    public void Append(EventRecord tapeRecord)
+    public async Task<IEnumerable<EventRecord>> ReadRecords(string name, long afterVersion, long maxCount)
     {
-        throw new NotImplementedException();
-    }
+        var records = new List<EventRecord>();
 
-    private static long GetMaxVersion(string name, long expectedVersion, SqliteConnection connection, SqliteTransaction transaction)
-    {
-        const string sql = @"
-SELECT COALESCE(MAX(Version),0)
-FROM EventStore
-WHERE Name=@name
-";
-
-        using (var command = new SqliteCommand(sql, connection, transaction))
-        {
-            command.Parameters.AddWithValue("@name", name);
-
-            var version = (long)command.ExecuteScalar();
-
-            if (expectedVersion != -1)
-            {
-                if (version != expectedVersion)
-                {
-                    throw new AppendOnlyStoreConcurrencyException(version, expectedVersion, name);
-                }
-            }
-
-            return version;
-        }
-    }
-
-    public IEnumerable<EventRecord> ReadRecords(string name, long afterVersion, long maxCount)
-    {
         using (var connection = new SqliteConnection(_connectionString))
         {
             connection.Open();
@@ -99,7 +78,7 @@ LIMIT 0, @take
 
                 command.Parameters.AddWithValue("@take", maxCount);
 
-                using (var reader = command.ExecuteReader())
+                using (var reader = await command.ExecuteReaderAsync())
                 {
                     while (reader.Read())
                     {
@@ -111,52 +90,78 @@ LIMIT 0, @take
 
                         var data = (byte[])reader["Data"];
 
-                        yield return new EventRecord(name, typeName, version, date, data);
+                        records.Add(new EventRecord(name, version, date, typeName, data));
                     }
                 }
             }
         }
+
+        return records;
     }
 
-    public IEnumerable<EventRecord> ReadRecords(long afterVersion, long maxCount)
+    public async Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
     {
         using (var connection = new SqliteConnection(_connectionString))
         {
             connection.Open();
 
-            const string sql = @"
-SELECT Name, Version, Date, Data FROM EventStore
-WHERE Version > @version
-ORDER BY Version
-LIMIT 0, @take
+            using (var transaction = connection.BeginTransaction())
+            {
+                var version = await GetMaxVersion(name, expectedVersion, connection, transaction);
+
+                const string sql = @"
+INSERT INTO EventStore (Name, Version, Date, Data)
+VALUES(@name, @version, @date, @data)
 ";
 
-            using (var command = new SqliteCommand(sql, connection))
-            {
-                command.Parameters.AddWithValue("@version", afterVersion);
-
-                command.Parameters.AddWithValue("@take", maxCount);
-
-                using (var reader = command.ExecuteReader())
+                using (var command = new SqliteCommand(sql, connection, transaction))
                 {
-                    while (reader.Read())
-                    {
-                        var name = reader["Name"].ToString();
+                    command.Parameters.AddWithValue("@name", name);
 
-                        var typeName = reader["TypeName"].ToString();
+                    command.Parameters.AddWithValue("@version", version + 1);
 
-                        var version = (long)reader["Version"];
+                    command.Parameters.AddWithValue("@date", date);
 
-                        var dateString = reader["Date"].ToString();
+                    command.Parameters.AddWithValue("@data", data);
 
-                        var date = Convert.ToDateTime(dateString);
+                    await command.ExecuteNonQueryAsync();
+                }
 
-                        var data = (byte[])reader["Data"];
+                transaction.Commit();
+            }
+        }
 
-                        yield return new EventRecord(name, typeName, version, date, data);
-                    }
+        return null;
+    }
+
+    public Task Append(EventRecord tapeRecord)
+    {
+        throw new NotImplementedException();
+    }
+
+    private static async Task<long> GetMaxVersion(string name, long expectedVersion, SqliteConnection connection, SqliteTransaction transaction)
+    {
+        const string sql = @"
+SELECT COALESCE(MAX(Version),0)
+FROM EventStore
+WHERE Name=@name
+";
+
+        using (var command = new SqliteCommand(sql, connection, transaction))
+        {
+            command.Parameters.AddWithValue("@name", name);
+
+            var version = (long)(await command.ExecuteScalarAsync());
+
+            if (expectedVersion != -1)
+            {
+                if (version != expectedVersion)
+                {
+                    throw new AppendOnlyStoreConcurrencyException(version, expectedVersion, name);
                 }
             }
+
+            return version;
         }
     }
 

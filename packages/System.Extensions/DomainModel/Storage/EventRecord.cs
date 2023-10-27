@@ -7,29 +7,29 @@ namespace System.DomainModel.Storage;
 public class EventRecord : INotification
 {
     [BsonId]
-    public ObjectId Id { get; }
+    public Guid Id { get; }
 
     public string Name { get; }
-
-    public string TypeName { get; }
 
     public long Version { get; }
 
     public DateTime Date { get; }
 
+    public string TypeName { get; }
+
     public byte[] Data { get; }
 
-    public EventRecord(string name, string typeName, long version, DateTime date, byte[] data)
+    public EventRecord(string name, long version, DateTime date, string typeName, byte[] data)
     {
-        Id = ObjectId.GenerateNewId();
+        Id = Guid.NewGuid();
 
         Name = name;
-
-        TypeName = typeName;
 
         Version = version;
 
         Date = date;
+
+        TypeName = typeName;
 
         Data = data;
     }

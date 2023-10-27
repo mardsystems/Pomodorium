@@ -2,13 +2,13 @@
 
 public interface IAppendOnlyStore : IDisposable
 {
-    EventRecord Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1);
+    Task<IEnumerable<EventRecord>> ReadRecords(long maxCount);
 
-    void Append(EventRecord tapeRecord);
+    Task<IEnumerable<EventRecord>> ReadRecords(string name, long afterVersion, long maxCount);
 
-    IEnumerable<EventRecord> ReadRecords(string name, long afterVersion, long maxCount);
+    Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1);
 
-    IEnumerable<EventRecord> ReadRecords(long afterVersion, long maxCount);
+    Task Append(EventRecord tapeRecord);
 
     void Close();
 }

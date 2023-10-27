@@ -2,13 +2,13 @@
 
 namespace Pomodorium.Data;
 
-public class MemoryStore : IAppendOnlyStore
+public class IndexedDBStore : IAppendOnlyStore
 {
-    private readonly List<EventRecord> _events;
+    private readonly IndexedDBAccessor _db;
 
-    public MemoryStore()
+    public IndexedDBStore(IndexedDBAccessor db)
     {
-        _events = new List<EventRecord>();
+        _db = db;
     }
 
     public async Task<IEnumerable<EventRecord>> ReadRecords(long maxCount)
@@ -24,12 +24,14 @@ public class MemoryStore : IAppendOnlyStore
             count = (int)maxCount;
         }
 
-        var events = _events
+        var events = await _db.GetAllAsync<EventRecord>("EventStore");
+
+        var eventsSorted = events
             .OrderBy(x => x.Name)
                 .ThenBy(x => x.Version)
             .Take(count);
 
-        return await Task.FromResult(events);
+        return eventsSorted;
     }
 
     public async Task<IEnumerable<EventRecord>> ReadRecords(string name, long afterVersion, long maxCount)
@@ -45,13 +47,14 @@ public class MemoryStore : IAppendOnlyStore
             count = (int)maxCount;
         }
 
-        var events = _events
-            .Where(x => x.Name == name)
-            .Where(x => x.Version > afterVersion)
+        var events = await _db.GetEventsAsync(name);
+
+        var eventsSorted = events
+            .Where(x => x.Version >= afterVersion)
             .OrderBy(x => x.Version)
             .Take(count);
 
-        return await Task.FromResult(events);
+        return eventsSorted;
     }
 
     public async Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
@@ -60,7 +63,7 @@ public class MemoryStore : IAppendOnlyStore
 
         var @event = new EventRecord(name, version + 1, date, typeName, data);
 
-        _events.Add(@event);
+        await _db.PutAsync("EventStore", @event);
 
         return @event;
     }
@@ -71,15 +74,16 @@ public class MemoryStore : IAppendOnlyStore
 
         var @event = new EventRecord(tapeRecord.Name, version + 1, tapeRecord.Date, tapeRecord.TypeName, tapeRecord.Data);
 
-        _events.Add(@event);
+        await _db.PutAsync("EventStore", @event);
     }
 
     private async Task<long> GetMaxVersion(string name, long expectedVersion)
     {
-        var version = _events
-            .Where(x => x.Name == name)
+        var events = await _db.GetEventsAsync(name);
+
+        var version = events
             .Select(x => x.Version)
-            .DefaultIfEmpty()
+            .DefaultIfEmpty(-1)
             .Max();
 
         if (expectedVersion != -1)
@@ -90,7 +94,7 @@ public class MemoryStore : IAppendOnlyStore
             }
         }
 
-        return await Task.FromResult(version);
+        return version;
     }
 
     public void Close()
