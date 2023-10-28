@@ -2,7 +2,7 @@ using System.DomainModel;
 using System.DomainModel.Storage;
 using System.Runtime.Serialization;
 
-namespace Pomodorium.Modules.Pomodori;
+namespace Pomodorium.Modules.Timers;
 
 public class Pomodoro : AggregateRoot
 {

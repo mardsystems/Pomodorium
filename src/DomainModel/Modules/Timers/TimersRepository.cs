@@ -3,15 +3,15 @@ using System.Collections.ObjectModel;
 using System.DomainModel;
 using System.DomainModel.Storage;
 
-namespace Pomodorium.Modules.Pomodori;
+namespace Pomodorium.Modules.Timers;
 
-public class PomodoroRepository
+public class TimersRepository
 {
     private readonly EventStore _eventStore;
 
     private readonly IMediator _mediator;
 
-    public PomodoroRepository(EventStore eventStore, IMediator mediator)
+    public TimersRepository(EventStore eventStore, IMediator mediator)
     {
         _eventStore = eventStore;
         _mediator = mediator;

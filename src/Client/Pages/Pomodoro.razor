@@ -1,6 +1,6 @@
-﻿@page "/pomodori/{Id}"
+﻿@page "/timers/{Id}"
 @using MediatR;
-@using Pomodorium.Modules.Pomodori;
+@using Pomodorium.Modules.Timers;
 @using Pomodorium.Shared
 @using System.DomainModel;
 @using System.DomainModel.Storage;
@@ -105,7 +105,7 @@ else
             var response = await Mediator.Send<PutPomodoroResponse>(request);
         }
 
-        Navigation.NavigateTo("pomodori");
+        Navigation.NavigateTo("timers");
     }
 
     private async Task Delete()
@@ -123,6 +123,6 @@ else
 
         var response = await Mediator.Send<DeletePomodoroResponse>(request);
 
-        Navigation.NavigateTo("pomodori");
+        Navigation.NavigateTo("timers");
     }
 }

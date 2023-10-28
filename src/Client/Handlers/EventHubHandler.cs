@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR.Client;
 using Pomodorium.Hubs;
-using Pomodorium.Modules.Pomodori;
+using Pomodorium.Modules.Timers;
 using System.DomainModel;
 using System.DomainModel.Storage;
 

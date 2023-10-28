@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System.DomainModel;
 
-namespace Pomodorium.Modules.Pomodori;
+namespace Pomodorium.Modules.Timers;
 
 public class IndexDBPomodoroDetailsProjection :
     IRequestHandler<GetPomodoroRequest, GetPomodoroResponse>,

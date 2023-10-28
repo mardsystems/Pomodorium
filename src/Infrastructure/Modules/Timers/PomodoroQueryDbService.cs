@@ -1,7 +1,7 @@
 ﻿using Pomodorium.Data;
 using System.Collections.ObjectModel;
 
-namespace Pomodorium.Modules.Pomodori;
+namespace Pomodorium.Modules.Timers;
 
 public class PomodoroQueryDbService
 {

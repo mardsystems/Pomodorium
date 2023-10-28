@@ -5,12 +5,12 @@ using Pomodorium;
 using Pomodorium.Data;
 using Pomodorium.Handlers;
 using Pomodorium.Hubs;
-using Pomodorium.Modules.Pomodori;
+using Pomodorium.Modules.Timers;
 using System.DomainModel.Storage;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-var APP_REMOTE = false;
+var APP_REMOTE = true;
 
 builder.Services.AddLocalization();
 
@@ -23,7 +23,7 @@ if (APP_REMOTE)
 
     builder.Services.AddMediatR(config =>
     {
-        config.RegisterServicesFromAssembly(typeof(HttpClientPomodoroFacade).Assembly);
+        config.RegisterServicesFromAssembly(typeof(HttpClientTimersFacade).Assembly);
     });
 }
 else
@@ -43,7 +43,7 @@ else
 
     builder.Services.AddScoped<EventHubClient>();
 
-    builder.Services.AddScoped<PomodoroRepository>();
+    builder.Services.AddScoped<TimersRepository>();
 
     builder.Services.AddScoped<EventStore>();
 

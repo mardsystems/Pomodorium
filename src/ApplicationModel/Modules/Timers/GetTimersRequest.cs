@@ -1,6 +1,6 @@
 ﻿namespace Pomodorium;
 
-public class GetPomodoriRequest : Request<GetPomodoriResponse>
+public class GetTimersRequest : Request<GetTimersResponse>
 {
     public int PageSize { get; set; }
     public int PageIndex { get; set; }

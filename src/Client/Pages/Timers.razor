@@ -1,6 +1,6 @@
-﻿@page "/pomodori"
+﻿@page "/timers"
 @using MediatR;
-@using Pomodorium.Modules.Pomodori;
+@using Pomodorium.Modules.Timers;
 @using Pomodorium.Shared
 @using System.DomainModel;
 @using System.DomainModel.Storage;
@@ -11,13 +11,13 @@
 @inject IMediator Mediator
 @inject IStringLocalizer<SharedResource> SharedResource;
 
-<PageTitle>Pomodori</PageTitle>
+<PageTitle>Timers</PageTitle>
 
-<h1>Pomodori</h1>
+<h1>Timers</h1>
 
 <p role="status">Total: @_pomodori?.Count</p>
 
-<a class="btn btn-primary" href="pomodori/new">@SharedResource["Add New"]</a>
+<a class="btn btn-primary" href="timers/new">@SharedResource["Add New"]</a>
 
 <button class="btn btn-primary" @onclick="Add">@SharedResource["Add"]</button>
 
@@ -40,7 +40,7 @@ else
             {
                 <tr>
                     <td>
-                        <a class="btn btn-primary" href=@($"pomodori/{pomodoro.Id}")>@SharedResource["Details"]</a>
+                        <a class="btn btn-primary" href=@($"timers/{pomodoro.Id}")>@SharedResource["Details"]</a>
                     </td>
                     <td>@pomodoro.StartDateTime</td>
                     <td>@pomodoro.Description</td>
@@ -69,9 +69,9 @@ else
 
     private async Task Refresh()
     {
-        var request = new GetPomodoriRequest { };
+        var request = new GetTimersRequest { };
 
-        var response = await Mediator.Send<GetPomodoriResponse>(request);
+        var response = await Mediator.Send<GetTimersResponse>(request);
 
         _pomodori.Clear();
 

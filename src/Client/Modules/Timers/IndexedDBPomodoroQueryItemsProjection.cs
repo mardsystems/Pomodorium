@@ -2,10 +2,10 @@
 using Pomodorium.Data;
 using System.DomainModel;
 
-namespace Pomodorium.Modules.Pomodori;
+namespace Pomodorium.Modules.Timers;
 
 public class IndexedDBPomodoroQueryItemsProjection :
-    IRequestHandler<GetPomodoriRequest, GetPomodoriResponse>,
+    IRequestHandler<GetTimersRequest, GetTimersResponse>,
     INotificationHandler<PomodoroCreated>,
     INotificationHandler<PomodoroDescriptionChanged>,
     INotificationHandler<PomodoroArchived>
@@ -17,11 +17,11 @@ public class IndexedDBPomodoroQueryItemsProjection :
         _db = db;
     }
 
-    public async Task<GetPomodoriResponse> Handle(GetPomodoriRequest request, CancellationToken cancellationToken)
+    public async Task<GetTimersResponse> Handle(GetTimersRequest request, CancellationToken cancellationToken)
     {
         var pomodoroQueryItems = await _db.GetAllAsync<PomodoroQueryItem>("PomodoroQueryItems");
 
-        var response = new GetPomodoriResponse(request.GetCorrelationId()) { PomodoroQueryItems = pomodoroQueryItems };
+        var response = new GetTimersResponse(request.GetCorrelationId()) { PomodoroQueryItems = pomodoroQueryItems };
 
         return response;
     }

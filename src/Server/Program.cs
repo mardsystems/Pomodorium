@@ -1,7 +1,7 @@
 using MongoDB.Driver;
 using Pomodorium.Data;
 using Pomodorium.Hubs;
-using Pomodorium.Modules.Pomodori;
+using Pomodorium.Modules.Timers;
 using System.DomainModel.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +25,7 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddSignalR();
 
-builder.Services.AddScoped<PomodoroRepository>();
+builder.Services.AddScoped<TimersRepository>();
 
 builder.Services.AddScoped<EventStore>();
 

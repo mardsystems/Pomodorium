@@ -1,4 +1,4 @@
-namespace Pomodorium.Modules.Pomodori;
+namespace Pomodorium.Modules.Timers;
 
 public class PomodoroQueryItem
 {

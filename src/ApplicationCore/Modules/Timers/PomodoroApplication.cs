@@ -1,16 +1,16 @@
 ﻿using MediatR;
 using System.DomainModel;
 
-namespace Pomodorium.Modules.Pomodori
+namespace Pomodorium.Modules.Timers
 {
     public class PomodoroApplication :
         IRequestHandler<PostPomodoroRequest, PostPomodoroResponse>,
         IRequestHandler<PutPomodoroRequest, PutPomodoroResponse>,
         IRequestHandler<DeletePomodoroRequest, DeletePomodoroResponse>
     {
-        private readonly PomodoroRepository _pomodoroRepository;
+        private readonly TimersRepository _pomodoroRepository;
 
-        public PomodoroApplication(PomodoroRepository pomodoroRepository)
+        public PomodoroApplication(TimersRepository pomodoroRepository)
         {
             _pomodoroRepository = pomodoroRepository;
         }

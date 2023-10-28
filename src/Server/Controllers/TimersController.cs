@@ -5,26 +5,26 @@ namespace Pomodorium.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PomodoriController : ControllerBase
+public class TimersController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    private readonly ILogger<PomodoriController> _logger;
+    private readonly ILogger<TimersController> _logger;
 
-    public PomodoriController(
+    public TimersController(
         IMediator mediator,
-        ILogger<PomodoriController> logger)
+        ILogger<TimersController> logger)
     {
         _mediator = mediator;
 
         _logger = logger;
     }
 
-    [HttpGet("", Name = "GetPomodori")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetPomodoriResponse))]
-    public async Task<GetPomodoriResponse> GetPomodori([FromQuery] GetPomodoriRequest request)
+    [HttpGet("", Name = "GetTimers")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetTimersResponse))]
+    public async Task<GetTimersResponse> GetTimers([FromQuery] GetTimersRequest request)
     {
-        var response = await _mediator.Send<GetPomodoriResponse>(request);
+        var response = await _mediator.Send<GetTimersResponse>(request);
 
         return response;
     }
