@@ -5,25 +5,25 @@ using System.DomainModel.Storage;
 
 namespace Pomodorium.Hubs;
 
-public class EventHubClient
+public class EventRecordHubClient
 {
     private readonly HubConnection _connection;
 
-    private readonly EventStore _eventStore;
+    private readonly IAppendOnlyStore _appendOnlyStore;
 
     private readonly IMediator _mediator;
 
     public event Action<Event> NewEvent;
 
-    public EventHubClient(HubConnection connection, IMediator mediator, EventStore eventStore)
+    public EventRecordHubClient(HubConnection connection, IAppendOnlyStore appendOnlyStore, IMediator mediator)
     {
         _connection = connection;
 
         connection.On<EventRecord>("Append", Append);
 
-        _mediator = mediator;
+        _appendOnlyStore = appendOnlyStore;
 
-        _eventStore = eventStore;
+        _mediator = mediator;
     }
 
     private async Task Append(EventRecord tapeRecord)
@@ -36,7 +36,7 @@ public class EventHubClient
 
         try
         {
-            await _eventStore.AppendToStream(id, -1, @event); //
+            await _appendOnlyStore.Append(tapeRecord);
         }
         catch (EventStoreConcurrencyException ex)
         {
@@ -52,7 +52,7 @@ public class EventHubClient
                 }
             }
 
-            await _eventStore.AppendToStream(id, ex.StoreVersion, @event);
+            await _appendOnlyStore.Append(tapeRecord);
         }
 
         //@event.IsHandled = true;

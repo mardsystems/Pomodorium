@@ -1,3 +1,4 @@
+using MediatR;
 using MongoDB.Driver;
 using Pomodorium.Data;
 using Pomodorium.Hubs;
@@ -24,6 +25,15 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 builder.Services.AddSignalR();
+
+builder.Services.AddSingleton((factory) =>
+{
+    using var scope = factory.CreateScope();
+
+    return new EventRecordHub(
+        scope.ServiceProvider.GetRequiredService<IAppendOnlyStore>(),
+        scope.ServiceProvider.GetRequiredService<IMediator>()) ;
+});
 
 builder.Services.AddScoped<TimersRepository>();
 
@@ -59,7 +69,7 @@ app.UseRouting();
 app.MapRazorPages();
 app.MapControllers();
 
-app.MapHub<EventHub>("/events");
+app.MapHub<EventRecordHub>("/events");
 
 app.MapFallbackToFile("index.html");
 

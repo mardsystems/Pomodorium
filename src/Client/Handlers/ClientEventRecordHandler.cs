@@ -7,14 +7,14 @@ using System.DomainModel.Storage;
 
 namespace Pomodorium.Handlers;
 
-public class EventHubHandler :
+public class ClientEventRecordHandler :
     INotificationHandler<EventRecord>
 {
-    private readonly EventHubClient _eventHubClient;
+    private readonly EventRecordHubClient _eventRecordHubClient;
 
-    public EventHubHandler(EventHubClient eventHubClient)
+    public ClientEventRecordHandler(EventRecordHubClient eventRecordHubClient)
     {
-        _eventHubClient = eventHubClient;
+        _eventRecordHubClient = eventRecordHubClient;
     }
 
     //public async Task Handle(PomodoroCreated notification, CancellationToken cancellationToken)
@@ -40,9 +40,9 @@ public class EventHubHandler :
 
     public async Task Handle(EventRecord notification, CancellationToken cancellationToken)
     {
-        if (_eventHubClient.Connection.State == HubConnectionState.Disconnected)
+        if (_eventRecordHubClient.Connection.State == HubConnectionState.Disconnected)
         {
-            await _eventHubClient.Connection.StartAsync();
+            await _eventRecordHubClient.Connection.StartAsync();
         }
 
         //if (notification.IsHandled)
@@ -58,6 +58,6 @@ public class EventHubHandler :
 
         //var data = EventStoreRepository.SerializeEvent(notification);
 
-        await _eventHubClient.Connection.SendAsync("Append", notification);
+        await _eventRecordHubClient.Connection.SendAsync("AppendToOthers", notification);
     }
 }
