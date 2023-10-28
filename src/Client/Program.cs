@@ -10,45 +10,61 @@ using System.DomainModel.Storage;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
+var APP_REMOTE = false;
+
 builder.Services.AddLocalization();
 
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-
-builder.Services.AddScoped<IndexedDBAccessor>();
-
-builder.Services.AddScoped<IAppendOnlyStore, IndexedDBStore>();
-
-builder.Services.AddScoped(sp =>
+if (APP_REMOTE)
 {
-    var hubConnectionBuilder = new HubConnectionBuilder();
+    builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-    var connection = hubConnectionBuilder.WithUrl(new Uri($"{builder.HostEnvironment.BaseAddress}events")).Build();
-
-    return connection;
-});
-
-builder.Services.AddScoped<EventHubClient>();
-
-builder.Services.AddScoped<PomodoroRepository>();
-
-builder.Services.AddScoped<EventStore>();
-
-builder.Services.AddMediatR(config =>
+    builder.Services.AddMediatR(config =>
+    {
+        config.RegisterServicesFromAssembly(typeof(HttpClientPomodoroFacade).Assembly);
+    });
+}
+else
 {
-    config.RegisterServicesFromAssemblies(typeof(EventHubHandler).Assembly, typeof(PomodoroApplication).Assembly);
-});
+    builder.Services.AddScoped(sp =>
+    {
+        var hubConnectionBuilder = new HubConnectionBuilder();
+
+        var connection = hubConnectionBuilder.WithUrl(new Uri($"{builder.HostEnvironment.BaseAddress}events")).Build();
+
+        return connection;
+    });
+
+    builder.Services.AddScoped<IndexedDBAccessor>();
+
+    builder.Services.AddScoped<IAppendOnlyStore, IndexedDBStore>();
+
+    builder.Services.AddScoped<EventHubClient>();
+
+    builder.Services.AddScoped<PomodoroRepository>();
+
+    builder.Services.AddScoped<EventStore>();
+
+    builder.Services.AddMediatR(config =>
+    {
+        config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(PomodoroApplication).Assembly);
+    });
+}
 
 var host = builder.Build();
 
-using var scope = host.Services.CreateScope();
-await using var indexedDB = scope.ServiceProvider.GetService<IndexedDBAccessor>();
-
-if (indexedDB is not null)
+if (!APP_REMOTE)
 {
-    await indexedDB.InitializeAsync();
+    await using var scope = host.Services.CreateAsyncScope();
+
+    await using var indexedDB = scope.ServiceProvider.GetService<IndexedDBAccessor>();
+
+    if (indexedDB is not null)
+    {
+        await indexedDB.InitializeAsync();
+    }
 }
 
 await host.RunAsync();
