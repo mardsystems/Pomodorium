@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
+    <ProjectReference Include="..\ApplicationCore\Pomodorium.ApplicationCore.csproj" />
     <ProjectReference Include="..\ApplicationModel\Pomodorium.ApplicationModel.csproj" />
     <ProjectReference Include="..\Infrastructure\Pomodorium.Infrastructure.csproj" />
     <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
