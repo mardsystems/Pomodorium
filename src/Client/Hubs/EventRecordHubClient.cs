@@ -58,6 +58,8 @@ public class EventRecordHubClient
         //@event.IsHandled = true;
 
         await _mediator.Publish(@event);
+
+        NewEvent(@event);
     }
 
     private bool ConflictsWith(Event event1, Event event2)

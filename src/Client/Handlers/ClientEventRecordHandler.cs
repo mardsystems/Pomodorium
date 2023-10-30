@@ -40,10 +40,10 @@ public class ClientEventRecordHandler :
 
     public async Task Handle(EventRecord notification, CancellationToken cancellationToken)
     {
-        if (_eventRecordHubClient.Connection.State == HubConnectionState.Disconnected)
-        {
-            await _eventRecordHubClient.Connection.StartAsync();
-        }
+        //if (_eventRecordHubClient.Connection.State == HubConnectionState.Disconnected)
+        //{
+        //    await _eventRecordHubClient.Connection.StartAsync();
+        //}
 
         //if (notification.IsHandled)
         //{
