@@ -1,4 +1,3 @@
-using MediatR;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -6,6 +5,7 @@ using Pomodorium;
 using Pomodorium.Data;
 using Pomodorium.Hubs;
 using Pomodorium.Modules.Timers;
+using System.DomainModel;
 using System.DomainModel.Storage;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -19,6 +19,12 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+var hubConnectionBuilder = new HubConnectionBuilder();
+
+var hubConnection = hubConnectionBuilder.WithUrl(new Uri($"{builder.HostEnvironment.BaseAddress}events")).Build();
+
+builder.Services.AddScoped(sp => hubConnection);
+
 if (APP_REMOTE)
 {
     builder.Services.AddMediatR(config =>
@@ -28,22 +34,13 @@ if (APP_REMOTE)
 }
 else
 {
-    builder.Services.AddScoped(sp =>
-    {
-        var hubConnectionBuilder = new HubConnectionBuilder();
-
-        var connection = hubConnectionBuilder.WithUrl(new Uri($"{builder.HostEnvironment.BaseAddress}events")).Build();
-
-        return connection;
-    });
-
-    builder.Services.AddScoped<EventRecordHubClient>();
+    builder.Services.AddScoped<EventHubClient>();
 
     builder.Services.AddScoped<IndexedDBAccessor>();
 
     builder.Services.AddScoped<IAppendOnlyStore, IndexedDBStore>();
 
-    builder.Services.AddScoped<TimersRepository>();
+    builder.Services.AddScoped<Repository>();
 
     builder.Services.AddScoped<EventStore>();
 
@@ -65,6 +62,8 @@ if (!APP_REMOTE)
     {
         await indexedDB.InitializeAsync();
     }
+
+    await hubConnection.StartAsync();
 }
 
 await host.RunAsync();

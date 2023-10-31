@@ -22,7 +22,7 @@ public class IndexDBPomodoroQueryItemsProjection :
     {
         var pomodoroQueryItem = new PomodoroQueryItem
         {
-            Id = request.Id.Value,
+            Id = request.Id,
             StartDateTime = request.StartDateTime,
             Description = request.Description
         };

@@ -27,7 +27,7 @@ public class IndexDBPomodoroDetailsProjection :
     {
         var pomodoroDetails = new PomodoroDetails
         {
-            Id = request.Id.Value,
+            Id = request.Id,
             StartDateTime = request.StartDateTime,
             Description = request.Description,
             Version = request.Version

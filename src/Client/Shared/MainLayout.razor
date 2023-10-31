@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.SignalR.Client;
+@inject HubConnection HubConnection
 
 <div class="page">
     <div class="sidebar">
@@ -7,6 +9,22 @@
 
     <main>
         <div class="top-row px-4">
+            <button class="btn btn-outline-secondary" @onclick="ToogleConnection">
+                @if (@HubConnection.State == HubConnectionState.Disconnected)
+                {
+                    <img class="rounded-circle text-secondary bg-secondary" width="16" height="16" />
+                }
+                else if (@HubConnection.State == HubConnectionState.Connected)
+                {
+                    <img class="rounded-circle bg-success" width="16" height="16" />
+                }
+                else
+                {
+                    <span class="spinner-grow text-success" role="status" style="width: 16px; height: 16px">
+                        <span class="visually-hidden">Loading...</span>
+                    </span>
+                }
+            </button>
             <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
         </div>
 
@@ -15,3 +33,17 @@
         </article>
     </main>
 </div>
+
+@code {
+    private async Task ToogleConnection()
+    {
+        if (HubConnection.State == HubConnectionState.Disconnected)
+        {
+            await HubConnection.StartAsync();
+        }
+        else if (HubConnection.State == HubConnectionState.Connected)
+        {
+            await HubConnection.StopAsync();
+        }
+    }
+}

@@ -23,7 +23,6 @@
     <ProjectReference Include="..\ApplicationCore\Pomodorium.ApplicationCore.csproj" />
     <ProjectReference Include="..\ApplicationModel\Pomodorium.ApplicationModel.csproj" />
     <ProjectReference Include="..\Client\Pomodorium.Client.csproj" />
-    <ProjectReference Include="..\DomainModel\Pomodorium.DomainModel.csproj" />
     <ProjectReference Include="..\Infrastructure\Pomodorium.Infrastructure.csproj" />
     <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
   </ItemGroup>

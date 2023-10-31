@@ -5,9 +5,9 @@ using System.DomainModel.Storage;
 
 namespace Pomodorium.Hubs;
 
-public class EventRecordHubClient
+public class EventHubClient
 {
-    private readonly HubConnection _connection;
+    private readonly HubConnection _server;
 
     private readonly IAppendOnlyStore _appendOnlyStore;
 
@@ -15,28 +15,30 @@ public class EventRecordHubClient
 
     public event Action<Event> NewEvent;
 
-    public EventRecordHubClient(HubConnection connection, IAppendOnlyStore appendOnlyStore, IMediator mediator)
+    public EventHubClient(HubConnection connection, IAppendOnlyStore appendOnlyStore, IMediator mediator)
     {
-        _connection = connection;
+        _server = connection;
 
-        connection.On<EventRecord>("Append", Append);
+        _server.On<EventAppended>("Notify", OnNotifyFromServer);
 
         _appendOnlyStore = appendOnlyStore;
 
         _mediator = mediator;
     }
 
-    private async Task Append(EventRecord tapeRecord)
+    private async Task OnNotifyFromServer(EventAppended notification)
     {
-        var id = Guid.Parse(tapeRecord.Name);
+        var eventRecord = notification.Record;
 
-        var type = Type.GetType(tapeRecord.TypeName);
+        var id = Guid.Parse(eventRecord.Name);
 
-        var @event = EventStore.DesserializeEvent(type, tapeRecord.Data);
+        var type = Type.GetType(eventRecord.TypeName);
+
+        var @event = EventStore.DesserializeEvent(type, eventRecord.Data);
 
         try
         {
-            await _appendOnlyStore.Append(tapeRecord);
+            await _appendOnlyStore.Append(eventRecord);
         }
         catch (EventStoreConcurrencyException ex)
         {
@@ -52,20 +54,23 @@ public class EventRecordHubClient
                 }
             }
 
-            await _appendOnlyStore.Append(tapeRecord);
+            await _appendOnlyStore.Append(eventRecord);
         }
 
-        //@event.IsHandled = true;
+        @event.IsRemote = true;
 
         await _mediator.Publish(@event);
 
         NewEvent(@event);
     }
 
+    public async Task NotifyOthers(EventAppended notification)
+    {
+        await _server.SendAsync("NotifyOthers", notification);
+    }
+
     private bool ConflictsWith(Event event1, Event event2)
     {
         return event1.GetType() == event2.GetType();
     }
-
-    public HubConnection Connection { get => _connection; }
 }

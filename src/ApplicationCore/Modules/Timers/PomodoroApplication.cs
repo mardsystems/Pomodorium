@@ -8,22 +8,22 @@ namespace Pomodorium.Modules.Timers
         IRequestHandler<PutPomodoroRequest, PutPomodoroResponse>,
         IRequestHandler<DeletePomodoroRequest, DeletePomodoroResponse>
     {
-        private readonly TimersRepository _pomodoroRepository;
+        private readonly Repository _repository;
 
-        public PomodoroApplication(TimersRepository pomodoroRepository)
+        public PomodoroApplication(Repository pomodoroRepository)
         {
-            _pomodoroRepository = pomodoroRepository;
+            _repository = pomodoroRepository;
         }
 
         public async Task<PostPomodoroResponse> Handle(PostPomodoroRequest request, CancellationToken cancellationToken)
         {
             var correlationId = request.GetCorrelationId();
 
-            var pomodoroId = new PomodoroId(correlationId);
+            var pomodoroId = correlationId;
 
             var pomodoro = new Pomodoro(pomodoroId, request.StartDateTime, request.Description);
 
-            await _pomodoroRepository.Save(pomodoro, -1);
+            await _repository.Save(pomodoro, -1);
 
             var response = new PostPomodoroResponse(request.GetCorrelationId()) { };
 
@@ -32,9 +32,7 @@ namespace Pomodorium.Modules.Timers
 
         public async Task<PutPomodoroResponse> Handle(PutPomodoroRequest request, CancellationToken cancellationToken)
         {
-            var pomodoroId = new PomodoroId(request.Id);
-
-            var pomodoro = await _pomodoroRepository.GetPomodoroById(pomodoroId);
+            var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id);
 
             if (pomodoro == null)
             {
@@ -43,7 +41,7 @@ namespace Pomodorium.Modules.Timers
 
             pomodoro.ChangeDescription(request.Description);
 
-            await _pomodoroRepository.Save(pomodoro, request.Version);
+            await _repository.Save(pomodoro, request.Version);
 
             var response = new PutPomodoroResponse(request.GetCorrelationId()) { };
 
@@ -52,9 +50,7 @@ namespace Pomodorium.Modules.Timers
 
         public async Task<DeletePomodoroResponse> Handle(DeletePomodoroRequest request, CancellationToken cancellationToken)
         {
-            var pomodoroId = new PomodoroId(request.Id);
-
-            var pomodoro = await _pomodoroRepository.GetPomodoroById(pomodoroId);
+            var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id);
 
             if (pomodoro == null)
             {
@@ -63,7 +59,7 @@ namespace Pomodorium.Modules.Timers
 
             pomodoro.Archive();
 
-            await _pomodoroRepository.Save(pomodoro, request.Version);
+            await _repository.Save(pomodoro, request.Version);
 
             var response = new DeletePomodoroResponse(request.GetCorrelationId()) { };
 

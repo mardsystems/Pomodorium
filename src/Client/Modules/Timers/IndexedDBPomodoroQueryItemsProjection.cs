@@ -30,7 +30,7 @@ public class IndexedDBPomodoroQueryItemsProjection :
     {
         var pomodoroQueryItem = new PomodoroQueryItem
         {
-            Id = request.Id.Value,
+            Id = request.Id,
             StartDateTime = request.StartDateTime,
             Description = request.Description
         };
@@ -40,7 +40,7 @@ public class IndexedDBPomodoroQueryItemsProjection :
 
     public async Task Handle(PomodoroDescriptionChanged notification, CancellationToken cancellationToken)
     {
-        var pomodoroQueryItem = await _db.GetAsync<PomodoroQueryItem>("PomodoroQueryItems", notification.Id.Value);
+        var pomodoroQueryItem = await _db.GetAsync<PomodoroQueryItem>("PomodoroQueryItems", notification.Id);
 
         if (pomodoroQueryItem == null)
         {
@@ -54,13 +54,13 @@ public class IndexedDBPomodoroQueryItemsProjection :
 
     public async Task Handle(PomodoroArchived notification, CancellationToken cancellationToken)
     {
-        var pomodoroQueryItem = await _db.GetAsync<PomodoroDetails>("PomodoroQueryItems", notification.Id.Value);
+        var pomodoroQueryItem = await _db.GetAsync<PomodoroDetails>("PomodoroQueryItems", notification.Id);
 
         if (pomodoroQueryItem == null)
         {
             throw new EntityNotFoundException();
         }
 
-        await _db.RemoveAsync("PomodoroQueryItems", notification.Id.Value);
+        await _db.RemoveAsync("PomodoroQueryItems", notification.Id);
     }
 }

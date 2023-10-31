@@ -1,10 +1,8 @@
-﻿using MediatR;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 
 namespace System.DomainModel.Storage;
 
-public class EventRecord : INotification
+public class EventRecord
 {
     [BsonId]
     public Guid Id { get; }

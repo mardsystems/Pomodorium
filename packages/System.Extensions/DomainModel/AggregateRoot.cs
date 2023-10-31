@@ -24,6 +24,14 @@ public abstract class AggregateRoot : Entity
         Changes = new HashSet<Event>();
     }
 
+    public void LoadsFromHistory(IEnumerable<Event> history)
+    {
+        foreach (var e in history)
+        {
+            Mutate(e);
+        }
+    }
+
     public void Replay(IEnumerable<Event> events)
     {
         foreach (var @event in events)

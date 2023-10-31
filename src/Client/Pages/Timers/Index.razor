@@ -1,7 +1,5 @@
 ﻿@page "/timers"
 @using MediatR;
-@using Microsoft.AspNetCore.SignalR.Client;
-@using Pomodorium.Hubs;
 @using Pomodorium.Modules.Timers;
 @using Pomodorium.Shared
 @using System.DomainModel;
@@ -12,7 +10,6 @@
 @using System.Reactive.Threading.Tasks;
 @using System.Reactive.Subjects;
 @inject IMediator Mediator
-@inject EventRecordHubClient EventRecordHubClient
 @inject IStringLocalizer<SharedResource> SharedResource
 
 <PageTitle>Timers</PageTitle>
@@ -36,24 +33,6 @@
         </button>
         <button class="btn btn-primary" @onclick="Refresh">
             <span class="oi oi-reload" aria-hidden="true"></span>
-        </button>
-    </div>
-    <div class="btn-group">
-        <button class="btn btn-outline-secondary" @onclick="ToogleConnection">
-            @if (@EventRecordHubClient.Connection.State == Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Disconnected)
-            {
-                <img class="rounded-circle text-secondary bg-secondary" width="16" height="16" />
-            }
-            else if (@EventRecordHubClient.Connection.State == Microsoft.AspNetCore.SignalR.Client.HubConnectionState.Connected)
-            {
-                <img class="rounded-circle bg-success" width="16" height="16" />
-            }
-            else
-            {
-                <span class="spinner-grow text-success" role="status" style="width: 16px; height: 16px">
-                    <span class="visually-hidden">Loading...</span>
-                </span>
-            }
         </button>
     </div>
     <div class="input-group">
@@ -148,17 +127,5 @@ else
         var response = await Mediator.Send<PostPomodoroResponse>(request);
 
         await Refresh();
-    }
-
-    private async Task ToogleConnection()
-    {
-        if (EventRecordHubClient.Connection.State == HubConnectionState.Disconnected)
-        {
-            await EventRecordHubClient.Connection.StartAsync();
-        }
-        else if (EventRecordHubClient.Connection.State == HubConnectionState.Connected)
-        {
-            await EventRecordHubClient.Connection.StopAsync();
-        }
     }
 }

@@ -15,7 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
     <ProjectReference Include="..\ApplicationModel\Pomodorium.ApplicationModel.csproj" />
-    <ProjectReference Include="..\DomainModel\Pomodorium.DomainModel.csproj" />
     <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
   </ItemGroup>
 

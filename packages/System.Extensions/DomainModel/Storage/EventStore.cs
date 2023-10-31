@@ -104,7 +104,9 @@ public class EventStore
             {
                 var eventRecord = await _appendOnlyStore.Append(name, @event.GetType().AssemblyQualifiedName, @event.Date, data, originalVersion);
 
-                await _mediator.Publish(eventRecord);
+                var eventStored = new EventAppended { Record = eventRecord };
+
+                await _mediator.Publish(eventStored);
             }
             catch (AppendOnlyStoreConcurrencyException ex)
             {

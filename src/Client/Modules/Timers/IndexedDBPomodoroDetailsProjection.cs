@@ -35,7 +35,7 @@ public class IndexedDBPomodoroDetailsProjection :
     {
         var pomodoroDetails = new PomodoroDetails
         {
-            Id = request.Id.Value,
+            Id = request.Id,
             StartDateTime = request.StartDateTime,
             Description = request.Description,
             Version = request.Version
@@ -46,7 +46,7 @@ public class IndexedDBPomodoroDetailsProjection :
 
     public async Task Handle(PomodoroDescriptionChanged notification, CancellationToken cancellationToken)
     {
-        var pomodoroDetails = await _db.GetAsync<PomodoroDetails>("PomodoroDetails", notification.Id.Value);
+        var pomodoroDetails = await _db.GetAsync<PomodoroDetails>("PomodoroDetails", notification.Id);
 
         if (pomodoroDetails == null)
         {
@@ -61,13 +61,13 @@ public class IndexedDBPomodoroDetailsProjection :
 
     public async Task Handle(PomodoroArchived notification, CancellationToken cancellationToken)
     {
-        var pomodoroDetails = await _db.GetAsync<PomodoroDetails>("PomodoroDetails", notification.Id.Value);
+        var pomodoroDetails = await _db.GetAsync<PomodoroDetails>("PomodoroDetails", notification.Id);
 
         if (pomodoroDetails == null)
         {
             throw new EntityNotFoundException();
         }
 
-        await _db.RemoveAsync("PomodoroDetails", notification.Id.Value);
+        await _db.RemoveAsync("PomodoroDetails", notification.Id);
     }
 }
