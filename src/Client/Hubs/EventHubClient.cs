@@ -1,42 +1,74 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Logging;
+using Pomodorium.Events;
 using System.DomainModel;
 using System.DomainModel.Storage;
+using System.Reactive.Subjects;
 
 namespace Pomodorium.Hubs;
 
-public class EventHubClient
+public class EventHubClient : IDisposable
 {
-    private readonly HubConnection _connection;
+    private readonly HubConnection _server;
 
-    private readonly EventStore _eventStore;
+    private readonly IAppendOnlyStore _appendOnlyStore;
 
     private readonly IMediator _mediator;
 
-    public event Action<Event> NewEvent;
+    public Subject<Event> Notification { get; } = new Subject<Event>();
 
-    public EventHubClient(HubConnection connection, IMediator mediator, EventStore eventStore)
+    public EventHubClient(HubConnection connection, IAppendOnlyStore appendOnlyStore, IMediator mediator)
     {
-        _connection = connection;
+        _server = connection;
 
-        connection.On<EventRecord>("Append", Append);
+        _server.On<EventAppended>("Notify", OnNotifyFromServer);
+
+        _appendOnlyStore = appendOnlyStore;
 
         _mediator = mediator;
-
-        _eventStore = eventStore;
     }
 
-    private async Task Append(EventRecord tapeRecord)
+    private async Task OnNotifyFromServer(EventAppended notification)
     {
-        var id = Guid.Parse(tapeRecord.Name);
+        var eventRecord = notification.Record;
 
-        var type = Type.GetType(tapeRecord.TypeName);
+        await DispatchEvent(eventRecord);
+    }
 
-        var @event = EventStore.DesserializeEvent(type, tapeRecord.Data);
+    public async Task NotifyOthers(EventAppended notification)
+    {
+        await _server.SendAsync("NotifyOthers", notification);
+    }
+
+    public async Task<GetEventsResponse> GetEvents(GetEventsRequest request)
+    {
+        return await _server.InvokeAsync<GetEventsResponse>("GetEvents", request);
+    }
+
+    public async Task DispatchEvents()
+    {
+        var request = new GetEventsRequest { };
+
+        var response = await _server.InvokeAsync<GetEventsResponse>("GetEvents", request);
+
+        foreach (var eventRecord in response.EventRecords)
+        {
+            await DispatchEvent(eventRecord);
+        }
+    }
+
+    private async Task DispatchEvent(EventRecord eventRecord)
+    {
+        var id = Guid.Parse(eventRecord.Name);
+
+        var type = Type.GetType(eventRecord.TypeName);
+
+        var @event = EventStore.DesserializeEvent(type, eventRecord.Data);
 
         try
         {
-            await _eventStore.AppendToStream(id, -1, @event); //
+            await _appendOnlyStore.Append(eventRecord);
         }
         catch (EventStoreConcurrencyException ex)
         {
@@ -52,12 +84,16 @@ public class EventHubClient
                 }
             }
 
-            await _eventStore.AppendToStream(id, ex.StoreVersion, @event);
+            await _appendOnlyStore.Append(eventRecord);
         }
 
-        //@event.IsHandled = true;
+        @event.IsRemote = true;
+
+        @event.Version = eventRecord.Version;
 
         await _mediator.Publish(@event);
+
+        Notification.OnNext(@event);
     }
 
     private bool ConflictsWith(Event event1, Event event2)
@@ -65,5 +101,12 @@ public class EventHubClient
         return event1.GetType() == event2.GetType();
     }
 
-    public HubConnection Connection { get => _connection; }
+    public void Dispose()
+    {
+        _server.Remove("Notify");
+
+        Notification.OnCompleted();
+
+        Notification.Dispose();
+    }
 }

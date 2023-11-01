@@ -1,0 +1,148 @@
+﻿@page "/timers"
+@using MediatR;
+@using Pomodorium.Hubs;
+@using Pomodorium.Modules.Timers;
+@using Pomodorium.Shared
+@using System.DomainModel;
+@using System.DomainModel.Storage;
+@using System.Collections.ObjectModel;
+@using System.Collections.Specialized;
+@using System.Reactive.Linq;
+@using System.Reactive.Threading.Tasks;
+@using System.Reactive.Subjects;
+@inject IMediator Mediator
+@inject EventHubClient EventHubClient
+@inject IStringLocalizer<SharedResource> SharedResource
+
+<PageTitle>Timers</PageTitle>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="timers"><span class="oi oi-home" aria-hidden="true"></span></a></li>
+        <li class="breadcrumb-item active" aria-current="page">Timers</li>
+    </ol>
+</nav>
+
+<h1>Timers</h1>
+
+<div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group me-2" role="group" aria-label="First group">
+        <a class="btn btn-primary" href="timers/new">
+            @SharedResource["Add New"]
+        </a>
+        <button class="btn btn-primary" @onclick="Add">
+            <span class="oi oi-plus" aria-hidden="true"></span>
+        </button>
+        <button class="btn btn-primary" @onclick="Refresh">
+            <span class="oi oi-reload" aria-hidden="true"></span>
+        </button>
+    </div>
+    <div class="input-group">
+        <span role="status">Total: @_items?.Count</span>
+    </div>
+</div>
+
+@if (_items == null)
+{
+    <p><em>@SharedResource["Loading"]...</em></p>
+}
+else
+{
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>@SharedResource["Start Date Time"]</th>
+                <th>@SharedResource["Description"]</th>
+                <th>Version</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var pomodoro in _items)
+            {
+                <tr>
+                    <td>
+                        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                            <div class="btn-group me-2" role="group" aria-label="First group">
+                                <a class="btn btn-outline-secondary btn-sm" href=@($"timers/{pomodoro.Id}")>
+                                    <span class="oi oi-pencil" aria-hidden="true"></span>
+                                </a>
+                                <button class="btn btn-outline-danger btn-sm" onclick=@(() => Delete(pomodoro.Id, pomodoro.Version))>
+                                    <span class="oi oi-trash" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                    <td>@pomodoro.StartDateTime</td>
+                    <td>@pomodoro.Description</td>
+                    <td>@pomodoro.Version</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private readonly ObservableCollection<PomodoroQueryItem>? _items = new ObservableCollection<PomodoroQueryItem>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var x = Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(h => _items.CollectionChanged += h, h => _items.CollectionChanged -= h)
+            .Throttle(TimeSpan.FromSeconds(1))
+            .Subscribe((x) =>
+            {
+                StateHasChanged();
+            });
+
+        var y = EventHubClient.Notification
+            .Throttle(TimeSpan.FromSeconds(1))
+            .Subscribe(async (x) =>
+            {
+                await Refresh();
+            });
+
+        await Refresh();
+    }
+
+    private async Task Refresh()
+    {
+        var request = new GetTimersRequest { };
+
+        var response = await Mediator.Send<GetTimersResponse>(request);
+
+        _items.Clear();
+
+        foreach (var item in response.PomodoroQueryItems)
+        {
+            _items.Add(item);
+        }
+    }
+
+    private async Task Add()
+    {
+        var now = DateTime.Now;
+
+        var request = new PostPomodoroRequest
+            {
+                StartDateTime = now,
+                Description = Guid.NewGuid().ToString()
+            };
+
+        var response = await Mediator.Send<PostPomodoroResponse>(request);
+
+        await Refresh();
+    }
+
+    private async Task Delete(Guid id, long version)
+    {
+        var request = new DeletePomodoroRequest
+            {
+                Id = id,
+                Version = version
+            };
+
+        var response = await Mediator.Send<DeletePomodoroResponse>(request);
+
+        await Refresh();
+    }
+}

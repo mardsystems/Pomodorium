@@ -3,12 +3,15 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.SignalR.Client;
 using Pomodorium;
 using Pomodorium.Data;
-using Pomodorium.Handlers;
 using Pomodorium.Hubs;
-using Pomodorium.Modules.Pomodori;
+using Pomodorium.Modules.Timers;
+using System.DomainModel;
 using System.DomainModel.Storage;
+using static System.Formats.Asn1.AsnWriter;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
+
+var APP_REMOTE = false;
 
 builder.Services.AddLocalization();
 
@@ -17,30 +20,51 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-builder.Services.AddScoped(sp =>
+var hubConnectionBuilder = new HubConnectionBuilder();
+
+var hubConnection = hubConnectionBuilder.WithUrl(new Uri($"{builder.HostEnvironment.BaseAddress}events")).Build();
+
+builder.Services.AddScoped(sp => hubConnection);
+
+if (APP_REMOTE)
 {
-    var hubConnectionBuilder = new HubConnectionBuilder();
-
-    var connection = hubConnectionBuilder.WithUrl(new Uri($"{builder.HostEnvironment.BaseAddress}events")).Build();
-
-    return connection;
-});
-
-//builder.Services.AddScoped<PomodoroQueryDbService>();
-
-//builder.Services.AddScoped<PomodoroRepository>();
-
-builder.Services.AddScoped<EventStore>();
-
-builder.Services.AddScoped<IAppendOnlyStore>(factory => new MemoryStore(@"Data Source=EventStore.db"));
-
-builder.Services.AddScoped<PomodoriumDbContext>();
-
-builder.Services.AddScoped<EventHubClient>();
-
-builder.Services.AddMediatR(config =>
+    builder.Services.AddMediatR(config =>
+    {
+        config.RegisterServicesFromAssembly(typeof(HttpClientTimersFacade).Assembly);
+    });
+}
+else
 {
-    config.RegisterServicesFromAssembly(typeof(EventHubHandler).Assembly);
-});
+    builder.Services.AddScoped<EventHubClient>();
 
-await builder.Build().RunAsync();
+    builder.Services.AddScoped<IndexedDBAccessor>();
+
+    builder.Services.AddScoped<IAppendOnlyStore, IndexedDBStore>();
+
+    builder.Services.AddScoped<Repository>();
+
+    builder.Services.AddScoped<EventStore>();
+
+    builder.Services.AddMediatR(config =>
+    {
+        config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(PomodoroApplication).Assembly);
+    });
+}
+
+var host = builder.Build();
+
+if (!APP_REMOTE)
+{
+    await using var scope = host.Services.CreateAsyncScope();
+
+    await using var indexedDB = scope.ServiceProvider.GetService<IndexedDBAccessor>();
+
+    if (indexedDB is not null)
+    {
+        await indexedDB.InitializeAsync();
+    }
+    
+    await hubConnection.StartAsync();
+}
+
+await host.RunAsync();

@@ -7,13 +7,13 @@ namespace System.DomainModel;
 public abstract class Event : INotification
 {
     [IgnoreDataMember]
-    private bool isHandled;
-    public bool IsHandled
+    private bool isRemote;
+    public bool IsRemote
     {
-        get { return isHandled; }
+        get { return isRemote; }
         set
         {
-            isHandled = value;
+            isRemote = value;
         }
     }
 

@@ -4,38 +4,77 @@ namespace Pomodorium.Data;
 
 public class MemoryStore : IAppendOnlyStore
 {
-    private readonly string _connectionString;
-
     private readonly List<EventRecord> _events;
 
-    public MemoryStore(string connectionString)
+    public MemoryStore()
     {
-        _connectionString = connectionString;
-
         _events = new List<EventRecord>();
     }
 
-    public EventRecord Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
+    public async Task<IEnumerable<EventRecord>> ReadRecords(long maxCount)
     {
-        var version = GetMaxVersion(name, expectedVersion);
+        int count;
 
-        var @event = new EventRecord(name, typeName, version + 1, date, data);
+        if (maxCount > int.MaxValue)
+        {
+            count = int.MaxValue;
+        }
+        else
+        {
+            count = (int)maxCount;
+        }
+
+        var events = _events
+            .OrderBy(x => x.Name)
+                .ThenBy(x => x.Version)
+            .Take(count);
+
+        return await Task.FromResult(events);
+    }
+
+    public async Task<IEnumerable<EventRecord>> ReadRecords(string name, long afterVersion, long maxCount)
+    {
+        int count;
+
+        if (maxCount > int.MaxValue)
+        {
+            count = int.MaxValue;
+        }
+        else
+        {
+            count = (int)maxCount;
+        }
+
+        var events = _events
+            .Where(x => x.Name == name)
+            .Where(x => x.Version > afterVersion)
+            .OrderBy(x => x.Version)
+            .Take(count);
+
+        return await Task.FromResult(events);
+    }
+
+    public async Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
+    {
+        var version = await GetMaxVersion(name, expectedVersion);
+
+        var @event = new EventRecord(name, version + 1, date, typeName, data);
 
         _events.Add(@event);
 
         return @event;
     }
 
-    public void Append(EventRecord tapeRecord)
+    public async Task Append(EventRecord tapeRecord)
     {
-        var version = GetMaxVersion(tapeRecord.Name, -1);
+        var version = await GetMaxVersion(tapeRecord.Name, -1);
 
-        var @event = new EventRecord(tapeRecord.Name, tapeRecord.TypeName, version + 1, tapeRecord.Date, tapeRecord.Data);
+        var @event = new EventRecord(tapeRecord.Name, version + 1, tapeRecord.Date, tapeRecord.TypeName, tapeRecord.Data);
 
         _events.Add(@event);
     }
 
-    private long GetMaxVersion(string name, long expectedVersion)
+    private async Task<long> GetMaxVersion(string name, long expectedVersion)
     {
         var version = _events
             .Where(x => x.Name == name)
@@ -51,50 +90,7 @@ public class MemoryStore : IAppendOnlyStore
             }
         }
 
-        return version;
-    }
-
-    public IEnumerable<EventRecord> ReadRecords(string name, long afterVersion, long maxCount)
-    {
-        int count;
-
-        if (maxCount > int.MaxValue)
-        {
-            count = int.MaxValue;
-        }
-        else
-        {
-            count = (int)maxCount;
-        }
-
-        var events = _events
-            .Where(x => x.Name == name)
-            .Where(x => x.Version > afterVersion)
-            .OrderBy(x => x.Version)
-            .Take(count);
-
-        return events;
-    }
-
-    public IEnumerable<EventRecord> ReadRecords(long afterVersion, long maxCount)
-    {
-        int count;
-
-        if (maxCount > int.MaxValue)
-        {
-            count = int.MaxValue;
-        }
-        else
-        {
-            count = (int)maxCount;
-        }
-
-        var events = _events
-            .Where(x => x.Version > afterVersion)
-            .OrderBy(x => x.Version)
-            .Take(count);
-
-        return events;
+        return await Task.FromResult(version);
     }
 
     public void Close()

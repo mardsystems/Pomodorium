@@ -1,7 +1,10 @@
 using MongoDB.Driver;
+using Pomodorium.Bus;
 using Pomodorium.Data;
 using Pomodorium.Hubs;
-using Pomodorium.Modules.Pomodori;
+using Pomodorium.Modules.Timers;
+using RabbitMQ.Client;
+using System.DomainModel;
 using System.DomainModel.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,13 +28,22 @@ builder.Services.AddRazorPages();
 
 builder.Services.AddSignalR();
 
-builder.Services.AddScoped<PomodoroRepository>();
+builder.Services.AddScoped<Repository>();
 
 builder.Services.AddScoped<EventStore>();
 
+var connectionFactory = new ConnectionFactory()
+{
+    HostName = builder.Configuration["MessageBroker"]
+};
+
+//var connection = connectionFactory.CreateConnection();
+
+//builder.Services.AddScoped((factory) => new RabbitMQPublisher(connection));
+
 builder.Services.AddMediatR(config =>
 {
-    config.RegisterServicesFromAssembly(typeof(MongoDBPomodoroQueryItemsProjection).Assembly);
+    config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(PomodoroApplication).Assembly);
 });
 
 var app = builder.Build();

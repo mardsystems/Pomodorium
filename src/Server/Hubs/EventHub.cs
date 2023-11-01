@@ -1,40 +1,62 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
-using System.DomainModel;
+using Pomodorium.Events;
 using System.DomainModel.Storage;
 
-namespace Pomodorium.Hubs
+namespace Pomodorium.Hubs;
+
+public class EventHub : Hub<IHubEvent>
 {
-    public class EventHub : Hub
+    private readonly IAppendOnlyStore _appendOnlyStore;
+
+    private readonly IMediator _mediator;
+
+    public EventHub(IAppendOnlyStore appendOnlyStore, IMediator mediator)
     {
-        private readonly IAppendOnlyStore appendOnlyStore;
+        _appendOnlyStore = appendOnlyStore;
 
-        private readonly IMediator _mediator;
+        _mediator = mediator;
+    }
 
-        public EventHub(IAppendOnlyStore appendOnlyStore, IMediator mediator)
+    public async Task NotifyAll(EventAppended notification)
+    {
+        if (Clients == null)
         {
-            this.appendOnlyStore = appendOnlyStore;
-
-            _mediator = mediator;
+            return;
         }
 
-        public async Task Append(EventRecord tapeRecord)
-        {
-            appendOnlyStore.Append(tapeRecord);
+        await Clients.All.Notify(notification);
+    }
 
-            await Clients.Others.SendAsync("Append", tapeRecord);
+    public async Task NotifyOthers(EventAppended notification)
+    {
+        await Clients.Others.Notify(notification);
 
-            //
+        //
 
-            var type = Type.GetType(tapeRecord.TypeName);
+        var eventRecord = notification.Record;
 
-            var @event = EventStore.DesserializeEvent(type, tapeRecord.Data);
+        await _appendOnlyStore.Append(eventRecord);
 
-            @event.Version = tapeRecord.Version;
+        //
 
-            @event.Date = tapeRecord.Date;
+        var type = Type.GetType(eventRecord.TypeName);
 
-            await _mediator.Publish(@event);
-        }
+        var @event = EventStore.DesserializeEvent(type, eventRecord.Data);
+
+        @event.Version = eventRecord.Version;
+
+        @event.Date = eventRecord.Date;
+
+        @event.IsRemote = true;
+
+        await _mediator.Publish(@event);
+    }
+
+    public async Task<GetEventsResponse> GetEvents(GetEventsRequest request)
+    {
+        var response = await _mediator.Send<GetEventsResponse>(request);
+
+        return response;
     }
 }

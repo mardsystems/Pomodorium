@@ -7,13 +7,13 @@ version: '3.4'
 #     external: false
 
 services:
-  # message_broker:
-  #   #volumes:
-  #   #  - ./data/message_broker:/var/lib/rabbitmq/mnesia/
-  #   #ports:
-  #   #  - "5672:5672"
-  #   ports:
-  #     - "15672:15672"
+  message_broker:
+    # volumes:
+    #  - ./data/message_broker:/var/lib/rabbitmq/mnesia/
+    #ports:
+    #  - "5672:5672"
+    ports:
+      - "15672:15672"
 
   read_database:
     volumes:

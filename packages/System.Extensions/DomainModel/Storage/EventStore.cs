@@ -16,9 +16,9 @@ public class EventStore
         _mediator = mediator;
     }
 
-    public IEnumerable<Event> LoadAllEvents()
+    public async Task<IEnumerable<Event>> LoadAllEvents()
     {
-        var records = _appendOnlyStore.ReadRecords(0, long.MaxValue);
+        var records = await _appendOnlyStore.ReadRecords(long.MaxValue);
 
         var events = new List<Event>();
 
@@ -38,11 +38,11 @@ public class EventStore
         return events;
     }
 
-    public IEnumerable<Event> GetEventsForAggregate(Guid id, long skip, long take)
+    public async Task<IEnumerable<Event>> GetEventsForAggregate(Guid id, long skip, long take)
     {
         var name = id.ToString();
 
-        var records = _appendOnlyStore.ReadRecords(name, skip, take).ToList();
+        var records = await _appendOnlyStore.ReadRecords(name, skip, take);
 
         var events = new List<Event>();
 
@@ -102,13 +102,15 @@ public class EventStore
 
             try
             {
-                var eventRecord = _appendOnlyStore.Append(name, @event.GetType().AssemblyQualifiedName, @event.Date, data, originalVersion);
+                var eventRecord = await _appendOnlyStore.Append(name, @event.GetType().AssemblyQualifiedName, @event.Date, data, originalVersion);
 
-                await _mediator.Publish(eventRecord);
+                var eventStored = new EventAppended { Record = eventRecord };
+
+                await _mediator.Publish(eventStored);
             }
             catch (AppendOnlyStoreConcurrencyException ex)
             {
-                var serverEvents = GetEventsForAggregate(id, 0, long.MaxValue);
+                var serverEvents = await GetEventsForAggregate(id, 0, long.MaxValue);
 
                 var lastEvent = serverEvents.Last();
 
