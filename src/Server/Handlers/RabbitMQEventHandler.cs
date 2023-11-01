@@ -4,7 +4,7 @@ using System.DomainModel.Storage;
 
 namespace Pomodorium.Handlers;
 
-public class RabbitMQEventHandler : INotificationHandler<EventAppended>
+public class RabbitMQEventHandler //: INotificationHandler<EventAppended>
 {
     private readonly RabbitMQPublisher _bus;
 

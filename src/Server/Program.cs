@@ -37,9 +37,9 @@ var connectionFactory = new ConnectionFactory()
     HostName = builder.Configuration["MessageBroker"]
 };
 
-var connection = connectionFactory.CreateConnection();
+//var connection = connectionFactory.CreateConnection();
 
-builder.Services.AddScoped((factory) => new RabbitMQPublisher(connection));
+//builder.Services.AddScoped((factory) => new RabbitMQPublisher(connection));
 
 builder.Services.AddMediatR(config =>
 {
