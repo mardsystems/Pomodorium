@@ -26,13 +26,14 @@ public class IndexedDBPomodoroQueryItemsProjection :
         return response;
     }
 
-    public async Task Handle(PomodoroCreated request, CancellationToken cancellationToken)
+    public async Task Handle(PomodoroCreated notification, CancellationToken cancellationToken)
     {
         var pomodoroQueryItem = new PomodoroQueryItem
         {
-            Id = request.Id,
-            StartDateTime = request.StartDateTime,
-            Description = request.Description
+            Id = notification.Id,
+            StartDateTime = notification.StartDateTime,
+            Description = notification.Description,
+            Version = notification.Version
         };
 
         await _db.PutAsync("PomodoroQueryItems", pomodoroQueryItem);
@@ -48,6 +49,7 @@ public class IndexedDBPomodoroQueryItemsProjection :
         }
 
         pomodoroQueryItem.Description = notification.Description;
+        pomodoroQueryItem.Version = notification.Version;
 
         await _db.PutAsync("PomodoroQueryItems", pomodoroQueryItem);
     }

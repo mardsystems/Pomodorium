@@ -9,4 +9,6 @@ public class PomodoroQueryItem
     public DateTime? EndDateTime { get; set; }
 
     public string? Description { get; set; }
+
+    public long Version { get; set; }
 }

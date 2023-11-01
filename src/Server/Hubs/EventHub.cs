@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
+using Pomodorium.Events;
 using System.DomainModel.Storage;
 
 namespace Pomodorium.Hubs;
@@ -50,5 +51,12 @@ public class EventHub : Hub<IHubEvent>
         @event.IsRemote = true;
 
         await _mediator.Publish(@event);
+    }
+
+    public async Task<GetEventsResponse> GetEvents(GetEventsRequest request)
+    {
+        var response = await _mediator.Send<GetEventsResponse>(request);
+
+        return response;
     }
 }

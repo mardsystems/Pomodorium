@@ -31,14 +31,14 @@ public class IndexedDBPomodoroDetailsProjection :
         return response;
     }
 
-    public async Task Handle(PomodoroCreated request, CancellationToken cancellationToken)
+    public async Task Handle(PomodoroCreated notification, CancellationToken cancellationToken)
     {
         var pomodoroDetails = new PomodoroDetails
         {
-            Id = request.Id,
-            StartDateTime = request.StartDateTime,
-            Description = request.Description,
-            Version = request.Version
+            Id = notification.Id,
+            StartDateTime = notification.StartDateTime,
+            Description = notification.Description,
+            Version = notification.Version
         };
 
         await _db.PutAsync("PomodoroDetails", pomodoroDetails);

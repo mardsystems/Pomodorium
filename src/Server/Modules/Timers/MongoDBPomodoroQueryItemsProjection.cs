@@ -32,13 +32,14 @@ public class MongoDBPomodoroQueryItemsProjection :
         return response;
     }
 
-    public async Task Handle(PomodoroCreated request, CancellationToken cancellationToken)
+    public async Task Handle(PomodoroCreated notification, CancellationToken cancellationToken)
     {
         var pomodoroQueryItem = new PomodoroQueryItem
         {
-            Id = request.Id,
-            StartDateTime = request.StartDateTime,
-            Description = request.Description
+            Id = notification.Id,
+            StartDateTime = notification.StartDateTime,
+            Description = notification.Description,
+            Version = notification.Version
         };
 
         await _mongoCollection.InsertOneAsync(pomodoroQueryItem, null, cancellationToken);
@@ -56,9 +57,11 @@ public class MongoDBPomodoroQueryItemsProjection :
         }
 
         pomodoroQueryItem.Description = notification.Description;
+        pomodoroQueryItem.Version = notification.Version;
 
         var update = Builders<PomodoroQueryItem>.Update
-            .Set(x => x.Description, notification.Description);
+            .Set(x => x.Description, notification.Description)
+            .Set(x => x.Version, notification.Version);
 
         await _mongoCollection.UpdateOneAsync(filter, update, null, cancellationToken);
     }

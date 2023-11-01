@@ -1,6 +1,9 @@
 ﻿@inherits LayoutComponentBase
 @using Microsoft.AspNetCore.SignalR.Client;
+@using Pomodorium.Hubs;
 @inject HubConnection HubConnection
+@inject EventHubClient EventHubClient
+@inject IStringLocalizer<SharedResource> SharedResource
 
 <div class="page">
     <div class="sidebar">
@@ -9,6 +12,12 @@
 
     <main>
         <div class="top-row px-4">
+            <div class="input-group">
+                <span role="status">@SharedResource["Notifications"]: @NotificationTotal</span>
+            </div>
+            <button class="btn btn-outline-secondary me-2" @onclick="DispatchEvents">
+                <span class="oi oi-command" aria-hidden="true"></span>
+            </button>
             <button class="btn btn-outline-secondary" @onclick="ToogleConnection">
                 @if (@HubConnection.State == HubConnectionState.Disconnected)
                 {
@@ -21,11 +30,11 @@
                 else
                 {
                     <span class="spinner-grow text-success" role="status" style="width: 16px; height: 16px">
-                        <span class="visually-hidden">Loading...</span>
+                        <span class="visually-hidden">@SharedResource["Loading"]...</span>
                     </span>
                 }
             </button>
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">@SharedResource["About"]</a>
         </div>
 
         <article class="content px-4">
@@ -35,6 +44,20 @@
 </div>
 
 @code {
+    private long NotificationTotal;
+
+    protected override async Task OnInitializedAsync()
+    {
+        EventHubClient.Notification.Subscribe((e) =>
+        {
+            NotificationTotal += 1;
+
+            InvokeAsync(StateHasChanged);
+        });
+
+        await Task.CompletedTask;
+    }
+
     private async Task ToogleConnection()
     {
         if (HubConnection.State == HubConnectionState.Disconnected)
@@ -45,5 +68,10 @@
         {
             await HubConnection.StopAsync();
         }
+    }
+
+    private async Task DispatchEvents()
+    {
+        await EventHubClient.DispatchEvents();
     }
 }

@@ -1,11 +1,14 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Logging;
+using Pomodorium.Events;
 using System.DomainModel;
 using System.DomainModel.Storage;
+using System.Reactive.Subjects;
 
 namespace Pomodorium.Hubs;
 
-public class EventHubClient
+public class EventHubClient : IDisposable
 {
     private readonly HubConnection _server;
 
@@ -13,7 +16,7 @@ public class EventHubClient
 
     private readonly IMediator _mediator;
 
-    public event Action<Event> NewEvent;
+    public Subject<Event> Notification { get; } = new Subject<Event>();
 
     public EventHubClient(HubConnection connection, IAppendOnlyStore appendOnlyStore, IMediator mediator)
     {
@@ -30,6 +33,33 @@ public class EventHubClient
     {
         var eventRecord = notification.Record;
 
+        await DispatchEvent(eventRecord);
+    }
+
+    public async Task NotifyOthers(EventAppended notification)
+    {
+        await _server.SendAsync("NotifyOthers", notification);
+    }
+
+    public async Task<GetEventsResponse> GetEvents(GetEventsRequest request)
+    {
+        return await _server.InvokeAsync<GetEventsResponse>("GetEvents", request);
+    }
+
+    public async Task DispatchEvents()
+    {
+        var request = new GetEventsRequest { };
+
+        var response = await _server.InvokeAsync<GetEventsResponse>("GetEvents", request);
+
+        foreach (var eventRecord in response.EventRecords)
+        {
+            await DispatchEvent(eventRecord);
+        }
+    }
+
+    private async Task DispatchEvent(EventRecord eventRecord)
+    {
         var id = Guid.Parse(eventRecord.Name);
 
         var type = Type.GetType(eventRecord.TypeName);
@@ -59,18 +89,24 @@ public class EventHubClient
 
         @event.IsRemote = true;
 
+        @event.Version = eventRecord.Version;
+
         await _mediator.Publish(@event);
 
-        NewEvent(@event);
-    }
-
-    public async Task NotifyOthers(EventAppended notification)
-    {
-        await _server.SendAsync("NotifyOthers", notification);
+        Notification.OnNext(@event);
     }
 
     private bool ConflictsWith(Event event1, Event event2)
     {
         return event1.GetType() == event2.GetType();
+    }
+
+    public void Dispose()
+    {
+        _server.Remove("Notify");
+
+        Notification.OnCompleted();
+
+        Notification.Dispose();
     }
 }

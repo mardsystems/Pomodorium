@@ -7,6 +7,7 @@ using Pomodorium.Hubs;
 using Pomodorium.Modules.Timers;
 using System.DomainModel;
 using System.DomainModel.Storage;
+using static System.Formats.Asn1.AsnWriter;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -62,7 +63,7 @@ if (!APP_REMOTE)
     {
         await indexedDB.InitializeAsync();
     }
-
+    
     await hubConnection.StartAsync();
 }
 
