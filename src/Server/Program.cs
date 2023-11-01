@@ -1,7 +1,9 @@
 using MongoDB.Driver;
+using Pomodorium.Bus;
 using Pomodorium.Data;
 using Pomodorium.Hubs;
 using Pomodorium.Modules.Timers;
+using RabbitMQ.Client;
 using System.DomainModel;
 using System.DomainModel.Storage;
 
@@ -29,6 +31,15 @@ builder.Services.AddSignalR();
 builder.Services.AddScoped<Repository>();
 
 builder.Services.AddScoped<EventStore>();
+
+var connectionFactory = new ConnectionFactory()
+{
+    HostName = builder.Configuration["MessageBroker"]
+};
+
+var connection = connectionFactory.CreateConnection();
+
+builder.Services.AddScoped((factory) => new RabbitMQPublisher(connection));
 
 builder.Services.AddMediatR(config =>
 {

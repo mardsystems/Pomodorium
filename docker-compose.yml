@@ -1,18 +1,18 @@
 version: '3.4'
 
 networks:
-  # message_broker_network:
+  message_broker_network:
   read_network:
   write_network:
   public_network:
 
 services:
-  # message_broker:
-  #   container_name: message_broker
-  #   restart: always
-  #   image: rabbitmq:3-management
-  #   networks:
-  #     - message_broker_network
+  message_broker:
+    container_name: message_broker
+    restart: always
+    image: rabbitmq:3-management
+    networks:
+      - message_broker_network
 
   read_database:
     container_name: read_database
