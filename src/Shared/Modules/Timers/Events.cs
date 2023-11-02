@@ -10,21 +10,43 @@ public class PomodoroCreated : Event
     public Guid Id { get; private set; }
 
     [DataMember(Order = 2)]
-    public DateTime StartDateTime { get; private set; }
+    public string Description { get; private set; }
 
     [DataMember(Order = 3)]
-    public string? Description { get; private set; }
+    public TimerState State { get; private set; }
 
-    public PomodoroCreated(Guid id, DateTime startDateTime, string description)
+    public PomodoroCreated(Guid id, string description, TimerState state)
+    {
+        Id = id;
+
+        Description = description;
+
+        State = state;
+    }
+
+    private PomodoroCreated()
+    {
+
+    }
+}
+
+[DataContract]
+public class PomodoroStarted : Event
+{
+    [DataMember(Order = 1)]
+    public Guid Id { get; private set; }
+
+    [DataMember(Order = 2)]
+    public DateTime StartDateTime { get; private set; }
+
+    public PomodoroStarted(Guid id, DateTime startDateTime)
     {
         Id = id;
 
         StartDateTime = startDateTime;
-
-        Description = description;
     }
 
-    private PomodoroCreated()
+    private PomodoroStarted()
     {
 
     }

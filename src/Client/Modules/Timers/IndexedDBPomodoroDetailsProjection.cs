@@ -36,7 +36,7 @@ public class IndexedDBPomodoroDetailsProjection :
         var pomodoroDetails = new PomodoroDetails
         {
             Id = notification.Id,
-            StartDateTime = notification.StartDateTime,
+            State = notification.State,
             Description = notification.Description,
             Version = notification.Version
         };

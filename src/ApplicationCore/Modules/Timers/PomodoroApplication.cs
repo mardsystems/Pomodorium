@@ -21,7 +21,7 @@ namespace Pomodorium.Modules.Timers
 
             var pomodoroId = correlationId;
 
-            var pomodoro = new Pomodoro(pomodoroId, request.StartDateTime, request.Description);
+            var pomodoro = new Pomodoro(pomodoroId, request.Description);
 
             await _repository.Save(pomodoro, -1);
 

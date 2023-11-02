@@ -37,7 +37,7 @@ public class MongoDBPomodoroQueryItemsProjection :
         var pomodoroQueryItem = new PomodoroQueryItem
         {
             Id = notification.Id,
-            StartDateTime = notification.StartDateTime,
+            State = notification.State,
             Description = notification.Description,
             Version = notification.Version
         };
