@@ -1,6 +1,4 @@
-﻿using Pomodorium.Modules.Timers;
-
-namespace Pomodorium;
+﻿namespace Pomodorium.Modules.Timers;
 
 public class PomodoroDetails
 {

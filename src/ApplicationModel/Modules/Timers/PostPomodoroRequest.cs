@@ -1,4 +1,4 @@
-﻿namespace Pomodorium;
+﻿namespace Pomodorium.Modules.Timers;
 
 public class PostPomodoroRequest : Request<PostPomodoroResponse>
 {

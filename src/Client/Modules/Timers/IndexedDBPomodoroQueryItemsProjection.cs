@@ -56,7 +56,7 @@ public class IndexedDBPomodoroQueryItemsProjection :
 
     public async Task Handle(PomodoroArchived notification, CancellationToken cancellationToken)
     {
-        var pomodoroQueryItem = await _db.GetAsync<PomodoroDetails>("PomodoroQueryItems", notification.Id);
+        var pomodoroQueryItem = await _db.GetAsync<PomodoroQueryItem>("PomodoroQueryItems", notification.Id);
 
         if (pomodoroQueryItem == null)
         {

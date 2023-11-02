@@ -1,3 +1,6 @@
+let CURRENT_VERSION = 1;
+let DATABASE_NAME = "Pomodorium";
+
 export function initialize() {
     let openDbRequest = indexedDB.open(DATABASE_NAME, CURRENT_VERSION);
 
@@ -10,6 +13,7 @@ export function initialize() {
 
         db.createObjectStore("PomodoroDetails", { keyPath: "id" });
         db.createObjectStore("PomodoroQueryItems", { keyPath: "id" });
+        db.createObjectStore("FlowtimeQueryItems", { keyPath: "id" });
     }
 }
 
@@ -144,6 +148,3 @@ export function remove(collectionName, id) {
         console.log("Error on remove:", id);
     }
 }
-
-let CURRENT_VERSION = 1;
-let DATABASE_NAME = "Pomodorium";

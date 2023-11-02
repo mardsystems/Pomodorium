@@ -31,10 +31,10 @@ public class FlowtimeCreated : Event
     [DataMember(Order = 2)]
     public Guid TaskId { get; private set; }
 
-    [DataMember(Order = 2)]
+    [DataMember(Order = 3)]
     public string TaskDescription { get; private set; }
 
-    [DataMember(Order = 3)]
+    [DataMember(Order = 4)]
     public FlowtimeState State { get; private set; }
 
     public FlowtimeCreated(Guid id, Guid taskId, string taskDescription, FlowtimeState state)

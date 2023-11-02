@@ -158,4 +158,6 @@ public class Flowtime : AggregateRoot
 
         State = e.State;
     }
+
+    public Flowtime() { }
 }

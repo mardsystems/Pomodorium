@@ -1,0 +1,88 @@
+﻿@page "/flows/create"
+@using MediatR;
+@using Pomodorium.Modules.Flows;
+@using Pomodorium.Shared
+@using System.DomainModel;
+@using System.DomainModel.Storage;
+@using System.Collections.ObjectModel;
+@using System.Collections.Specialized;
+@using System.Reactive.Linq;
+@using System.Reactive.Threading.Tasks;
+@inject IMediator Mediator
+@inject IStringLocalizer<SharedResource> SharedResource;
+@inject NavigationManager Navigation;
+
+<PageTitle>Flowtime</PageTitle>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/"><span class="oi oi-home" aria-hidden="true"></span></a></li>
+        <li class="breadcrumb-item"><a href="flows">Flows</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@SharedResource["New"]</li>
+    </ol>
+</nav>
+
+<h1>Flowtime</h1>
+
+<div class="card">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="true" href="#">
+                    @SharedResource["Create New"]
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled">Disabled</a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        @* <h5 class="card-title">Special title treatment</h5>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> *@
+
+        <from>
+            @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+            <div class="row mb-3">
+                <label class="col-sm-3 col-form-label">@SharedResource["Task"]</label>
+                <div class="col-sm-9">
+                    <input @bind="TaskDescription" class="form-control" />
+                    @*<span asp-validation-for="TaskDescription" class="text-danger"></span>*@
+                </div>
+            </div>
+            <button class="btn btn-primary" @onclick="Save">
+                @* <i class="bi bi-save"></i> *@
+                @SharedResource["Save"]
+            </button>
+        </from>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+
+    public string TaskDescription { get; set; }
+
+    protected override async System.Threading.Tasks.Task OnInitializedAsync()
+    {
+
+    }
+
+    private async System.Threading.Tasks.Task Save()
+    {
+        var now = DateTime.Now;
+
+        var request = new CreateFlowtimeRequest
+            {
+                TaskDescription = TaskDescription
+            };
+
+        var response = await Mediator.Send<CreateFlowtimeResponse>(request);
+
+        Navigation.NavigateTo("flows");
+    }
+}
