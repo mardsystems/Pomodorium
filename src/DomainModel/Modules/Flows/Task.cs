@@ -8,6 +8,20 @@ public class Task : AggregateRoot
 
     public Task(string description)
     {
-        Description = description;
+        if (description == null)
+        {
+            throw new ArgumentNullException(nameof(description));
+        }
+
+        Apply(new TaskCreated(Id, description));
     }
+
+    public void When(TaskCreated e)
+    {
+        Id = e.Id;
+
+        Description = e.Description;
+    }
+
+    public Task() { }
 }

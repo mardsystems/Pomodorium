@@ -31,9 +31,9 @@ public abstract class FlowtimeUnitTest : UnitTest
             }
 
             [Fact]
-            public void Task_Should_NotBeNull()
+            public void TaskId_Should_NotBeEmpty()
             {
-                Flowtime.Task.Should().NotBeNull();
+                Flowtime.TaskId.Should().NotBeEmpty();
             }
 
             //[Fact]

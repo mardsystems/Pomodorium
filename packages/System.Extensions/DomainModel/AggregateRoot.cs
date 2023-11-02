@@ -10,17 +10,19 @@ public abstract class AggregateRoot : Entity
 
     public ICollection<Event> Changes { get; private set; }
 
-    public AggregateRoot(Guid id, string userId)
-    {
-        Id = id;
+    //public AggregateRoot(Guid id, string userId)
+    //{
+    //    Id = id;
 
-        UserId = userId;
+    //    UserId = userId;
 
-        Changes = new HashSet<Event>();
-    }
+    //    Changes = new HashSet<Event>();
+    //}
 
     protected AggregateRoot()
     {
+        Id = Guid.NewGuid();
+
         Changes = new HashSet<Event>();
     }
 

@@ -2,6 +2,7 @@
 
 public enum FlowtimeState
 {
+    NotStarted,
     Flow,
     Limbo,
     Finished

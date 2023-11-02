@@ -16,4 +16,8 @@
     <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Modules\Flows\" />
+  </ItemGroup>
+
 </Project>
