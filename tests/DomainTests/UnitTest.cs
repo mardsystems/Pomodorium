@@ -1,4 +1,4 @@
-namespace Pomodorium.DomainTests;
+namespace Pomodorium;
 
 public abstract class UnitTest
 {

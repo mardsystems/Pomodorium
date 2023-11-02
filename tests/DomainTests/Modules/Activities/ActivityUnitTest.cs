@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Pomodorium.DomainTests;
 using Pomodorium.Modules.Timers;
 
 namespace Pomodorium.Modules.Activities;
