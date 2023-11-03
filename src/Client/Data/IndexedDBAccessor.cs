@@ -66,7 +66,7 @@ public class IndexedDBAccessor : IAsyncDisposable
     {
         if (_accessorJsRef.IsValueCreated is false)
         {
-            _accessorJsRef = new(await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/indexedDBAccessor.js?123"));
+            _accessorJsRef = new(await _jsRuntime.InvokeAsync<IJSObjectReference>("import", "/indexedDBAccessor.js?1"));
         }
     }
 

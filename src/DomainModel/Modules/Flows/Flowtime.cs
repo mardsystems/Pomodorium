@@ -1,4 +1,5 @@
-﻿using System.DomainModel;
+﻿using Pomodorium.Modules.Timers;
+using System.DomainModel;
 
 namespace Pomodorium.Modules.Flows;
 
@@ -157,6 +158,16 @@ public class Flowtime : AggregateRoot
         Breaktime = e.Breaktime;
 
         State = e.State;
+    }
+
+    public override void Archive()
+    {
+        Apply(new FlowtimeArchived(Id));
+    }
+
+    public void When(FlowtimeArchived e)
+    {
+        base.Archive();
     }
 
     public Flowtime() { }

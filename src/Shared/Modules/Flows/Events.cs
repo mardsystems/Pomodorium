@@ -35,6 +35,9 @@ public class FlowtimeCreated : Event
     public string TaskDescription { get; private set; }
 
     [DataMember(Order = 4)]
+    public long TaskVersion { get; private set; }
+
+    [DataMember(Order = 5)]
     public FlowtimeState State { get; private set; }
 
     public FlowtimeCreated(Guid id, Guid taskId, string taskDescription, FlowtimeState state)

@@ -11,9 +11,10 @@ export function initialize() {
 
         eventStore.createIndex("name", "name", { unique: false });
 
-        db.createObjectStore("PomodoroDetails", { keyPath: "id" });
         db.createObjectStore("PomodoroQueryItems", { keyPath: "id" });
+        db.createObjectStore("PomodoroDetails", { keyPath: "id" });
         db.createObjectStore("FlowtimeQueryItems", { keyPath: "id" });
+        db.createObjectStore("FlowtimeDetails", { keyPath: "id" });
     }
 }
 

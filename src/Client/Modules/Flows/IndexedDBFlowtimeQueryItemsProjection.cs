@@ -23,7 +23,7 @@ public class IndexedDBFlowtimeQueryItemsProjection :
     {
         var flowtimeQueryItems = await _db.GetAllAsync<FlowtimeQueryItem>("FlowtimeQueryItems");
 
-        var response = new GetFlowsResponse(request.GetCorrelationId()) { FlowtimeQueryItems = flowtimeQueryItems };
+        var response = new GetFlowsResponse(request.GetCorrelationId()) { FlowtimeQueryItems = flowtimeQueryItems.OrderByDescending(x => x.StartDateTime) };
 
         return response;
     }
@@ -34,6 +34,7 @@ public class IndexedDBFlowtimeQueryItemsProjection :
         {
             Id = notification.Id,
             State = notification.State,
+            TaskId = notification.TaskId,
             TaskDescription = notification.TaskDescription,
             Version = notification.Version
         };

@@ -49,11 +49,6 @@ public class Pomodoro : AggregateRoot
         State = TimerState.Stopped;
     }
 
-    public void Archive()
-    {
-        Apply(new PomodoroArchived(Id));
-    }
-
     public void When(PomodoroCreated e)
     {
         Id = e.Id;
@@ -75,9 +70,14 @@ public class Pomodoro : AggregateRoot
         Description = e.Description;
     }
 
+    public override void Archive()
+    {
+        Apply(new PomodoroArchived(Id));
+    }
+
     public void When(PomodoroArchived e)
     {
-
+        base.Archive();
     }
 
     public Pomodoro()

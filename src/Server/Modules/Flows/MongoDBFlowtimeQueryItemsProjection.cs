@@ -40,6 +40,7 @@ public class MongoDBFlowtimeQueryItemsProjection :
         {
             Id = notification.Id,
             State = notification.State,
+            TaskId = notification.TaskId,
             TaskDescription = notification.TaskDescription,
             Version = notification.Version
         };
