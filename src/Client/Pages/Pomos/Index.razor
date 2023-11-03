@@ -1,7 +1,7 @@
-﻿@page "/activities"
+﻿@page "/pomos"
 @using MediatR;
 @using Pomodorium.Hubs;
-@using Pomodorium.Modules.Activities;
+@using Pomodorium.Modules.Pomos;
 @using Pomodorium.Shared
 @using System.DomainModel;
 @using System.DomainModel.Storage;
@@ -14,20 +14,20 @@
 @inject EventHubClient EventHubClient
 @inject IStringLocalizer<SharedResource> SharedResource
 
-<PageTitle>Activities</PageTitle>
+<PageTitle>Pomos</PageTitle>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/"><span class="oi oi-home" aria-hidden="true"></span></a></li>
-        <li class="breadcrumb-item active" aria-current="page">Activities</li>
+        <li class="breadcrumb-item active" aria-current="page">Pomos</li>
     </ol>
 </nav>
 
-<h1>Activities</h1>
+<h1>Pomos</h1>
 
 <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
     <div class="btn-group me-2" role="group" aria-label="First group">
-        <a class="btn btn-primary" href="activities/new">
+        <a class="btn btn-primary" href="pomos/new">
             @SharedResource["Create New"]
         </a>
         <button class="btn btn-primary" @onclick="Add">
@@ -52,36 +52,30 @@ else
         <thead>
             <tr>
                 <th>#</th>
-                <th>@SharedResource["State"]</th>
-                <th>@SharedResource["Name"]</th>
                 <th>@SharedResource["Start Date Time"]</th>
-                <th>@SharedResource["Stop Date Time"]</th>
-                <th>@SharedResource["Duration"]</th>
                 <th>@SharedResource["Description"]</th>
+                <th>Version</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var activity in _items)
+            @foreach (var pomodoro in _items)
             {
                 <tr>
                     <td>
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                             <div class="btn-group me-2" role="group" aria-label="First group">
-                                <a class="btn btn-outline-secondary btn-sm" href=@($"activities/{activity.Id}")>
+                                <a class="btn btn-outline-secondary btn-sm" href=@($"pomos/{pomodoro.Id}")>
                                     <span class="oi oi-pencil" aria-hidden="true"></span>
                                 </a>
-                                <button class="btn btn-outline-danger btn-sm" onclick=@(() => Delete(activity.Id, activity.Version))>
+                                <button class="btn btn-outline-danger btn-sm" onclick=@(() => Delete(pomodoro.Id, pomodoro.Version))>
                                     <span class="oi oi-trash" aria-hidden="true"></span>
                                 </button>
                             </div>
                         </div>
                     </td>
-                    <td>@activity.State</td>
-                    <td>@activity.Name</td>
-                    <td>@activity.StartDateTime</td>
-                    <td>@activity.StopDateTime</td>
-                    <td>@activity.Duration</td>
-                    <td>@activity.Description</td>
+                    <td>@pomodoro.StartDateTime</td>
+                    <td>@pomodoro.Description</td>
+                    <td>@pomodoro.Version</td>
                 </tr>
             }
         </tbody>
@@ -89,7 +83,7 @@ else
 }
 
 @code {
-    private readonly ObservableCollection<ActivityQueryItem>? _items = new ObservableCollection<ActivityQueryItem>();
+    private readonly ObservableCollection<PomodoroQueryItem>? _items = new ObservableCollection<PomodoroQueryItem>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -112,13 +106,13 @@ else
 
     private async Task Refresh()
     {
-        var request = new GetActivitiesRequest { };
+        var request = new GetPomosRequest { };
 
-        var response = await Mediator.Send<GetActivitiesResponse>(request);
+        var response = await Mediator.Send<GetPomosResponse>(request);
 
         _items.Clear();
 
-        foreach (var item in response.ActivityQueryItems)
+        foreach (var item in response.PomodoroQueryItems)
         {
             _items.Add(item);
         }
@@ -128,26 +122,26 @@ else
     {
         var now = DateTime.Now;
 
-        var request = new PostActivityRequest
+        var request = new PostPomodoroRequest
             {
                 StartDateTime = now,
                 Description = Guid.NewGuid().ToString()
             };
 
-        var response = await Mediator.Send<PostActivityResponse>(request);
+        var response = await Mediator.Send<PostPomodoroResponse>(request);
 
         await Refresh();
     }
 
     private async Task Delete(Guid id, long version)
     {
-        var request = new DeleteActivityRequest
+        var request = new DeletePomodoroRequest
             {
                 Id = id,
                 Version = version
             };
 
-        var response = await Mediator.Send<DeleteActivityResponse>(request);
+        var response = await Mediator.Send<DeletePomodoroResponse>(request);
 
         await Refresh();
     }

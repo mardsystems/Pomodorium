@@ -1,6 +1,6 @@
-﻿@page "/activities/{Id}"
+﻿@page "/pomos/{Id}"
 @using MediatR;
-@using Pomodorium.Modules.Activities;
+@using Pomodorium.Modules.Pomos;
 @using Pomodorium.Shared
 @using System.DomainModel;
 @using System.DomainModel.Storage;
@@ -12,17 +12,17 @@
 @inject IStringLocalizer<SharedResource> SharedResource;
 @inject NavigationManager Navigation;
 
-<PageTitle>Activity</PageTitle>
+<PageTitle>Pomodoro</PageTitle>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/"><span class="oi oi-home" aria-hidden="true"></span></a></li>
-        <li class="breadcrumb-item"><a href="activities">Activities</a></li>
+        <li class="breadcrumb-item"><a href="pomos">Pomos</a></li>
         <li class="breadcrumb-item active" aria-current="page">@SharedResource["New"]</li>
     </ol>
 </nav>
 
-<h1>Activity</h1>
+<h1>Pomodoro</h1>
 
 <div class="card">
     <div class="card-header">
@@ -60,44 +60,16 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">@SharedResource["State"]</label>
-                    <div class="col-sm-9">
-                        <input @bind="Model.State" class="form-control" disabled />
-                        @*<span asp-validation-for="Model.State" class="text-danger"></span>*@
-                    </div>
-                </div>
-                <div class="row mb-3">                    
-                    <label class="col-sm-3 col-form-label" for="Name">@SharedResource["Name"]</label>
-                    <div class="col-sm-9">
-                        <input @bind="Model.Name" class="form-control" id="Name" />
-                        @*<span asp-validation-for="Model.Name" class="text-danger"></span>*@
-                    </div>
-                </div>
-                <div class="row mb-3">
                     <label class="col-sm-3 col-form-label">@SharedResource["Start Date Time"]</label>
                     <div class="col-sm-9">
-                        <InputDate @bind-Value="Model.StartDateTime" class="form-control" Type="InputDateType.DateTimeLocal" />
+                        <input @bind="Model.StartDateTime" class="form-control" disabled />
                         @*<span asp-validation-for="Model.StartDateTime" class="text-danger"></span>*@
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">@SharedResource["Stop Date Time"]</label>
-                    <div class="col-sm-9">
-                        <input @bind="Model.StopDateTime" class="form-control" type="datetime-local" />
-                        @*<span asp-validation-for="Model.StopDateTime" class="text-danger"></span>*@
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">@SharedResource["Duration"]</label>
-                    <div class="col-sm-9">
-                        <input @bind="Model.Duration" class="form-control" disabled />
-                        @*<span asp-validation-for="Model.Duration" class="text-danger"></span>*@
                     </div>
                 </div>
                 <div class="row mb-3">
                     <label class="col-sm-3 col-form-label">@SharedResource["Description"]</label>
                     <div class="col-sm-9">
-                        <textarea @bind="Model.Description" class="form-control"></textarea>
+                        <input @bind="Model.Description" class="form-control" />
                         @*<span asp-validation-for="Model.Description" class="text-danger"></span>*@
                     </div>
                 </div>
@@ -126,21 +98,21 @@
     [Parameter]
     public string? Id { get; set; }
 
-    public ActivityDetails? Model { get; set; }
+    public PomodoroDetails? Model { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         if (Id == null || Id == "new")
         {
-            Model = new ActivityDetails { };
+            Model = new PomodoroDetails { };
         }
         else
         {
-            var request = new GetActivityRequest { Id = Guid.Parse(Id) };
+            var request = new GetPomodoroRequest { Id = Guid.Parse(Id) };
 
-            var response = await Mediator.Send<GetActivityResponse>(request);
+            var response = await Mediator.Send<GetPomodoroResponse>(request);
 
-            Model = response.ActivityDetails;
+            Model = response.PomodoroDetails;
         }
     }
 
@@ -150,32 +122,27 @@
         {
             var now = DateTime.Now;
 
-            var request = new PostActivityRequest
+            var request = new PostPomodoroRequest
                 {
-                    Name = Model.Name,
-                    StartDateTime = Model.StartDateTime,
-                    StopDateTime = Model.StopDateTime,
+                    StartDateTime = now,
                     Description = Model.Description
                 };
 
-            var response = await Mediator.Send<PostActivityResponse>(request);
+            var response = await Mediator.Send<PostPomodoroResponse>(request);
         }
         else
         {
-            var request = new PutActivityRequest
+            var request = new PutPomodoroRequest
                 {
                     Id = Guid.Parse(Id),
-                    Name = Model.Name,
-                    StartDateTime = Model.StartDateTime,
-                    StopDateTime = Model.StopDateTime,
                     Description = Model.Description,
                     Version = Model.Version
                 };
 
-            var response = await Mediator.Send<PutActivityResponse>(request);
+            var response = await Mediator.Send<PutPomodoroResponse>(request);
         }
 
-        Navigation.NavigateTo("activities");
+        Navigation.NavigateTo("pomos");
     }
 
     private async Task Delete()
@@ -185,14 +152,14 @@
             return;
         }
 
-        var request = new DeleteActivityRequest
+        var request = new DeletePomodoroRequest
             {
                 Id = Guid.Parse(Id),
                 Version = Model.Version
             };
 
-        var response = await Mediator.Send<DeleteActivityResponse>(request);
+        var response = await Mediator.Send<DeletePomodoroResponse>(request);
 
-        Navigation.NavigateTo("activities");
+        Navigation.NavigateTo("pomos");
     }
 }

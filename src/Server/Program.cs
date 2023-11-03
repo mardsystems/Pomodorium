@@ -2,7 +2,7 @@ using MongoDB.Driver;
 using Pomodorium.Bus;
 using Pomodorium.Data;
 using Pomodorium.Hubs;
-using Pomodorium.Modules.Timers;
+using Pomodorium.Modules.Pomos;
 using RabbitMQ.Client;
 using System.DomainModel;
 using System.DomainModel.Storage;

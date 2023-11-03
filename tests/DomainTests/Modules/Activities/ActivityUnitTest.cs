@@ -1,5 +1,5 @@
 //using FluentAssertions;
-//using Pomodorium.Modules.Timers;
+//using Pomodorium.Modules.Pomos;
 
 //namespace Pomodorium.Modules.Activities;
 

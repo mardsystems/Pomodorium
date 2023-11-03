@@ -44,27 +44,34 @@
         @* <h5 class="card-title">Special title treatment</h5>
         <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> *@
 
-        <from>
-            @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label">@SharedResource["Task"]</label>
-                <div class="col-sm-9">
-                    <input @bind="Model.TaskDescription" class="form-control" />
-                    @*<span asp-validation-for="Model.TaskDescription" class="text-danger"></span>*@
+        @if (Model == null)
+        {
+            <p><em>@SharedResource["Loading"]...</em></p>
+        }
+        else
+        {
+            <from>
+                @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
+                <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">@SharedResource["Task"]</label>
+                    <div class="col-sm-9">
+                        <input @bind="Model.TaskDescription" class="form-control" />
+                        @*<span asp-validation-for="Model.TaskDescription" class="text-danger"></span>*@
+                    </div>
                 </div>
-            </div>
-            <div class="row mb-3">
-                <label class="col-sm-3 col-form-label">@SharedResource["Task"]</label>
-                <div class="col-sm-9">
-                    <input @bind="Model.State" class="form-control" />
-                    @*<span asp-validation-for="Model.State" class="text-danger"></span>*@
+                <div class="row mb-3">
+                    <label class="col-sm-3 col-form-label">@SharedResource["State"]</label>
+                    <div class="col-sm-9">
+                        <input @bind="Model.State" class="form-control" disabled />
+                        @*<span asp-validation-for="Model.State" class="text-danger"></span>*@
+                    </div>
                 </div>
-            </div>
-            <button class="btn btn-primary" @onclick="Save">
-                @* <i class="bi bi-save"></i> *@
-                @SharedResource["Save"]
-            </button>
-        </from>
+                <button class="btn btn-primary" @onclick="Save">
+                    @* <i class="bi bi-save"></i> *@
+                    @SharedResource["Save"]
+                </button>
+            </from>
+        }
     </div>
 </div>
 
@@ -76,21 +83,46 @@
 
     protected override async System.Threading.Tasks.Task OnInitializedAsync()
     {
+        if (Id == null || Id == "new")
+        {
+            Model = new FlowtimeDetails { };
+        }
+        else
+        {
+            var request = new GetFlowtimeRequest { Id = Guid.Parse(Id) };
 
+            var response = await Mediator.Send<GetFlowtimeResponse>(request);
+
+            Model = response.FlowtimeDetails;
+        }
     }
 
     private async System.Threading.Tasks.Task Save()
     {
-        var now = DateTime.Now;
+        if (Id == null || Id == "new")
+        {
+            var now = DateTime.Now;
 
-        var request = new ChangeTaskDescriptionRequest
-            {
-                TaskId = Model.TaskId,
-                TaskDescription = Model.TaskDescription,
-                TaskVersion = Model.TaskVersion
-            };
+            var request = new CreateFlowtimeRequest
+                {
+                    TaskDescription = Model.TaskDescription
+                };
 
-        var response = await Mediator.Send<ChangeTaskDescriptionResponse>(request);
+            var response = await Mediator.Send<CreateFlowtimeResponse>(request);
+        }
+        else
+        {
+            var now = DateTime.Now;
+
+            var request = new ChangeTaskDescriptionRequest
+                {
+                    TaskId = Model.TaskId,
+                    TaskDescription = Model.TaskDescription,
+                    TaskVersion = Model.TaskVersion
+                };
+
+            var response = await Mediator.Send<ChangeTaskDescriptionResponse>(request);
+        }
 
         Navigation.NavigateTo("flows");
     }

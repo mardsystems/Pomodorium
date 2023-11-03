@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Pomodorium;
 using Pomodorium.Data;
 using Pomodorium.Hubs;
-using Pomodorium.Modules.Timers;
+using Pomodorium.Modules.Pomos;
 using System.DomainModel;
 using System.DomainModel.Storage;
 using static System.Formats.Asn1.AsnWriter;
@@ -30,7 +30,7 @@ if (APP_REMOTE)
 {
     builder.Services.AddMediatR(config =>
     {
-        config.RegisterServicesFromAssembly(typeof(HttpClientTimersFacade).Assembly);
+        config.RegisterServicesFromAssembly(typeof(HttpClientPomosFacade).Assembly);
     });
 }
 else

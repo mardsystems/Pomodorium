@@ -27,7 +27,7 @@
 
 <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
     <div class="btn-group me-2" role="group" aria-label="First group">
-        <a class="btn btn-primary" href="flows/create">
+        <a class="btn btn-primary" href="flows/new">
             @SharedResource["Create New"]
         </a>
         <button class="btn btn-primary" @onclick="Refresh">
@@ -68,9 +68,9 @@ else
                     <td>
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                             <div class="btn-group me-2" role="group" aria-label="First group">
-                                @* <a class="btn btn-outline-secondary btn-sm" href=@($"flows/edit/{item.Id}")>
+                                <a class="btn btn-outline-secondary btn-sm" href=@($"flows/{item.Id}")>
                                     <span class="oi oi-pencil" aria-hidden="true"></span>
-                                </a> *@
+                                </a>
                                 <button class="btn btn-outline-secondary btn-sm" onclick=@(() => Start(item.Id, item.Version))>
                                     <span class="oi oi-media-play" aria-hidden="true"></span>
                                 </button>
