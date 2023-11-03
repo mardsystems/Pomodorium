@@ -6,21 +6,25 @@ public abstract class AggregateRoot : Entity
 
     public string UserId { get; private set; }
 
+    public bool Archived { get; private set; }
+
     public long Version { get; internal set; }
 
     public ICollection<Event> Changes { get; private set; }
 
-    public AggregateRoot(Guid id, string userId)
-    {
-        Id = id;
+    //public AggregateRoot(Guid id, string userId)
+    //{
+    //    Id = id;
 
-        UserId = userId;
+    //    UserId = userId;
 
-        Changes = new HashSet<Event>();
-    }
+    //    Changes = new HashSet<Event>();
+    //}
 
     protected AggregateRoot()
     {
+        Id = Guid.NewGuid();
+
         Changes = new HashSet<Event>();
     }
 
@@ -63,6 +67,11 @@ public abstract class AggregateRoot : Entity
     protected void Mutate(Event e)
     {
         ((dynamic)this).When((dynamic)e);
+    }
+
+    public virtual void Archive()
+    {
+        Archived = true;
     }
 
     //public void OnSave()

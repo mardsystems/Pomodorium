@@ -1,0 +1,175 @@
+﻿@page "/flows"
+@using MediatR;
+@using Pomodorium.Hubs;
+@using Pomodorium.Modules.Flows;
+@using Pomodorium.Shared
+@using System.DomainModel;
+@using System.DomainModel.Storage;
+@using System.Collections.ObjectModel;
+@using System.Collections.Specialized;
+@using System.Reactive.Linq;
+@using System.Reactive.Threading.Tasks;
+@using System.Reactive.Subjects;
+@inject IMediator Mediator
+@inject EventHubClient EventHubClient
+@inject IStringLocalizer<SharedResource> SharedResource
+
+<PageTitle>Flows</PageTitle>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/"><span class="oi oi-home" aria-hidden="true"></span></a></li>
+        <li class="breadcrumb-item active" aria-current="page">Flows</li>
+    </ol>
+</nav>
+
+<h1>Flows</h1>
+
+<div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+    <div class="btn-group me-2" role="group" aria-label="First group">
+        <a class="btn btn-primary" href="flows/create">
+            @SharedResource["Create New"]
+        </a>
+        <button class="btn btn-primary" @onclick="Refresh">
+            <span class="oi oi-reload" aria-hidden="true"></span>
+        </button>
+    </div>
+    <div class="input-group">
+        <span role="status">Total: @_items?.Count</span>
+    </div>
+</div>
+
+@if (_items == null)
+{
+    <p><em>@SharedResource["Loading"]...</em></p>
+}
+else
+{
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>@SharedResource["Task"]</th>
+                <th>@SharedResource["State"]</th>
+                <th>
+                    @SharedResource["Start Date Time"]
+                    <span class="oi oi-sort-descending" aria-hidden="true"></span>
+                </th>
+                <th>@SharedResource["Stop Date Time"]</th>
+                <th>@SharedResource["Interrupted?"]</th>
+                <th>@SharedResource["Worktime"]</th>
+                <th>@SharedResource["Breaktime"]</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in _items)
+            {
+                <tr>
+                    <td>
+                        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                            <div class="btn-group me-2" role="group" aria-label="First group">
+                                @* <a class="btn btn-outline-secondary btn-sm" href=@($"flows/edit/{item.Id}")>
+                                    <span class="oi oi-pencil" aria-hidden="true"></span>
+                                </a> *@
+                                <button class="btn btn-outline-secondary btn-sm" onclick=@(() => Start(item.Id, item.Version))>
+                                    <span class="oi oi-media-play" aria-hidden="true"></span>
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" onclick=@(() => Stop(item.Id, item.Version))>
+                                    <span class="oi oi-media-stop" aria-hidden="true"></span>
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm" onclick=@(() => Archive(item.Id, item.Version))>
+                                    <span class="oi oi-trash" aria-hidden="true"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </td>
+                    <td>@item.TaskDescription</td>
+                    <td>@item.State</td>
+                    <td>@item.StartDateTime</td>
+                    <td>@item.StopDateTime</td>
+                    <td>@item.Interrupted</td>
+                    <td>@item.Worktime</td>
+                    <td>@item.Breaktime</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private readonly ObservableCollection<FlowtimeQueryItem>? _items = new ObservableCollection<FlowtimeQueryItem>();
+
+    protected override async System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        var x = Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(h => _items.CollectionChanged += h, h => _items.CollectionChanged -= h)
+            .Throttle(TimeSpan.FromSeconds(1))
+            .Subscribe((x) =>
+            {
+                StateHasChanged();
+            });
+
+        var y = EventHubClient.Notification
+            .Throttle(TimeSpan.FromSeconds(1))
+            .Subscribe(async (x) =>
+            {
+                await Refresh();
+            });
+
+        await Refresh();
+    }
+
+    private async System.Threading.Tasks.Task Refresh()
+    {
+        var request = new GetFlowsRequest { };
+
+        var response = await Mediator.Send<GetFlowsResponse>(request);
+
+        _items.Clear();
+
+        foreach (var item in response.FlowtimeQueryItems)
+        {
+            _items.Add(item);
+        }
+    }
+
+    private async System.Threading.Tasks.Task Start(Guid id, long version)
+    {
+        var request = new StartFlowtimeRequest
+            {
+                Id = id,
+                StartDateTime = DateTime.Now,
+                Version = version
+            };
+
+        var response = await Mediator.Send<StartFlowtimeResponse>(request);
+
+        await Refresh();
+    }
+
+    private async System.Threading.Tasks.Task Stop(Guid id, long version)
+    {
+        var request = new StopFlowtimeRequest
+            {
+                Id = id,
+                StopDateTime = DateTime.Now,
+                Version = version
+            };
+
+        var response = await Mediator.Send<StopFlowtimeResponse>(request);
+
+        await Refresh();
+    }
+
+    private async System.Threading.Tasks.Task Archive(Guid id, long version)
+    {
+        var request = new ArchiveFlowtimeRequest
+            {
+                Id = id,
+                Version = version
+            };
+
+        var response = await Mediator.Send<ArchiveFlowtimeResponse>(request);
+
+        await Refresh();
+    }
+}

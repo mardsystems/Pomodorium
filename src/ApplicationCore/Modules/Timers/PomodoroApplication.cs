@@ -1,69 +1,68 @@
 ﻿using MediatR;
 using System.DomainModel;
 
-namespace Pomodorium.Modules.Timers
+namespace Pomodorium.Modules.Timers;
+
+public class PomodoroApplication :
+    IRequestHandler<PostPomodoroRequest, PostPomodoroResponse>,
+    IRequestHandler<PutPomodoroRequest, PutPomodoroResponse>,
+    IRequestHandler<DeletePomodoroRequest, DeletePomodoroResponse>
 {
-    public class PomodoroApplication :
-        IRequestHandler<PostPomodoroRequest, PostPomodoroResponse>,
-        IRequestHandler<PutPomodoroRequest, PutPomodoroResponse>,
-        IRequestHandler<DeletePomodoroRequest, DeletePomodoroResponse>
+    private readonly Repository _repository;
+
+    public PomodoroApplication(Repository pomodoroRepository)
     {
-        private readonly Repository _repository;
+        _repository = pomodoroRepository;
+    }
 
-        public PomodoroApplication(Repository pomodoroRepository)
+    public async Task<PostPomodoroResponse> Handle(PostPomodoroRequest request, CancellationToken cancellationToken)
+    {
+        var correlationId = request.GetCorrelationId();
+
+        var pomodoroId = correlationId;
+
+        var pomodoro = new Pomodoro(pomodoroId, request.Description);
+
+        await _repository.Save(pomodoro, -1);
+
+        var response = new PostPomodoroResponse(request.GetCorrelationId()) { };
+
+        return response;
+    }
+
+    public async Task<PutPomodoroResponse> Handle(PutPomodoroRequest request, CancellationToken cancellationToken)
+    {
+        var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id);
+
+        if (pomodoro == null)
         {
-            _repository = pomodoroRepository;
+            throw new EntityNotFoundException();
         }
 
-        public async Task<PostPomodoroResponse> Handle(PostPomodoroRequest request, CancellationToken cancellationToken)
+        pomodoro.ChangeDescription(request.Description);
+
+        await _repository.Save(pomodoro, request.Version);
+
+        var response = new PutPomodoroResponse(request.GetCorrelationId()) { };
+
+        return response;
+    }
+
+    public async Task<DeletePomodoroResponse> Handle(DeletePomodoroRequest request, CancellationToken cancellationToken)
+    {
+        var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id);
+
+        if (pomodoro == null)
         {
-            var correlationId = request.GetCorrelationId();
-
-            var pomodoroId = correlationId;
-
-            var pomodoro = new Pomodoro(pomodoroId, request.StartDateTime, request.Description);
-
-            await _repository.Save(pomodoro, -1);
-
-            var response = new PostPomodoroResponse(request.GetCorrelationId()) { };
-
-            return response;
+            throw new EntityNotFoundException();
         }
 
-        public async Task<PutPomodoroResponse> Handle(PutPomodoroRequest request, CancellationToken cancellationToken)
-        {
-            var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id);
+        pomodoro.Archive();
 
-            if (pomodoro == null)
-            {
-                throw new EntityNotFoundException();
-            }
+        await _repository.Save(pomodoro, request.Version);
 
-            pomodoro.ChangeDescription(request.Description);
+        var response = new DeletePomodoroResponse(request.GetCorrelationId()) { };
 
-            await _repository.Save(pomodoro, request.Version);
-
-            var response = new PutPomodoroResponse(request.GetCorrelationId()) { };
-
-            return response;
-        }
-
-        public async Task<DeletePomodoroResponse> Handle(DeletePomodoroRequest request, CancellationToken cancellationToken)
-        {
-            var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id);
-
-            if (pomodoro == null)
-            {
-                throw new EntityNotFoundException();
-            }
-
-            pomodoro.Archive();
-
-            await _repository.Save(pomodoro, request.Version);
-
-            var response = new DeletePomodoroResponse(request.GetCorrelationId()) { };
-
-            return response;
-        }
+        return response;
     }
 }
