@@ -7,9 +7,9 @@ namespace Pomodorium.Modules.Pomos
     public class HttpClientPomosFacade :
         IRequestHandler<GetPomosRequest, GetPomosResponse>,
         IRequestHandler<GetPomodoroRequest, GetPomodoroResponse>,
-        IRequestHandler<PostPomodoroRequest, PostPomodoroResponse>,
-        IRequestHandler<PutPomodoroRequest, PutPomodoroResponse>,
-        IRequestHandler<DeletePomodoroRequest, DeletePomodoroResponse>
+        IRequestHandler<CreatePomodoroRequest, CreatePomodoroResponse>,
+        IRequestHandler<RefinePomodoroTaskRequest, RefinePomodoroTaskResponse>,
+        IRequestHandler<ArchivePomodoroRequest, ArchivePomodoroResponse>
     {
         private readonly HttpClient _httpClient;
 
@@ -32,27 +32,27 @@ namespace Pomodorium.Modules.Pomos
             return response;
         }
 
-        public async Task<PostPomodoroResponse> Handle(PostPomodoroRequest request, CancellationToken cancellationToken)
+        public async Task<CreatePomodoroResponse> Handle(CreatePomodoroRequest request, CancellationToken cancellationToken)
         {
             var httpResponse = await _httpClient.PostAsJsonAsync("api/timers", request, cancellationToken);
 
-            var response = await httpResponse.Content.ReadFromJsonAsync<PostPomodoroResponse>(JsonSerializerOptions.Default, cancellationToken);
+            var response = await httpResponse.Content.ReadFromJsonAsync<CreatePomodoroResponse>(JsonSerializerOptions.Default, cancellationToken);
 
             return response;
         }
 
-        public async Task<PutPomodoroResponse> Handle(PutPomodoroRequest request, CancellationToken cancellationToken)
+        public async Task<RefinePomodoroTaskResponse> Handle(RefinePomodoroTaskRequest request, CancellationToken cancellationToken)
         {
             var httpResponse = await _httpClient.PutAsJsonAsync($"api/timers/{request.Id}", request, cancellationToken);
 
-            var response = await httpResponse.Content.ReadFromJsonAsync<PutPomodoroResponse>(JsonSerializerOptions.Default, cancellationToken);
+            var response = await httpResponse.Content.ReadFromJsonAsync<RefinePomodoroTaskResponse>(JsonSerializerOptions.Default, cancellationToken);
 
             return response;
         }
 
-        public async Task<DeletePomodoroResponse> Handle(DeletePomodoroRequest request, CancellationToken cancellationToken)
+        public async Task<ArchivePomodoroResponse> Handle(ArchivePomodoroRequest request, CancellationToken cancellationToken)
         {
-            var response = await _httpClient.DeleteFromJsonAsync<DeletePomodoroResponse>($"api/timers/{request.Id}?version={request.Version}", cancellationToken);
+            var response = await _httpClient.DeleteFromJsonAsync<ArchivePomodoroResponse>($"api/timers/{request.Id}?version={request.Version}", cancellationToken);
 
             return response;
         }

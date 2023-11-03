@@ -10,68 +10,93 @@ public class PomodoroCreated : Event
     public Guid Id { get; private set; }
 
     [DataMember(Order = 2)]
-    public string Description { get; private set; }
+    public string Task { get; private set; }
 
     [DataMember(Order = 3)]
-    public TimerState State { get; private set; }
+    public TimeSpan Timer { get; private set; }
 
-    public PomodoroCreated(Guid id, string description, TimerState state)
+    [DataMember(Order = 4)]
+    public DateTime StartDateTime { get; private set; }
+
+    [DataMember(Order = 5)]
+    public PomodoroState State { get; private set; }
+
+    public PomodoroCreated(Guid id, string task, TimeSpan timer, DateTime startDateTime, PomodoroState state)
     {
         Id = id;
 
-        Description = description;
+        Task = task;
+
+        Timer = timer;
+
+        StartDateTime = startDateTime;
 
         State = state;
     }
 
-    private PomodoroCreated()
-    {
-
-    }
+    private PomodoroCreated() { }
 }
 
 [DataContract]
-public class PomodoroStarted : Event
+public class PomodoroRinged : Event
 {
     [DataMember(Order = 1)]
     public Guid Id { get; private set; }
 
     [DataMember(Order = 2)]
-    public DateTime StartDateTime { get; private set; }
+    public DateTime StopDateTime { get; private set; }
 
-    public PomodoroStarted(Guid id, DateTime startDateTime)
+    [DataMember(Order = 5)]
+    public PomodoroState State { get; private set; }
+
+    public PomodoroRinged(Guid id, DateTime stopDateTime, PomodoroState state)
     {
         Id = id;
 
-        StartDateTime = startDateTime;
+        StopDateTime = stopDateTime;
+
+        State = state;
     }
 
-    private PomodoroStarted()
-    {
-
-    }
+    private PomodoroRinged() { }
 }
 
 [DataContract]
-public class PomodoroDescriptionChanged : Event
+public class PomodoroChecked : Event
 {
     [DataMember(Order = 1)]
     public Guid Id { get; private set; }
 
     [DataMember(Order = 2)]
-    public string? Description { get; private set; }
+    public PomodoroState State { get; private set; }
 
-    public PomodoroDescriptionChanged(Guid id, string description)
+    public PomodoroChecked(Guid id, PomodoroState state)
     {
         Id = id;
 
-        Description = description;
+        State = state;
     }
 
-    private PomodoroDescriptionChanged()
+    private PomodoroChecked() { }
+}
+
+[DataContract]
+public class PomodoroTaskRefined : Event
+{
+    [DataMember(Order = 1)]
+    public Guid Id { get; private set; }
+
+    [DataMember(Order = 2)]
+    public string Task { get; private set; }
+
+    public PomodoroTaskRefined(Guid id, string task)
     {
+        Id = id;
 
+        Task = task;
     }
+
+    private PomodoroTaskRefined() { }
 }
 
 [DataContract]
@@ -85,8 +110,5 @@ public class PomodoroArchived : Event
         Id = id;
     }
 
-    private PomodoroArchived()
-    {
-
-    }
+    private PomodoroArchived() { }
 }

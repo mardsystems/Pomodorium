@@ -4,70 +4,71 @@ namespace Pomodorium.Modules.Pomos;
 
 public class Pomodoro : AggregateRoot
 {
-    public DateTime? StartDateTime { get; private set; }
+    public string? Task { get; private set; }
 
-    public DateTime? EndDateTime { get; private set; }
+    public TimeSpan Timer { get; private set; }
 
-    public string? Description { get; private set; }
+    public DateTime StartDateTime { get; private set; }
 
-    public TimerState State { get; private set; }
+    public PomodoroState State { get; private set; }
 
-    public Pomodoro(Guid id, string description)
+    public Pomodoro(string task, TimeSpan timer, DateTime moment)
     {
-        if (description == null)
+        if (task == null)
         {
-            throw new ArgumentNullException(nameof(description));
+            throw new ArgumentNullException(nameof(task));
         }
 
-        Apply(new PomodoroCreated(id, description, State));
-    }
-
-    public void ChangeDescription(string description)
-    {
-        if (description == null)
-        {
-            throw new ArgumentNullException(nameof(description));
-        }
-
-        Apply(new PomodoroDescriptionChanged(Id, description));
-    }
-
-    public void Start()
-    {
-        var now = DateTime.Now;
-
-        Apply(new PomodoroStarted(Id, now));
-    }
-
-    public void Pause()
-    {
-        State = TimerState.Paused;
-    }
-
-    public void Stop()
-    {
-        State = TimerState.Stopped;
+        Apply(new PomodoroCreated(Id, task, timer, moment, PomodoroState.Unknown));
     }
 
     public void When(PomodoroCreated e)
     {
         Id = e.Id;
 
-        Description = e.Description;
-    }
+        Task = e.Task;
 
-    public void When(PomodoroStarted e)
-    {
-        Id = e.Id;
+        Timer = e.Timer;
 
         StartDateTime = e.StartDateTime;
 
-        State = TimerState.Started;
+        State = e.State;
     }
 
-    public void When(PomodoroDescriptionChanged e)
+    public PomodoroState GetStateAt(DateTime moment)
     {
-        Description = e.Description;
+        var elapsedTime = moment - StartDateTime;
+
+        if (elapsedTime >= Timer)
+        {
+            return PomodoroState.Stopped;
+        }
+        else
+        {
+            return PomodoroState.Running;
+        }
+    }
+
+    public void RefineTask(string task)
+    {
+        Apply(new PomodoroTaskRefined(Id, task));
+    }
+
+    public void When(PomodoroTaskRefined e)
+    {
+        Task = e.Task;
+    }
+
+    public void Check()
+    {
+        var state = PomodoroState.Checked;
+
+        Apply(new PomodoroChecked(Id, state));
+    }
+
+    public void When(PomodoroChecked e)
+    {
+        State = e.State;
     }
 
     public override void Archive()
@@ -80,17 +81,5 @@ public class Pomodoro : AggregateRoot
         base.Archive();
     }
 
-    public Pomodoro()
-    {
-
-    }
-}
-
-public class Interval
-{
-    public DateTime StartDateTime { get; private set; }
-
-    public DateTime? EndDateTime { get; private set; }
-
-    public string? Description { get; private set; }
+    public Pomodoro() { }
 }

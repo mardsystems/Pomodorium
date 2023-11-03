@@ -1,8 +1,9 @@
 ﻿namespace Pomodorium.Modules.Pomos;
 
-public enum TimerState
+public enum PomodoroState
 {
-    Started,
-    Paused,
-    Stopped
+    Unknown,
+    Running,
+    Stopped,
+    Checked
 }

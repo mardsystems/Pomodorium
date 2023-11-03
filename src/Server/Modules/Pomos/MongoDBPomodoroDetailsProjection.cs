@@ -7,7 +7,8 @@ namespace Pomodorium.Modules.Pomos;
 public class MongoDBPomodoroDetailsProjection :
     IRequestHandler<GetPomodoroRequest, GetPomodoroResponse>,
     INotificationHandler<PomodoroCreated>,
-    INotificationHandler<PomodoroDescriptionChanged>,
+    INotificationHandler<PomodoroChecked>,
+    INotificationHandler<PomodoroTaskRefined>,
     INotificationHandler<PomodoroArchived>
 {
     private readonly MongoClient _mongoClient;
@@ -42,15 +43,17 @@ public class MongoDBPomodoroDetailsProjection :
         var pomodoroDetails = new PomodoroDetails
         {
             Id = notification.Id,
+            Task = notification.Task,
+            Timer = notification.Timer,
+            StartDateTime = notification.StartDateTime,
             State = notification.State,
-            Description = notification.Description,
             Version = notification.Version
         };
 
         await _mongoCollection.InsertOneAsync(pomodoroDetails, null, cancellationToken);
     }
 
-    public async Task Handle(PomodoroDescriptionChanged notification, CancellationToken cancellationToken)
+    public async Task Handle(PomodoroChecked notification, CancellationToken cancellationToken)
     {
         var filter = Builders<PomodoroDetails>.Filter.Eq(x => x.Id, notification.Id);
 
@@ -61,11 +64,26 @@ public class MongoDBPomodoroDetailsProjection :
             throw new EntityNotFoundException();
         }
 
-        pomodoroDetails.Description = notification.Description;
-        pomodoroDetails.Version = notification.Version;
+        var update = Builders<PomodoroDetails>.Update
+            .Set(x => x.State, notification.State)
+            .Set(x => x.Version, notification.Version);
+
+        await _mongoCollection.UpdateOneAsync(filter, update, null, cancellationToken);
+    }
+
+    public async Task Handle(PomodoroTaskRefined notification, CancellationToken cancellationToken)
+    {
+        var filter = Builders<PomodoroDetails>.Filter.Eq(x => x.Id, notification.Id);
+
+        var pomodoroDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
+
+        if (pomodoroDetails == null)
+        {
+            throw new EntityNotFoundException();
+        }
 
         var update = Builders<PomodoroDetails>.Update
-            .Set(x => x.Description, notification.Description)
+            .Set(x => x.Task, notification.Task)
             .Set(x => x.Version, notification.Version);
 
         await _mongoCollection.UpdateOneAsync(filter, update, null, cancellationToken);

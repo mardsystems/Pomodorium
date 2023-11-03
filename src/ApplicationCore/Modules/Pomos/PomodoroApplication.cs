@@ -4,9 +4,10 @@ using System.DomainModel;
 namespace Pomodorium.Modules.Pomos;
 
 public class PomodoroApplication :
-    IRequestHandler<PostPomodoroRequest, PostPomodoroResponse>,
-    IRequestHandler<PutPomodoroRequest, PutPomodoroResponse>,
-    IRequestHandler<DeletePomodoroRequest, DeletePomodoroResponse>
+    IRequestHandler<CreatePomodoroRequest, CreatePomodoroResponse>,
+    IRequestHandler<RefinePomodoroTaskRequest, RefinePomodoroTaskResponse>,
+    IRequestHandler<CheckPomodoroRequest, CheckPomodoroResponse>,
+    IRequestHandler<ArchivePomodoroRequest, ArchivePomodoroResponse>
 {
     private readonly Repository _repository;
 
@@ -15,22 +16,18 @@ public class PomodoroApplication :
         _repository = pomodoroRepository;
     }
 
-    public async Task<PostPomodoroResponse> Handle(PostPomodoroRequest request, CancellationToken cancellationToken)
+    public async Task<CreatePomodoroResponse> Handle(CreatePomodoroRequest request, CancellationToken cancellationToken)
     {
-        var correlationId = request.GetCorrelationId();
-
-        var pomodoroId = correlationId;
-
-        var pomodoro = new Pomodoro(pomodoroId, request.Description);
+        var pomodoro = new Pomodoro(request.Task, request.Timer, DateTime.Now);
 
         await _repository.Save(pomodoro, -1);
 
-        var response = new PostPomodoroResponse(request.GetCorrelationId()) { };
+        var response = new CreatePomodoroResponse(request.GetCorrelationId()) { };
 
         return response;
     }
 
-    public async Task<PutPomodoroResponse> Handle(PutPomodoroRequest request, CancellationToken cancellationToken)
+    public async Task<RefinePomodoroTaskResponse> Handle(RefinePomodoroTaskRequest request, CancellationToken cancellationToken)
     {
         var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id);
 
@@ -39,16 +36,34 @@ public class PomodoroApplication :
             throw new EntityNotFoundException();
         }
 
-        pomodoro.ChangeDescription(request.Description);
+        pomodoro.RefineTask(request.Task);
 
         await _repository.Save(pomodoro, request.Version);
 
-        var response = new PutPomodoroResponse(request.GetCorrelationId()) { };
+        var response = new RefinePomodoroTaskResponse(request.GetCorrelationId()) { };
 
         return response;
     }
 
-    public async Task<DeletePomodoroResponse> Handle(DeletePomodoroRequest request, CancellationToken cancellationToken)
+    public async Task<CheckPomodoroResponse> Handle(CheckPomodoroRequest request, CancellationToken cancellationToken)
+    {
+        var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id);
+
+        if (pomodoro == null)
+        {
+            throw new EntityNotFoundException();
+        }
+
+        pomodoro.Check();
+
+        await _repository.Save(pomodoro, request.Version);
+
+        var response = new CheckPomodoroResponse(request.GetCorrelationId()) { };
+
+        return response;
+    }
+
+    public async Task<ArchivePomodoroResponse> Handle(ArchivePomodoroRequest request, CancellationToken cancellationToken)
     {
         var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id);
 
@@ -61,7 +76,7 @@ public class PomodoroApplication :
 
         await _repository.Save(pomodoro, request.Version);
 
-        var response = new DeletePomodoroResponse(request.GetCorrelationId()) { };
+        var response = new ArchivePomodoroResponse(request.GetCorrelationId()) { };
 
         return response;
     }

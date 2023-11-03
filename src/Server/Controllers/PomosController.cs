@@ -31,10 +31,10 @@ public class PomosController : ControllerBase
     }
 
     [HttpPost("", Name = "PostPomodoro")]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(PostPomodoroResponse))]
-    public async Task<PostPomodoroResponse> PostPomodoro(PostPomodoroRequest request)
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreatePomodoroResponse))]
+    public async Task<CreatePomodoroResponse> PostPomodoro(CreatePomodoroRequest request)
     {
-        var response = await _mediator.Send<PostPomodoroResponse>(request);
+        var response = await _mediator.Send<CreatePomodoroResponse>(request);
 
         return response;
     }
@@ -51,23 +51,23 @@ public class PomosController : ControllerBase
     }
 
     [HttpPut("{id}", Name = "PutPomodoro")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PutPomodoroResponse))]
-    public async Task<PutPomodoroResponse> PutPomodoro(Guid id, PutPomodoroRequest request)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RefinePomodoroTaskResponse))]
+    public async Task<RefinePomodoroTaskResponse> PutPomodoro(Guid id, RefinePomodoroTaskRequest request)
     {
         request.Id = id;
 
-        var response = await _mediator.Send<PutPomodoroResponse>(request);
+        var response = await _mediator.Send<RefinePomodoroTaskResponse>(request);
 
         return response;
     }
 
     [HttpDelete("{id}", Name = "DeletePomodoro")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DeletePomodoroResponse))]
-    public async Task<DeletePomodoroResponse> DeletePomodoro(Guid id, long version)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ArchivePomodoroResponse))]
+    public async Task<ArchivePomodoroResponse> DeletePomodoro(Guid id, long version)
     {
-        var request = new DeletePomodoroRequest { Id = id, Version = version };
+        var request = new ArchivePomodoroRequest { Id = id, Version = version };
 
-        var response = await _mediator.Send<DeletePomodoroResponse>(request);
+        var response = await _mediator.Send<ArchivePomodoroResponse>(request);
 
         return response;
     }

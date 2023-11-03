@@ -1,6 +1,6 @@
 ﻿namespace Pomodorium.Modules.Pomos;
 
-public class DeletePomodoroRequest : Request<DeletePomodoroResponse>
+public class ArchivePomodoroRequest : Request<ArchivePomodoroResponse>
 {
     public Guid Id { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Pomodorium.Data;
+using Pomodorium.Modules.Activities;
 using System.DomainModel;
 
 namespace Pomodorium.Modules.Pomos;
@@ -7,7 +8,8 @@ namespace Pomodorium.Modules.Pomos;
 public class IndexedDBPomodoroQueryItemsProjection :
     IRequestHandler<GetPomosRequest, GetPomosResponse>,
     INotificationHandler<PomodoroCreated>,
-    INotificationHandler<PomodoroDescriptionChanged>,
+    INotificationHandler<PomodoroChecked>,
+    INotificationHandler<PomodoroTaskRefined>,
     INotificationHandler<PomodoroArchived>
 {
     private readonly IndexedDBAccessor _db;
@@ -31,15 +33,17 @@ public class IndexedDBPomodoroQueryItemsProjection :
         var pomodoroQueryItem = new PomodoroQueryItem
         {
             Id = notification.Id,
+            Task = notification.Task,
+            Timer = notification.Timer,
+            StartDateTime = notification.StartDateTime,
             State = notification.State,
-            Description = notification.Description,
             Version = notification.Version
         };
 
         await _db.PutAsync("PomodoroQueryItems", pomodoroQueryItem);
     }
 
-    public async Task Handle(PomodoroDescriptionChanged notification, CancellationToken cancellationToken)
+    public async Task Handle(PomodoroChecked notification, CancellationToken cancellationToken)
     {
         var pomodoroQueryItem = await _db.GetAsync<PomodoroQueryItem>("PomodoroQueryItems", notification.Id);
 
@@ -48,7 +52,22 @@ public class IndexedDBPomodoroQueryItemsProjection :
             throw new EntityNotFoundException();
         }
 
-        pomodoroQueryItem.Description = notification.Description;
+        pomodoroQueryItem.State = notification.State;
+        pomodoroQueryItem.Version = notification.Version;
+
+        await _db.PutAsync("PomodoroQueryItems", pomodoroQueryItem);
+    }
+
+    public async Task Handle(PomodoroTaskRefined notification, CancellationToken cancellationToken)
+    {
+        var pomodoroQueryItem = await _db.GetAsync<PomodoroQueryItem>("PomodoroQueryItems", notification.Id);
+
+        if (pomodoroQueryItem == null)
+        {
+            throw new EntityNotFoundException();
+        }
+
+        pomodoroQueryItem.Task = notification.Task;
         pomodoroQueryItem.Version = notification.Version;
 
         await _db.PutAsync("PomodoroQueryItems", pomodoroQueryItem);
