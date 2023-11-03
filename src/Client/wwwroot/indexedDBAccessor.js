@@ -11,6 +11,8 @@ export function initialize() {
 
         eventStore.createIndex("name", "name", { unique: false });
 
+        db.createObjectStore("ActivityQueryItems", { keyPath: "id" });
+        db.createObjectStore("ActivityDetails", { keyPath: "id" });
         db.createObjectStore("PomodoroQueryItems", { keyPath: "id" });
         db.createObjectStore("PomodoroDetails", { keyPath: "id" });
         db.createObjectStore("FlowtimeQueryItems", { keyPath: "id" });
