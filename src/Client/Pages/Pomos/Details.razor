@@ -120,9 +120,9 @@
                     @* <i class="bi bi-save"></i> *@
                     @SharedResource["Save"]
                 </button>
-                <button class="btn btn-danger" @onclick="Delete">
+                <button class="btn btn-danger" @onclick="Archive">
                     @* <i class="bi bi-save"></i> *@
-                    @SharedResource["Delete"]
+                    @SharedResource["Archive"]
                 </button>
             </from>
         }
@@ -204,7 +204,7 @@
         Navigation.NavigateTo("pomos");
     }
 
-    private async Task Delete()
+    private async Task Archive()
     {
         if (Id == null || Id == "new")
         {

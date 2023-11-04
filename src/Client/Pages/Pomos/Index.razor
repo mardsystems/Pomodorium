@@ -48,44 +48,46 @@
 }
 else
 {
-    <table class="table table-striped align-middle">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>@SharedResource["State"]</th>
-                <th>@SharedResource["Task"]</th>
-                <th>@SharedResource["Start Date Time"]</th>
-                <th>@SharedResource["Stop Date Time"]</th>
-                <th>@SharedResource["Timer"]</th>
-                <th>@SharedResource["Countdown"]</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Items)
-            {
+    <div class="table-responsive text-nowrap">
+        <table class="table table-striped align-middle">
+            <thead>
                 <tr>
-                    <td>
-                        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                            <div class="btn-group me-2" role="group" aria-label="First group">
-                                <a class="btn btn-outline-secondary btn-sm" href=@($"pomos/{item.Id}")>
-                                    <span class="oi oi-pencil" aria-hidden="true"></span>
-                                </a>
-                                <button class="btn btn-outline-danger btn-sm" onclick=@(() => Delete(item.Id, item.Version))>
-                                    <span class="oi oi-trash" aria-hidden="true"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </td>
-                    <td>@item.State</td>
-                    <td>@item.Task</td>
-                    <td>@item.StartDateTime</td>
-                    <td>@item.StopDateTime</td>
-                    <td>@item.Timer</td>
-                    <td>@item.Countdown</td>
+                    <th>#</th>
+                    <th>@SharedResource["State"]</th>
+                    <th>@SharedResource["Task"]</th>
+                    <th>@SharedResource["Start Date Time"]</th>
+                    <th>@SharedResource["Stop Date Time"]</th>
+                    <th>@SharedResource["Timer"]</th>
+                    <th>@SharedResource["Countdown"]</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <td>
+                            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="btn-group me-2" role="group" aria-label="First group">
+                                    <a class="btn btn-outline-secondary btn-sm" href=@($"pomos/{item.Id}")>
+                                        <span class="oi oi-pencil" aria-hidden="true"></span>
+                                    </a>
+                                    <button class="btn btn-outline-danger btn-sm" onclick=@(() => Archive(item.Id, item.Version))>
+                                        <span class="oi oi-trash" aria-hidden="true"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                        <td>@item.State</td>
+                        <td>@item.Task</td>
+                        <td>@item.StartDateTime</td>
+                        <td>@item.StopDateTime</td>
+                        <td>@item.Timer</td>
+                        <td>@item.Countdown</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 
 @code {
@@ -139,7 +141,7 @@ else
         await Refresh();
     }
 
-    private async Task Delete(Guid id, long version)
+    private async Task Archive(Guid id, long version)
     {
         var request = new ArchivePomodoroRequest
             {
