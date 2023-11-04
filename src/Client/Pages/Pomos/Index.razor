@@ -11,87 +11,58 @@
 @using System.Reactive.Threading.Tasks;
 @using System.Reactive.Subjects;
 @inject IMediator Mediator
+@inject NavigationManager NavigationManager
 @inject EventHubClient EventHubClient
 @inject IStringLocalizer<SharedResource> SharedResource
 
 <PageTitle>Pomos</PageTitle>
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/"><span class="oi oi-home" aria-hidden="true"></span></a></li>
-        <li class="breadcrumb-item active" aria-current="page">Pomos</li>
-    </ol>
-</nav>
+<MudToolBar>
+    <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="Add" />
+    <MudIconButton Icon="@Icons.Material.Outlined.Refresh" Color="Color.Inherit" OnClick="Refresh" />
+    <MudSpacer />
+    <MudText Typo="Typo.button" Class="mx-4" Style="white-space: nowrap">Total: @Model.Items?.Count</MudText>
+    <MudIconButton Icon="@Icons.Material.Outlined.MoreVert" Color="Color.Inherit" />
+</MudToolBar>
 
-<h1>Pomos</h1>
-
-<div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-    <div class="btn-group me-2" role="group" aria-label="First group">
-        <a class="btn btn-primary" href="pomos/new">
-            @SharedResource["Create New"]
-        </a>
-        <button class="btn btn-primary" @onclick="Add">
-            <span class="oi oi-plus" aria-hidden="true"></span>
-        </button>
-        <button class="btn btn-primary" @onclick="Refresh">
-            <span class="oi oi-reload" aria-hidden="true"></span>
-        </button>
-    </div>
-    <div class="input-group">
-        <span role="status">Total: @Model?.Items.Count</span>
-    </div>
-</div>
-
-@if (Model.Items == null)
-{
-    <p><em>@SharedResource["Loading"]...</em></p>
-}
-else
-{
-    <div class="table-responsive text-nowrap">
-        <table class="table table-striped align-middle">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>@SharedResource["State"]</th>
-                    <th>@SharedResource["Task"]</th>
-                    <th>@SharedResource["Start Date Time"]</th>
-                    <th>@SharedResource["Stop Date Time"]</th>
-                    <th>@SharedResource["Timer"]</th>
-                    <th>@SharedResource["Countdown"]</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.Items)
-                {
-                    <tr>
-                        <td>
-                            <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                                <div class="btn-group me-2" role="group" aria-label="First group">
-                                    <a class="btn btn-outline-secondary btn-sm" href=@($"pomos/{item.Id}")>
-                                        <span class="oi oi-pencil" aria-hidden="true"></span>
-                                    </a>
-                                    <button class="btn btn-outline-danger btn-sm" onclick=@(() => Archive(item.Id, item.Version))>
-                                        <span class="oi oi-trash" aria-hidden="true"></span>
-                                    </button>
-                                </div>
-                            </div>
-                        </td>
-                        <td>@item.State</td>
-                        <td>@item.Task</td>
-                        <td>@item.StartDateTime</td>
-                        <td>@item.StopDateTime</td>
-                        <td>@item.Timer</td>
-                        <td>@item.Countdown</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-}
+<MudContainer MaxWidth="MaxWidth.Large">
+    @if (Model.Items == null)
+    {
+        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+    }
+    else
+    {
+        <MudTable Items="Model.Items" Hover="true" Striped="true" SortLabel="@SharedResource["Sort By"]" @ref="mudTable" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="IndexViewModel.Item" Style="cursor: pointer">
+            <HeaderContent>
+                <MudTh></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.State!)">@SharedResource["State"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.Task!)">@SharedResource["Task"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.StartDateTime)" InitialDirection="SortDirection.Ascending">@SharedResource["Start Date Time"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.StopDateTime)">@SharedResource["Stop Date Time"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.Timer)">@SharedResource["Timer"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.Countdown)">@SharedResource["Countdown"]</MudTableSortLabel></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd Style="white-space: nowrap; justify-content: center">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Archive" OnClick="@(() => Archive(context.Id, context.Version))">@SharedResource["Archive"]</MudIconButton>
+                </MudTd>
+                <MudTd DataLabel="@SharedResource["State"]">@context.State</MudTd>
+                <MudTd DataLabel="@SharedResource["Task"]">@context.Task</MudTd>
+                <MudTd DataLabel="@SharedResource["Start Date Time"]">@context.StartDateTime</MudTd>
+                <MudTd DataLabel="@SharedResource["Stop Date Time"]">@context.StopDateTime</MudTd>
+                <MudTd DataLabel="@SharedResource["Timer"]">@context.Timer</MudTd>
+                <MudTd DataLabel="@SharedResource["Countdown"]">@context.Countdown</MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+</MudContainer>
 
 @code {
     private IndexViewModel? Model;
+
+    private MudTable<IndexViewModel.Item> mudTable;
+
+    private int selectedRowNumber = -1;
 
     protected override async Task OnInitializedAsync()
     {
@@ -117,6 +88,11 @@ else
         await Refresh();
     }
 
+    private async Task Add()
+    {
+        NavigationManager.NavigateTo($"/pomos/new");
+    }
+
     private async Task Refresh()
     {
         var request = new GetPomosRequest { };
@@ -126,7 +102,7 @@ else
         Model.Repopulate(response.PomodoroQueryItems);
     }
 
-    private async Task Add()
+    private async Task Add2()
     {
         var now = DateTime.Now;
 
@@ -152,5 +128,33 @@ else
         var response = await Mediator.Send<ArchivePomodoroResponse>(request);
 
         await Refresh();
+    }
+
+    private void RowClickEvent(TableRowClickEventArgs<IndexViewModel.Item> e)
+    {
+        // clickedEvents.Add("Row has been clicked");
+    }
+
+    private string SelectedRowClassFunc(IndexViewModel.Item element, int rowNumber)
+    {
+        if (selectedRowNumber == rowNumber)
+        {
+            selectedRowNumber = -1;
+            // clickedEvents.Add("Selected Row: None");
+            return string.Empty;
+        }
+        else if (mudTable.SelectedItem != null && mudTable.SelectedItem.Equals(element))
+        {
+            selectedRowNumber = rowNumber;
+            // clickedEvents.Add($"Selected Row: {rowNumber}");
+
+            NavigationManager.NavigateTo($"/pomos/{mudTable.SelectedItem.Id}");
+
+            return "selected";
+        }
+        else
+        {
+            return string.Empty;
+        }
     }
 }

@@ -14,134 +14,79 @@
 
 <PageTitle>Flowtime</PageTitle>
 
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/"><span class="oi oi-home" aria-hidden="true"></span></a></li>
-        <li class="breadcrumb-item"><a href="flows">Flows</a></li>
-        <li class="breadcrumb-item active" aria-current="page">@SharedResource["New"]</li>
-    </ol>
-</nav>
-
-<h1>Flowtime</h1>
-
-<div class="card">
-    <div class="card-header">
-        <ul class="nav nav-tabs card-header-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="true" href="#">
-                    @SharedResource["Create New"]
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled">Disabled</a>
-            </li>
-        </ul>
-    </div>
-    <div class="card-body">
-        @* <h5 class="card-title">Special title treatment</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> *@
-
-        @if (Model == null)
-        {
-            <p><em>@SharedResource["Loading"]...</em></p>
-        }
-        else
-        {
-            <from>
-                @* <div asp-validation-summary="ModelOnly" class="text-danger"></div> *@
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">Id</label>
-                    <div class="col-sm-9">
-                        <input @bind="Model.Id" class="form-control" disabled />
-                        @*<span asp-validation-for="Model.Id" class="text-danger"></span>*@
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">@SharedResource["State"]</label>
-                    <div class="col-sm-9">
-                        <input @bind="Model.State" class="form-control" disabled />
-                        @*<span asp-validation-for="Model.State" class="text-danger"></span>*@
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">@SharedResource["Task"]</label>
-                    <div class="col-sm-9">
-                        <input @bind="Model.TaskDescription" class="form-control" />
-                        @*<span asp-validation-for="Model.TaskDescription" class="text-danger"></span>*@
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">@SharedResource["Start Date Time"]</label>
-                    <div class="col-sm-9">
-                        <input @bind="Model.StartDateTime" class="form-control" disabled />
-                        @*<span asp-validation-for="Model.StartDateTime" class="text-danger"></span>*@
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">@SharedResource["Stop Date Time"]</label>
-                    <div class="col-sm-9">
-                        <input @bind="Model.StopDateTime" class="form-control" disabled />
-                        @*<span asp-validation-for="Model.StopDateTime" class="text-danger"></span>*@
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-9 offset-sm-3">
-                        <div class="form-check">
-                            <input @bind="Model.Interrupted" class="form-check-input" type="checkbox" id="Interrupted" />
-                            <label class="form-check-label" for="Interrupted">@SharedResource["Interrupted?"]</label>
-                        </div>
-                        @*<span asp-validation-for="Model.Interrupted" class="text-danger"></span>*@
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">@SharedResource["Worktime"]</label>
-                    <div class="col-sm-9">
-                        <input @bind="Model.Worktime" class="form-control" disabled />
-                        @*<span asp-validation-for="Model.Worktime" class="text-danger"></span>*@
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">@SharedResource["Breaktime"]</label>
-                    <div class="col-sm-9">
-                        <input @bind="Model.Breaktime" class="form-control" />
-                        @*<span asp-validation-for="Model.Breaktime" class="text-danger"></span>*@
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <label class="col-sm-3 col-form-label">Version</label>
-                    <div class="col-sm-9">
-                        <input @bind="Model.Version" class="form-control" disabled />
-                        @*<span asp-validation-for="Model.Version" class="text-danger"></span>*@
-                    </div>
-                </div>
-                <input type="hidden" @bind="Model.Version" />
-                <button class="btn btn-primary me-2" @onclick="Save">
-                    @* <i class="bi bi-save"></i> *@
-                    @SharedResource["Save"]
-                </button>
-                <button class="btn btn-danger" @onclick="Archive">
-                    @* <i class="bi bi-save"></i> *@
-                    @SharedResource["Archive"]
-                </button>
-            </from>
-        }
-    </div>
-</div>
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    @if (Model == null)
+    {
+        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+    }
+    else
+    {
+        <EditForm Model="@Model" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+            <MudGrid>
+                <MudItem xs="12" sm="7">
+                    <MudCard>
+                        <MudCardContent>
+                            <MudTextField @bind-Value="Model.Id" Label="@SharedResource["Id"]" For="@(() => Model.Id)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTextField @bind-Value="Model.State" Label="@SharedResource["State"]" For="@(() => Model.State)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTextField @bind-Value="Model.TaskId" Label="@SharedResource["TaskId"]" For="@(() => Model.TaskId)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTextField @bind-Value="Model.TaskDescription" Label="@SharedResource["Task"]" For="@(() => Model.TaskDescription)" />
+                            <MudDatePicker @bind-Date="Model.StartDate" Label="@SharedResource["Start Date"]" For="@(() => Model.StartDate)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTimePicker @bind-Time="Model.StartTime" Label="@SharedResource["Start Time"]" For="@(() => Model.StartTime)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudDatePicker @bind-Date="Model.StopDate" Label="@SharedResource["Stop Date"]" For="@(() => Model.StopDate)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTimePicker @bind-Time="Model.StopTime" Label="@SharedResource["Stop Time"]" For="@(() => Model.StopTime)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudCheckBox @bind-Checked="Model.Interrupted" Label="@SharedResource["Interrupted?"]" For="@(() => Model.Interrupted)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTimePicker @bind-Time="Model.Worktime" Label="@SharedResource["Worktime"]" For="@(() => Model.Worktime)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTimePicker @bind-Time="Model.Breaktime" Label="@SharedResource["Breaktime"]" For="@(() => Model.Breaktime)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTextField @bind-Value="Model.Version" Label="@SharedResource["Version"]" For="@(() => Model.Version)" ReadOnly="true" Variant="Variant.Filled" />
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Color="Color.Error" OnClick="Archive" Class="ms-auto me-2">@SharedResource["Archive"]</MudButton>
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">@SharedResource["Save"]</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+                <MudItem xs="12" sm="5">
+                    <MudPaper Class="pa-4 mud-height-full">
+                        <MudText Typo="Typo.subtitle2">@SharedResource["Validation Summary"]</MudText>
+                        @if (_success)
+                        {
+                            <MudText Color="Color.Success">@SharedResource["Success"]</MudText>
+                        }
+                        else
+                        {
+                            <MudText Color="@Color.Error">
+                                <ValidationSummary />
+                            </MudText>
+                        }
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudText Typo="Typo.body2" Align="Align.Center">
+                        Fill out the form correctly to see the success message.
+                    </MudText>
+                </MudItem>
+            </MudGrid>
+        </EditForm>
+    }
+</MudContainer>
 
 @code {
     [Parameter]
     public string? Id { get; set; }
 
-    public FlowtimeDetails? Model { get; set; }
+    public DetailsViewModel? Model { get; set; }
+
+    [Inject]
+    private IDialogService DialogService { get; set; }
+
+    private bool _success;
 
     protected override async System.Threading.Tasks.Task OnInitializedAsync()
     {
         if (Id == null || Id == "new")
         {
-            Model = new FlowtimeDetails { };
+            Model = new DetailsViewModel();
         }
         else
         {
@@ -149,8 +94,27 @@
 
             var response = await Mediator.Send<GetFlowtimeResponse>(request);
 
-            Model = response.FlowtimeDetails;
+            Model = new DetailsViewModel(
+                response.FlowtimeDetails.Id,
+                response.FlowtimeDetails.TaskId,
+                response.FlowtimeDetails.TaskDescription,
+                response.FlowtimeDetails.StartDateTime,
+                response.FlowtimeDetails.StopDateTime,
+                response.FlowtimeDetails.Interrupted,
+                response.FlowtimeDetails.Worktime,
+                response.FlowtimeDetails.Breaktime,
+                response.FlowtimeDetails.State,
+                response.FlowtimeDetails.Version);
         }
+    }
+
+    private async System.Threading.Tasks.Task OnValidSubmit(EditContext context)
+    {
+        await Save();
+
+        _success = true;
+
+        StateHasChanged();
     }
 
     private async System.Threading.Tasks.Task Save()

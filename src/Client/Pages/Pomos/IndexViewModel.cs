@@ -8,7 +8,7 @@ namespace Pomodorium.Pages.Pomos;
 
 public class IndexViewModel
 {
-    public ObservableCollection<ItemViewModel>? Items { get; } = new ObservableCollection<ItemViewModel>();
+    public ObservableCollection<Item>? Items { get; } = new ObservableCollection<Item>();
 
     public IObservable<EventPattern<NotifyCollectionChangedEventArgs>> ItemsChanged { get; }
 
@@ -44,7 +44,7 @@ public class IndexViewModel
 
         foreach (var item in items)
         {
-            Items.Add(new ItemViewModel(
+            Items.Add(new Item(
                 item.Id,
                 item.Task,
                 item.Timer,
@@ -54,7 +54,7 @@ public class IndexViewModel
         }
     }
 
-    public class ItemViewModel
+    public class Item
     {
         public Guid Id { get; set; }
 
@@ -74,7 +74,7 @@ public class IndexViewModel
 
         public IObservable<long> CountdownChanges { get; set; }
 
-        public ItemViewModel(
+        public Item(
             Guid id,
             string? task,
             TimeSpan timer,
@@ -133,7 +133,7 @@ public class IndexViewModel
             }
         }
 
-        public ItemViewModel()
+        public Item()
         {
 
         }
