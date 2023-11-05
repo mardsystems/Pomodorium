@@ -1,4 +1,11 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿<MudNavMenu>
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
+    <MudNavLink Href="activities" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Task">Activities</MudNavLink>
+    <MudNavLink Href="flows" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ArrowRight">Flows</MudNavLink>
+    <MudNavLink Href="pomos" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Timer">Pomos</MudNavLink>
+</MudNavMenu>
+
+@* <div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Pomodorium</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -15,23 +22,18 @@
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
+            <NavLink class="nav-link" href="activities">
+                <span class="oi oi-task" aria-hidden="true"></span> Activities
             </NavLink>
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="flows">
-                <span class="oi oi-timer" aria-hidden="true"></span> Flows
+                <span class="oi oi-arrow-right" aria-hidden="true"></span> Flows
             </NavLink>
         </div>
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="timers">
-                <span class="oi oi-timer" aria-hidden="true"></span> Timers
+            <NavLink class="nav-link" href="pomos">
+                <span class="oi oi-timer" aria-hidden="true"></span> Pomos
             </NavLink>
         </div>
     </nav>
@@ -47,3 +49,4 @@
         collapseNavMenu = !collapseNavMenu;
     }
 }
+ *@

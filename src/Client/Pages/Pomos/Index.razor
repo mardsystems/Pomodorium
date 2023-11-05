@@ -1,0 +1,160 @@
+﻿@page "/pomos"
+@using MediatR;
+@using Pomodorium.Hubs;
+@using Pomodorium.Modules.Pomos;
+@using Pomodorium.Shared
+@using System.DomainModel;
+@using System.DomainModel.Storage;
+@using System.Collections.ObjectModel;
+@using System.Collections.Specialized;
+@using System.Reactive.Linq;
+@using System.Reactive.Threading.Tasks;
+@using System.Reactive.Subjects;
+@inject IMediator Mediator
+@inject NavigationManager NavigationManager
+@inject EventHubClient EventHubClient
+@inject IStringLocalizer<SharedResource> SharedResource
+
+<PageTitle>Pomos</PageTitle>
+
+<MudToolBar>
+    <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="Add" />
+    <MudIconButton Icon="@Icons.Material.Outlined.Refresh" Color="Color.Inherit" OnClick="Refresh" />
+    <MudSpacer />
+    <MudText Typo="Typo.button" Class="mx-4" Style="white-space: nowrap">Total: @Model.Items?.Count</MudText>
+    <MudIconButton Icon="@Icons.Material.Outlined.MoreVert" Color="Color.Inherit" />
+</MudToolBar>
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    @if (Model.Items == null)
+    {
+        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+    }
+    else
+    {
+        <MudTable Items="Model.Items" Hover="true" Striped="true" SortLabel="@SharedResource["Sort By"]" @ref="mudTable" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="IndexViewModel.Item" Style="cursor: pointer">
+            <HeaderContent>
+                <MudTh></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.State!)">@SharedResource["State"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.Task!)">@SharedResource["Task"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.StartDateTime)" InitialDirection="SortDirection.Ascending">@SharedResource["Start Date Time"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.StopDateTime)">@SharedResource["Stop Date Time"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.Timer)">@SharedResource["Timer"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.Countdown)">@SharedResource["Countdown"]</MudTableSortLabel></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd Style="white-space: nowrap; justify-content: center">
+                    <MudIconButton Icon="@Icons.Material.Outlined.Archive" OnClick="@(() => Archive(context.Id, context.Version))">@SharedResource["Archive"]</MudIconButton>
+                </MudTd>
+                <MudTd DataLabel="@SharedResource["State"]">@context.State</MudTd>
+                <MudTd DataLabel="@SharedResource["Task"]">@context.Task</MudTd>
+                <MudTd DataLabel="@SharedResource["Start Date Time"]">@context.StartDateTime</MudTd>
+                <MudTd DataLabel="@SharedResource["Stop Date Time"]">@context.StopDateTime</MudTd>
+                <MudTd DataLabel="@SharedResource["Timer"]">@context.Timer</MudTd>
+                <MudTd DataLabel="@SharedResource["Countdown"]">@context.Countdown</MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+</MudContainer>
+
+@code {
+    private IndexViewModel? Model;
+
+    private MudTable<IndexViewModel.Item> mudTable;
+
+    private int selectedRowNumber = -1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Model = new IndexViewModel();
+
+        Model.ItemsChanged.Subscribe((x) =>
+            {
+                StateHasChanged();
+            });
+
+        Model.CountdownChanges.Subscribe(x =>
+        {
+            StateHasChanged();
+        });
+
+        EventHubClient.Notification
+            .Throttle(TimeSpan.FromSeconds(1))
+            .Subscribe(async (x) =>
+            {
+                await Refresh();
+            });
+
+        await Refresh();
+    }
+
+    private async Task Add()
+    {
+        NavigationManager.NavigateTo($"/pomos/new");
+    }
+
+    private async Task Refresh()
+    {
+        var request = new GetPomosRequest { };
+
+        var response = await Mediator.Send<GetPomosResponse>(request);
+
+        Model.Repopulate(response.PomodoroQueryItems);
+    }
+
+    private async Task Add2()
+    {
+        var now = DateTime.Now;
+
+        var request = new CreatePomodoroRequest
+            {
+                Timer = TimeSpan.FromMinutes(25),
+                Task = now.ToString()
+            };
+
+        var response = await Mediator.Send<CreatePomodoroResponse>(request);
+
+        await Refresh();
+    }
+
+    private async Task Archive(Guid id, long version)
+    {
+        var request = new ArchivePomodoroRequest
+            {
+                Id = id,
+                Version = version
+            };
+
+        var response = await Mediator.Send<ArchivePomodoroResponse>(request);
+
+        await Refresh();
+    }
+
+    private void RowClickEvent(TableRowClickEventArgs<IndexViewModel.Item> e)
+    {
+        // clickedEvents.Add("Row has been clicked");
+    }
+
+    private string SelectedRowClassFunc(IndexViewModel.Item element, int rowNumber)
+    {
+        if (selectedRowNumber == rowNumber)
+        {
+            selectedRowNumber = -1;
+            // clickedEvents.Add("Selected Row: None");
+            return string.Empty;
+        }
+        else if (mudTable.SelectedItem != null && mudTable.SelectedItem.Equals(element))
+        {
+            selectedRowNumber = rowNumber;
+            // clickedEvents.Add($"Selected Row: {rowNumber}");
+
+            NavigationManager.NavigateTo($"/pomos/{mudTable.SelectedItem.Id}");
+
+            return "selected";
+        }
+        else
+        {
+            return string.Empty;
+        }
+    }
+}

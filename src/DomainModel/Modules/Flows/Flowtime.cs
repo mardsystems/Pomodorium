@@ -1,4 +1,4 @@
-﻿using Pomodorium.Modules.Timers;
+﻿using Pomodorium.Modules.Pomos;
 using System.DomainModel;
 
 namespace Pomodorium.Modules.Flows;

@@ -1,0 +1,170 @@
+﻿@page "/activities/{Id}"
+@using MediatR;
+@using Pomodorium.Modules.Activities;
+@using Pomodorium.Shared
+@using System.DomainModel;
+@using System.DomainModel.Storage;
+@using System.Collections.ObjectModel;
+@using System.Collections.Specialized;
+@using System.Reactive.Linq;
+@using System.Reactive.Threading.Tasks;
+@inject IMediator Mediator
+@inject IStringLocalizer<SharedResource> SharedResource;
+@inject NavigationManager Navigation;
+
+<PageTitle>Activity</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    @if (Model == null)
+    {
+        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+    }
+    else
+    {
+        <EditForm Model="@Model" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+            <MudGrid>
+                <MudItem xs="12" sm="7">
+                    <MudCard>
+                        <MudCardContent>
+                            <MudTextField @bind-Value="Model.Id" Label="@SharedResource["Id"]" For="@(() => Model.Id)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTextField @bind-Value="Model.State" Label="@SharedResource["State"]" For="@(() => Model.State)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTextField @bind-Value="Model.Name" Label="@SharedResource["Name"]" For="@(() => Model.Name)" />
+                            <MudDatePicker @bind-Date="Model.StartDate" Label="@SharedResource["Start Date"]" For="@(() => Model.StartDate)" />
+                            <MudTimePicker @bind-Time="Model.StartTime" Label="@SharedResource["Start Time"]" For="@(() => Model.StartTime)" />
+                            <MudDatePicker @bind-Date="Model.StopDate" Label="@SharedResource["Stop Date"]" For="@(() => Model.StopDate)" />
+                            <MudTimePicker @bind-Time="Model.StopTime" Label="@SharedResource["Stop Time"]" For="@(() => Model.StopTime)" />
+                            <MudTimePicker @bind-Time="Model.Duration" Label="@SharedResource["Duration"]" For="@(() => Model.Duration)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTextField @bind-Value="Model.Description" Label="@SharedResource["Description"]" For="@(() => Model.Description)" Lines="5" />
+                            <MudTextField @bind-Value="Model.Version" Label="@SharedResource["Version"]" For="@(() => Model.Version)" ReadOnly="true" Variant="Variant.Filled" />
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Color="Color.Error" OnClick="Delete" Class="ms-auto me-2">@SharedResource["Delete"]</MudButton>
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">@SharedResource["Save"]</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+                <MudItem xs="12" sm="5">
+                    <MudPaper Class="pa-4 mud-height-full">
+                        <MudText Typo="Typo.subtitle2">@SharedResource["Validation Summary"]</MudText>
+                        @if (_success)
+                        {
+                            <MudText Color="Color.Success">@SharedResource["Success"]</MudText>
+                        }
+                        else
+                        {
+                            <MudText Color="@Color.Error">
+                                <ValidationSummary />
+                            </MudText>
+                        }
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudText Typo="Typo.body2" Align="Align.Center">
+                        Fill out the form correctly to see the success message.
+                    </MudText>
+                </MudItem>
+            </MudGrid>
+        </EditForm>
+    }
+</MudContainer>
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+
+    public DetailsViewModel? Model { get; set; }
+
+    [Inject]
+    private IDialogService DialogService { get; set; }
+
+    private bool _success;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id == null || Id == "new")
+        {
+            Model = new DetailsViewModel();
+        }
+        else
+        {
+            var request = new GetActivityRequest { Id = Guid.Parse(Id) };
+
+            var response = await Mediator.Send<GetActivityResponse>(request);
+
+            Model = new DetailsViewModel(
+                response.ActivityDetails.Id,
+                response.ActivityDetails.Name,
+                response.ActivityDetails.StartDateTime,
+                response.ActivityDetails.StopDateTime,
+                response.ActivityDetails.State,
+                response.ActivityDetails.Duration,
+                response.ActivityDetails.Description,
+                response.ActivityDetails.Version);
+        }
+    }
+
+    private async Task OnValidSubmit(EditContext context)
+    {
+        await Save();
+
+        _success = true;
+
+        StateHasChanged();
+    }
+
+    private async Task Save()
+    {
+        if (Id == null || Id == "new")
+        {
+            var now = DateTime.Now;
+
+            var request = new PostActivityRequest
+                {
+                    Name = Model.Name,
+                    StartDateTime = Model.GetStartDateTime(),
+                    StopDateTime = Model.GetStopDateTime(),
+                    Description = Model.Description
+                };
+
+            var response = await Mediator.Send<PostActivityResponse>(request);
+        }
+        else
+        {
+            var request = new PutActivityRequest
+                {
+                    Id = Guid.Parse(Id),
+                    Name = Model.Name,
+                    StartDateTime = Model.GetStartDateTime(),
+                    StopDateTime = Model.GetStopDateTime(),
+                    Description = Model.Description,
+                    Version = Model.Version
+                };
+
+            var response = await Mediator.Send<PutActivityResponse>(request);
+        }
+
+        Navigation.NavigateTo("activities");
+    }
+
+    private async Task Delete()
+    {
+        bool? result = await DialogService.ShowMessageBox(
+            "Warning",
+            "Deleting can not be undone!",
+            yesText: "Delete!", cancelText: "Cancel");
+
+        if (result == true)
+        {
+            var request = new DeleteActivityRequest
+                {
+                    Id = Guid.Parse(Id),
+                    Version = Model.Version
+                };
+
+            var response = await Mediator.Send<DeleteActivityResponse>(request);
+
+            Navigation.NavigateTo("activities");
+        }
+    }
+}

@@ -1,13 +1,13 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.SignalR.Client;
+using MudBlazor.Services;
 using Pomodorium;
 using Pomodorium.Data;
 using Pomodorium.Hubs;
-using Pomodorium.Modules.Timers;
+using Pomodorium.Modules.Pomos;
 using System.DomainModel;
 using System.DomainModel.Storage;
-using static System.Formats.Asn1.AsnWriter;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
@@ -30,7 +30,7 @@ if (APP_REMOTE)
 {
     builder.Services.AddMediatR(config =>
     {
-        config.RegisterServicesFromAssembly(typeof(HttpClientTimersFacade).Assembly);
+        config.RegisterServicesFromAssembly(typeof(HttpClientPomosFacade).Assembly);
     });
 }
 else
@@ -50,6 +50,8 @@ else
         config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(PomodoroApplication).Assembly);
     });
 }
+
+builder.Services.AddMudServices();
 
 var host = builder.Build();
 

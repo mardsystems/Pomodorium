@@ -1,0 +1,173 @@
+﻿@page "/activities"
+@using MediatR;
+@using Pomodorium.Hubs;
+@using Pomodorium.Modules.Activities;
+@using Pomodorium.Shared
+@using System.DomainModel;
+@using System.DomainModel.Storage;
+@using System.Collections.ObjectModel;
+@using System.Collections.Specialized;
+@using System.Reactive.Linq;
+@using System.Reactive.Threading.Tasks;
+@using System.Reactive.Subjects;
+@inject IMediator Mediator
+@inject NavigationManager NavigationManager
+@inject EventHubClient EventHubClient
+@inject IStringLocalizer<SharedResource> SharedResource
+
+<style>
+    .selected {
+        background-color: #1E88E5 !important;
+    }
+
+        .selected > td {
+            color: white !important;
+        }
+
+            .selected > td .mud-input {
+                color: white !important;
+            }
+</style>
+
+<PageTitle>Activities</PageTitle>
+
+<MudToolBar>
+    <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="Add" />
+    <MudIconButton Icon="@Icons.Material.Outlined.Refresh" Color="Color.Inherit" OnClick="Refresh" />
+    <MudSpacer />
+    <MudText Typo="Typo.button" Class="mx-4" Style="text-wrap: nowrap">Total: @_items?.Count</MudText>
+    <MudIconButton Icon="@Icons.Material.Outlined.MoreVert" Color="Color.Inherit" />
+</MudToolBar>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="">
+    @* <MudText Typo="Typo.h3" GutterBottom="true">Activities</MudText> *@
+    @* <MudText Class="mb-8">This component demonstrates fetching data from the server.</MudText> *@
+
+    @if (_items == null)
+    {
+        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+    }
+    else
+    {
+        <MudTable Items="_items" Hover="true" Striped="true" SortLabel="@SharedResource["Sort By"]" @ref="mudTable" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="ActivityQueryItem" Style="cursor: pointer">
+            <HeaderContent>
+                <MudTh><MudTableSortLabel SortBy="new Func<ActivityQueryItem, object>(x => x.State!)">@SharedResource["State"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ActivityQueryItem, object>(x => x.Name!)">@SharedResource["Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ActivityQueryItem, object>(x => x.StartDateTime)" InitialDirection="SortDirection.Ascending">@SharedResource["Start Date Time"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ActivityQueryItem, object>(x => x.StopDateTime)">@SharedResource["Stop Date Time"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ActivityQueryItem, object>(x => x.Duration)">@SharedResource["Duration"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<ActivityQueryItem, object>(x => x.Description!)">@SharedResource["Description"]</MudTableSortLabel></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="@SharedResource["State"]">@context.State</MudTd>
+                <MudTd DataLabel="@SharedResource["Name"]">@context.Name</MudTd>
+                <MudTd DataLabel="@SharedResource["Start Date Time"]">@context.StartDateTime</MudTd>
+                <MudTd DataLabel="@SharedResource["Stop Date Time"]">@context.StopDateTime</MudTd>
+                <MudTd DataLabel="@SharedResource["Duration"]">@context.Duration</MudTd>
+                <MudTd DataLabel="@SharedResource["Description"]">@context.Description</MudTd>
+            </RowTemplate>
+        </MudTable>
+    }
+</MudContainer>
+
+@code {
+    private readonly ObservableCollection<ActivityQueryItem>? _items = new ObservableCollection<ActivityQueryItem>();
+
+    private MudTable<ActivityQueryItem> mudTable;
+
+    private int selectedRowNumber = -1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var x = Observable.FromEventPattern<NotifyCollectionChangedEventHandler, NotifyCollectionChangedEventArgs>(h => _items.CollectionChanged += h, h => _items.CollectionChanged -= h)
+            .Throttle(TimeSpan.FromSeconds(1))
+            .Subscribe((x) =>
+            {
+                StateHasChanged();
+            });
+
+        var y = EventHubClient.Notification
+            .Throttle(TimeSpan.FromSeconds(1))
+            .Subscribe(async (x) =>
+            {
+                await Refresh();
+            });
+
+        await Refresh();
+    }
+
+    private async Task Refresh()
+    {
+        var request = new GetActivitiesRequest { };
+
+        var response = await Mediator.Send<GetActivitiesResponse>(request);
+
+        _items.Clear();
+
+        foreach (var item in response.ActivityQueryItems)
+        {
+            _items.Add(item);
+        }
+    }
+
+    private async Task Add()
+    {
+        NavigationManager.NavigateTo($"/activities/new");
+    }
+
+    private async Task Add2()
+    {
+        var now = DateTime.Now;
+
+        var request = new PostActivityRequest
+            {
+                StartDateTime = now,
+                Description = Guid.NewGuid().ToString()
+            };
+
+        var response = await Mediator.Send<PostActivityResponse>(request);
+
+        await Refresh();
+    }
+
+    private async Task Delete(Guid id, long version)
+    {
+        var request = new DeleteActivityRequest
+            {
+                Id = id,
+                Version = version
+            };
+
+        var response = await Mediator.Send<DeleteActivityResponse>(request);
+
+        await Refresh();
+    }
+
+    private void RowClickEvent(TableRowClickEventArgs<ActivityQueryItem> e)
+    {
+        // clickedEvents.Add("Row has been clicked");
+    }
+
+    private string SelectedRowClassFunc(ActivityQueryItem element, int rowNumber)
+    {
+        if (selectedRowNumber == rowNumber)
+        {
+            selectedRowNumber = -1;
+            // clickedEvents.Add("Selected Row: None");
+            return string.Empty;
+        }
+        else if (mudTable.SelectedItem != null && mudTable.SelectedItem.Equals(element))
+        {
+            selectedRowNumber = rowNumber;
+            // clickedEvents.Add($"Selected Row: {rowNumber}");
+
+            NavigationManager.NavigateTo($"/activities/{mudTable.SelectedItem.Id}");
+
+            return "selected";
+        }
+        else
+        {
+            return string.Empty;
+        }
+    }
+}
