@@ -58,7 +58,7 @@
 </MudContainer>
 
 @code {
-    private IndexViewModel? Model;
+    private IndexViewModel? Model = new();
 
     private MudTable<IndexViewModel.Item> mudTable;
 
@@ -66,8 +66,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Model = new IndexViewModel();
-
         Model.ItemsChanged.Subscribe((x) =>
             {
                 StateHasChanged();

@@ -34,7 +34,7 @@
                             <MudTimePicker @bind-Time="Model.StartTime" Label="@SharedResource["Start Time"]" For="@(() => Model.StartTime)" ReadOnly="true" Variant="Variant.Filled" />
                             <MudDatePicker @bind-Date="Model.StopDate" Label="@SharedResource["Stop Date"]" For="@(() => Model.StopDate)" ReadOnly="true" Variant="Variant.Filled" />
                             <MudTimePicker @bind-Time="Model.StopTime" Label="@SharedResource["Stop Time"]" For="@(() => Model.StopTime)" ReadOnly="true" Variant="Variant.Filled" />
-                            <MudTimePicker @bind-Time="Model.Timer" Label="@SharedResource["Timer"]" For="@(() => Model.Timer)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTimePicker @bind-Time="Model.Timer" Label="@SharedResource["Timer"]" For="@(() => Model.Timer)" />
                             <MudTimePicker @bind-Time="Model.Countdown" Label="@SharedResource["Countdown"]" For="@(() => Model.Countdown)" ReadOnly="true" Variant="Variant.Filled" />
                             <MudTextField @bind-Value="Model.Version" Label="@SharedResource["Version"]" For="@(() => Model.Version)" ReadOnly="true" Variant="Variant.Filled" />
                         </MudCardContent>

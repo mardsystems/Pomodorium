@@ -1,4 +1,6 @@
 ﻿using Pomodorium.Modules.Flows;
+using System.ComponentModel.DataAnnotations;
+using System.Reactive.Linq;
 
 namespace Pomodorium.Pages.Flows;
 
@@ -24,11 +26,18 @@ public class DetailsViewModel
 
     public TimeSpan? Worktime { get; set; }
 
+    public TimeSpan WorkTimer { get; set; }
+
     public TimeSpan? Breaktime { get; set; }
+
+    //[DisplayFormat(DataFormatString = "{0:hh\\:mm\\:ss}")]
+    public TimeSpan? BreakCountdown { get; set; }
 
     public FlowtimeState? State { get; set; }
 
     public long Version { get; set; }
+
+    public IObservable<long> BreakCountdownChanges { get; set; }
 
     public DetailsViewModel(
         Guid id,
@@ -42,6 +51,8 @@ public class DetailsViewModel
         FlowtimeState? state,
         long version)
     {
+        var now = DateTime.Now;
+
         Id = id;
 
         TaskId = taskId;
@@ -71,6 +82,24 @@ public class DetailsViewModel
         State = state;
 
         Version = version;
+
+        if (now - stopDateTime > Breaktime)
+        {
+            BreakCountdown = TimeSpan.Zero;
+
+            BreakCountdownChanges = Observable.Empty<long>();
+        }
+        else
+        {
+            OnTick(now);
+
+            BreakCountdownChanges = Observable.Interval(TimeSpan.FromSeconds(1));
+
+            BreakCountdownChanges.Subscribe(x =>
+            {
+                OnTick(DateTime.Now);
+            });
+        }
     }
 
     public DateTime? GetStartDateTime()
@@ -108,6 +137,16 @@ public class DetailsViewModel
         else
         {
             return null;
+        }
+    }
+
+    private void OnTick(DateTime moment)
+    {
+        if (GetStopDateTime().HasValue && Breaktime.HasValue)
+        {
+            var breakCountdown = GetStopDateTime().Value.Add(Breaktime.Value) - moment;
+
+            BreakCountdown = new TimeSpan(breakCountdown.Ticks - (breakCountdown.Ticks % 10000000));
         }
     }
 

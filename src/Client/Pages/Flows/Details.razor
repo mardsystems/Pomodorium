@@ -37,11 +37,19 @@
                             <MudTimePicker @bind-Time="Model.StopTime" Label="@SharedResource["Stop Time"]" For="@(() => Model.StopTime)" ReadOnly="true" Variant="Variant.Filled" />
                             <MudCheckBox @bind-Checked="Model.Interrupted" Label="@SharedResource["Interrupted?"]" For="@(() => Model.Interrupted)" ReadOnly="true" Variant="Variant.Filled" />
                             <MudTimePicker @bind-Time="Model.Worktime" Label="@SharedResource["Worktime"]" For="@(() => Model.Worktime)" ReadOnly="true" Variant="Variant.Filled" />
-                            <MudTimePicker @bind-Time="Model.Breaktime" Label="@SharedResource["Breaktime"]" For="@(() => Model.Breaktime)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTextField @bind-Value="Model.BreakCountdown" Label="@SharedResource["Breaktime"]" For="@(() => Model.Breaktime)" ReadOnly="true" Variant="Variant.Filled" />
                             <MudTextField @bind-Value="Model.Version" Label="@SharedResource["Version"]" For="@(() => Model.Version)" ReadOnly="true" Variant="Variant.Filled" />
                         </MudCardContent>
                         <MudCardActions>
                             <MudButton Color="Color.Error" OnClick="Archive" Class="ms-auto me-2">@SharedResource["Archive"]</MudButton>
+                            @if (Model.State == FlowtimeState.NotStarted)
+                            {
+                                <MudButton OnClick="Start" Class="me-2">@SharedResource["Start"]</MudButton>
+                            }
+                            else if (Model.State == FlowtimeState.Flow)
+                            {
+                                <MudButton OnClick="Stop" Class="me-2">@SharedResource["Stop"]</MudButton>
+                            }
                             <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">@SharedResource["Save"]</MudButton>
                         </MudCardActions>
                     </MudCard>
@@ -105,6 +113,11 @@
                 response.FlowtimeDetails.Breaktime,
                 response.FlowtimeDetails.State,
                 response.FlowtimeDetails.Version);
+
+            Model.BreakCountdownChanges.Subscribe(x =>
+            {
+                StateHasChanged();
+            });
         }
     }
 
@@ -115,6 +128,34 @@
         _success = true;
 
         StateHasChanged();
+    }
+
+    private async System.Threading.Tasks.Task Start()
+    {
+        var request = new StartFlowtimeRequest
+            {
+                Id = Model.Id,
+                StartDateTime = DateTime.Now,
+                Version = Model.Version
+            };
+
+        var response = await Mediator.Send<StartFlowtimeResponse>(request);
+
+        Navigation.NavigateTo("flows");
+    }
+
+    private async System.Threading.Tasks.Task Stop()
+    {
+        var request = new StopFlowtimeRequest
+            {
+                Id = Model.Id,
+                StopDateTime = DateTime.Now,
+                Version = Model.Version
+            };
+
+        var response = await Mediator.Send<StopFlowtimeResponse>(request);
+
+        Navigation.NavigateTo("flows");
     }
 
     private async System.Threading.Tasks.Task Save()

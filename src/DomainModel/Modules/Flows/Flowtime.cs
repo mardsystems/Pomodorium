@@ -1,5 +1,4 @@
-﻿using Pomodorium.Modules.Pomos;
-using System.DomainModel;
+﻿using System.DomainModel;
 
 namespace Pomodorium.Modules.Flows;
 
@@ -76,7 +75,7 @@ public class Flowtime : AggregateRoot
 
         if (Worktime >= ExpectedDuration)
         {
-            State = FlowtimeState.Limbo;
+            //State = FlowtimeState.Limbo;
         }
     }
 
@@ -95,7 +94,7 @@ public class Flowtime : AggregateRoot
 
         StopDateTime = now;
 
-        State = FlowtimeState.Finished;
+        State = FlowtimeState.Stopped;
 
         if (Worktime <= TimeSpan.FromMinutes(25))
         {
@@ -121,7 +120,7 @@ public class Flowtime : AggregateRoot
 
         var interrupted = false;
 
-        var newState = FlowtimeState.Finished;
+        var newState = FlowtimeState.Stopped;
 
         TimeSpan breaktime;
 

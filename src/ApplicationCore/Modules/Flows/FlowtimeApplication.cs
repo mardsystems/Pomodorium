@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Pomodorium.Modules.Pomos;
 using System.DomainModel;
 
 namespace Pomodorium.Modules.Flows;
@@ -7,6 +8,7 @@ public class FlowtimeApplication :
     IRequestHandler<CreateFlowtimeRequest, CreateFlowtimeResponse>,
     IRequestHandler<StartFlowtimeRequest, StartFlowtimeResponse>,
     IRequestHandler<StopFlowtimeRequest, StopFlowtimeResponse>,
+    IRequestHandler<ChangeTaskDescriptionRequest, ChangeTaskDescriptionResponse>,
     IRequestHandler<ArchiveFlowtimeRequest, ArchiveFlowtimeResponse>
 {
     private readonly Repository _repository;
@@ -63,6 +65,24 @@ public class FlowtimeApplication :
         await _repository.Save(flowtime, request.Version);
 
         var response = new StopFlowtimeResponse(request.GetCorrelationId()) { };
+
+        return response;
+    }
+
+    public async Task<ChangeTaskDescriptionResponse> Handle(ChangeTaskDescriptionRequest request, CancellationToken cancellationToken)
+    {
+        var flowtime = await _repository.GetAggregateById<Flowtime>(request.TaskId);
+
+        if (flowtime == null)
+        {
+            throw new EntityNotFoundException();
+        }
+
+        //flowtime.RefineTask(request.TaskDescription);
+
+        await _repository.Save(flowtime, request.TaskVersion);
+
+        var response = new ChangeTaskDescriptionResponse(request.GetCorrelationId()) { };
 
         return response;
     }

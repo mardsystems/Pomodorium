@@ -1,4 +1,6 @@
-﻿namespace Pomodorium.Modules.Flows;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Pomodorium.Modules.Flows;
 
 public class FlowtimeDetails
 {
@@ -16,6 +18,7 @@ public class FlowtimeDetails
 
     public bool? Interrupted { get; set; }
 
+    [DisplayFormat(DataFormatString = "{0:hh\\:mm\\:ss}")]
     public TimeSpan? Worktime { get; set; }
 
     public TimeSpan? Breaktime { get; set; }
