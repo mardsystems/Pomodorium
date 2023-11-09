@@ -29,12 +29,14 @@ public class Flowtime : AggregateRoot
 
         var initialState = FlowtimeState.NotStarted;
 
-        Apply(new FlowtimeCreated(Id, task.Id, task.Description, initialState));
+        Apply(new FlowtimeCreated(Id, DateTime.Now, task.Id, task.Description, task.Version, initialState));
     }
 
     public void When(FlowtimeCreated e)
     {
         Id = e.Id;
+
+        CreationDate = e.CreationDate;
 
         TaskId = e.TaskId;
 
@@ -50,7 +52,7 @@ public class Flowtime : AggregateRoot
 
         var initialState = FlowtimeState.NotStarted;
 
-        Apply(new FlowtimeCreated(Id, task.Id, task.Description, initialState));
+        Apply(new FlowtimeCreated(Id, DateTime.Now, task.Id, task.Description, task.Version, initialState));
 
         ExpectedDuration = expectedDuration;
     }

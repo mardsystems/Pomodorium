@@ -32,7 +32,7 @@
     </MudToolBar>
 
     <MudContainer MaxWidth="MaxWidth.Large" Class="mb-4">
-        <MudDataGrid Style="white-space: nowrap"
+        <MudDataGrid @ref="_mudDataGrid" Style="white-space: nowrap"
                      Groupable="true" Items="Model.Items" Dense="_dataGridDense" Hover="true" Striped="true" MultiSelection="true"
                      SelectOnRowClick="false" T="IndexViewModel.Item" @bind-SelectedItems="_selectedItems">
             <ToolBarContent>
@@ -64,11 +64,13 @@
             <PropertyColumn Property="x => x.TaskDescription" Title="@SharedResource["Task"]" />
             <PropertyColumn Property="x => x.StartDateTime" Title="@SharedResource["Start Date Time"]" />
             <PropertyColumn Property="x => x.StopDateTime" Title="@SharedResource["Stop Date Time"]" />
-            <PropertyColumn Property="x => x.Interrupted" Title="@SharedResource["-|"]" />
+            <PropertyColumn Property="x => x.Interrupted" Title="@SharedResource["Interrupted?"]" Hideable="true" />
             <PropertyColumn Property="x => x.Worktime" Title="@SharedResource["Worktime"]" />
             <PropertyColumn Property="x => x.Breaktime" Title="@SharedResource["Breaktime"]" />
+            <PropertyColumn Property="x => x.CreationDate" Title="@SharedResource["Creation Date"]" Hideable="true" />
             <TemplateColumn StickyRight="true" Sortable="false">
                 <CellTemplate>
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Add" OnClick="@(() => Continue(context.Item.TaskId))"></MudIconButton>
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => Details(context.Item.Id))">@SharedResource["Details"]</MudIconButton>
                     @if (context.Item.State == FlowtimeState.NotStarted)
                     {
@@ -87,11 +89,11 @@
 @code {
     private IndexViewModel? Model = new();
 
+    private MudDataGrid<IndexViewModel.Item> _mudDataGrid;
+
     private string _searchString;
 
     private bool _dataGridDense = false;
-
-    private MudTable<IndexViewModel.Item> _mudTable;
 
     private int _selectedRowNumber = -1;
 
@@ -119,6 +121,16 @@
         await Refresh();
     }
 
+    protected override async System.Threading.Tasks.Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            await _mudDataGrid.SetSortAsync("CreationDate", SortDirection.Descending, (x) => x.CreationDate);
+        }
+    }
+
     private async System.Threading.Tasks.Task Refresh()
     {
         var request = new GetFlowsRequest { };
@@ -136,6 +148,11 @@
     private async System.Threading.Tasks.Task Details(Guid id)
     {
         NavigationManager.NavigateTo($"/flows/{id}");
+    }
+
+    private async System.Threading.Tasks.Task Continue(Guid taskId)
+    {
+        NavigationManager.NavigateTo($"/flows/continuation?TaskId={taskId}");
     }
 
     private async System.Threading.Tasks.Task Start(Guid id, long version)

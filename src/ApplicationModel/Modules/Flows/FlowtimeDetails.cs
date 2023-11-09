@@ -6,6 +6,8 @@ public class FlowtimeDetails
 {
     public Guid Id { get; set; }
 
+    public DateTime? CreationDate { get; set; }
+
     public Guid TaskId { get; set; }
 
     public string? TaskDescription { get; set; }

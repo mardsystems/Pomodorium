@@ -1,5 +1,4 @@
 ﻿using Pomodorium.Modules.Flows;
-using System.ComponentModel.DataAnnotations;
 using System.Reactive.Linq;
 
 namespace Pomodorium.Pages.Flows;
@@ -7,6 +6,8 @@ namespace Pomodorium.Pages.Flows;
 public class DetailsViewModel
 {
     public Guid Id { get; set; }
+
+    public DateTime? CreationDate { get; set; }
 
     public Guid TaskId { get; set; }
 
@@ -41,8 +42,10 @@ public class DetailsViewModel
 
     public DetailsViewModel(
         Guid id,
+        DateTime? creationDate,
         Guid taskId,
         string? taskDescription,
+        long taskVersion,
         DateTime? startDateTime,
         DateTime? stopDateTime,
         bool? interrupted,
@@ -55,9 +58,13 @@ public class DetailsViewModel
 
         Id = id;
 
+        CreationDate = creationDate;
+
         TaskId = taskId;
 
         TaskDescription = taskDescription;
+
+        TaskVersion = taskVersion;
 
         if (startDateTime.HasValue)
         {
@@ -100,6 +107,18 @@ public class DetailsViewModel
                 OnTick(DateTime.Now);
             });
         }
+    }
+
+    public DetailsViewModel(
+        Guid taskId,
+        string? taskDescription,
+        long taskVersion)
+    {
+        TaskId = taskId;
+
+        TaskDescription = taskDescription;
+
+        TaskVersion = taskVersion;
     }
 
     public DateTime? GetStartDateTime()

@@ -46,6 +46,7 @@ public class IndexViewModel
         {
             Items.Add(new Item(
                 item.Id,
+                item.CreationDate,
                 item.TaskId,
                 item.TaskDescription,
                 item.StartDateTime,
@@ -61,6 +62,8 @@ public class IndexViewModel
     public class Item
     {
         public Guid Id { get; set; }
+
+        public DateTime? CreationDate { get; set; }
 
         public Guid TaskId { get; set; }
 
@@ -92,6 +95,7 @@ public class IndexViewModel
 
         public Item(
             Guid id,
+            DateTime? creationDate,
             Guid taskId,
             string? taskDescription,
             DateTime? startDateTime,
@@ -105,6 +109,8 @@ public class IndexViewModel
             var now = DateTime.Now;
 
             Id = id;
+
+            CreationDate = creationDate;
 
             TaskId = taskId;
 

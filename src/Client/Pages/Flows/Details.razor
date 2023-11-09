@@ -31,6 +31,7 @@
                             <MudTextField @bind-Value="Model.State" Label="@SharedResource["State"]" For="@(() => Model.State)" ReadOnly="true" Variant="Variant.Filled" />
                             <MudTextField @bind-Value="Model.TaskId" Label="@SharedResource["TaskId"]" For="@(() => Model.TaskId)" ReadOnly="true" Variant="Variant.Filled" />
                             <MudTextField @bind-Value="Model.TaskDescription" Label="@SharedResource["Task"]" For="@(() => Model.TaskDescription)" />
+                            <MudTextField @bind-Value="Model.TaskVersion" Label="@SharedResource["Task Version"]" For="@(() => Model.TaskVersion)" ReadOnly="true" Variant="Variant.Filled" />
                             <MudDatePicker @bind-Date="Model.StartDate" Label="@SharedResource["Start Date"]" For="@(() => Model.StartDate)" ReadOnly="true" Variant="Variant.Filled" />
                             <MudTimePicker @bind-Time="Model.StartTime" Label="@SharedResource["Start Time"]" For="@(() => Model.StartTime)" ReadOnly="true" Variant="Variant.Filled" />
                             <MudDatePicker @bind-Date="Model.StopDate" Label="@SharedResource["Stop Date"]" For="@(() => Model.StopDate)" ReadOnly="true" Variant="Variant.Filled" />
@@ -38,6 +39,7 @@
                             <MudCheckBox @bind-Checked="Model.Interrupted" Label="@SharedResource["Interrupted?"]" For="@(() => Model.Interrupted)" ReadOnly="true" Variant="Variant.Filled" />
                             <MudTimePicker @bind-Time="Model.Worktime" Label="@SharedResource["Worktime"]" For="@(() => Model.Worktime)" ReadOnly="true" Variant="Variant.Filled" />
                             <MudTextField @bind-Value="Model.BreakCountdown" Label="@SharedResource["Breaktime"]" For="@(() => Model.Breaktime)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTextField @bind-Value="Model.CreationDate" Label="@SharedResource["Creation Date"]" For="@(() => Model.CreationDate)" ReadOnly="true" Variant="Variant.Filled" />
                             <MudTextField @bind-Value="Model.Version" Label="@SharedResource["Version"]" For="@(() => Model.Version)" ReadOnly="true" Variant="Variant.Filled" />
                         </MudCardContent>
                         <MudCardActions>
@@ -83,6 +85,10 @@
     [Parameter]
     public string? Id { get; set; }
 
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public Guid? TaskId { get; set; }
+
     public DetailsViewModel? Model { get; set; }
 
     [Inject]
@@ -96,6 +102,18 @@
         {
             Model = new DetailsViewModel();
         }
+        else if (Id == "continuation")
+        {
+            var request = new GetTaskRequest { Id = TaskId.Value };
+
+            var response = await Mediator.Send<GetTaskResponse>(request);
+
+            Model = new DetailsViewModel(
+                response.TaskDetails.Id,
+                response.TaskDetails.Description,
+                response.TaskDetails.Version
+            );
+        }
         else
         {
             var request = new GetFlowtimeRequest { Id = Guid.Parse(Id) };
@@ -104,8 +122,10 @@
 
             Model = new DetailsViewModel(
                 response.FlowtimeDetails.Id,
+                response.FlowtimeDetails.CreationDate,
                 response.FlowtimeDetails.TaskId,
                 response.FlowtimeDetails.TaskDescription,
+                response.FlowtimeDetails.TaskVersion,
                 response.FlowtimeDetails.StartDateTime,
                 response.FlowtimeDetails.StopDateTime,
                 response.FlowtimeDetails.Interrupted,
@@ -167,6 +187,19 @@
             var request = new CreateFlowtimeRequest
                 {
                     TaskDescription = Model.TaskDescription
+                };
+
+            var response = await Mediator.Send<CreateFlowtimeResponse>(request);
+        }
+        else if (Id == "continuation")
+        {
+            var now = DateTime.Now;
+
+            var request = new CreateFlowtimeRequest
+                {
+                    TaskId = Model.TaskId,
+                    TaskDescription = Model.TaskDescription,
+                    TaskVersion = Model.TaskVersion
                 };
 
             var response = await Mediator.Send<CreateFlowtimeResponse>(request);

@@ -21,14 +21,14 @@ public class IndexedDBFlowtimeDetailsProjection :
 
     public async Task<GetFlowtimeResponse> Handle(GetFlowtimeRequest request, CancellationToken cancellationToken)
     {
-        var pomodoroDetails = await _db.GetAsync<FlowtimeDetails>("FlowtimeDetails", request.Id);
+        var flowtimeDetails = await _db.GetAsync<FlowtimeDetails>("FlowtimeDetails", request.Id);
 
-        if (pomodoroDetails == null)
+        if (flowtimeDetails == null)
         {
             throw new EntityNotFoundException();
         }
 
-        var response = new GetFlowtimeResponse(request.GetCorrelationId()) { FlowtimeDetails = pomodoroDetails };
+        var response = new GetFlowtimeResponse(request.GetCorrelationId()) { FlowtimeDetails = flowtimeDetails };
 
         return response;
     }
@@ -38,6 +38,7 @@ public class IndexedDBFlowtimeDetailsProjection :
         var flowtimeDetails = new FlowtimeDetails
         {
             Id = notification.Id,
+            CreationDate = notification.CreationDate,
             State = notification.State,
             TaskId = notification.TaskId,
             TaskDescription = notification.TaskDescription,
@@ -85,17 +86,17 @@ public class IndexedDBFlowtimeDetailsProjection :
 
     public async System.Threading.Tasks.Task Handle(TaskDescriptionChanged notification, CancellationToken cancellationToken)
     {
-        var flowtimeDetails = await _db.GetAsync<FlowtimeDetails>("FlowtimeDetails", notification.Id);
+        var flowtimeDetailsList = await _db.GetAllAsync<FlowtimeDetails>("FlowtimeDetails");
 
-        if (flowtimeDetails == null)
+        var flowtimeDetailsByTaskId = flowtimeDetailsList.Where(x => x.TaskId == notification.Id);
+
+        foreach (var flowtimeDetails in flowtimeDetailsByTaskId)
         {
-            throw new EntityNotFoundException();
+            flowtimeDetails.TaskDescription = notification.Description;
+            flowtimeDetails.TaskVersion = notification.Version;
+
+            await _db.PutAsync("FlowtimeDetails", flowtimeDetails);
         }
-
-        flowtimeDetails.TaskDescription = notification.Description;
-        flowtimeDetails.Version = notification.Version;
-
-        await _db.PutAsync("FlowtimeDetails", flowtimeDetails);
     }
 
     public async System.Threading.Tasks.Task Handle(FlowtimeArchived notification, CancellationToken cancellationToken)

@@ -17,6 +17,7 @@ export function initialize() {
         db.createObjectStore("PomodoroDetails", { keyPath: "id" });
         db.createObjectStore("FlowtimeQueryItems", { keyPath: "id" });
         db.createObjectStore("FlowtimeDetails", { keyPath: "id" });
+        db.createObjectStore("TaskDetails", { keyPath: "id" });
     }
 }
 

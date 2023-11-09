@@ -45,6 +45,7 @@ public class MongoDBFlowtimeDetailsProjection :
         var flowtimeDetails = new FlowtimeDetails
         {
             Id = notification.Id,
+            CreationDate = notification.CreationDate,
             State = notification.State,
             TaskId = notification.TaskId,
             TaskDescription = notification.TaskDescription,
@@ -109,23 +110,13 @@ public class MongoDBFlowtimeDetailsProjection :
 
     public async System.Threading.Tasks.Task Handle(TaskDescriptionChanged notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<FlowtimeDetails>.Filter.Eq(x => x.Id, notification.Id);
-
-        var flowtimeDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
-
-        if (flowtimeDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
-        flowtimeDetails.TaskDescription = notification.Description;
-        flowtimeDetails.Version = notification.Version;
+        var filter = Builders<FlowtimeDetails>.Filter.Eq(x => x.TaskId, notification.Id);
 
         var update = Builders<FlowtimeDetails>.Update
             .Set(x => x.TaskDescription, notification.Description)
-            .Set(x => x.Version, notification.Version);
+            .Set(x => x.TaskVersion, notification.Version);
 
-        await _mongoCollection.UpdateOneAsync(filter, update, null, cancellationToken);
+        await _mongoCollection.UpdateManyAsync(filter, update, null, cancellationToken);
     }
 
     public async System.Threading.Tasks.Task Handle(FlowtimeArchived notification, CancellationToken cancellationToken)

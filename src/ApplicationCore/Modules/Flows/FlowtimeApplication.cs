@@ -20,9 +20,27 @@ public class FlowtimeApplication :
 
     public async Task<CreateFlowtimeResponse> Handle(CreateFlowtimeRequest request, CancellationToken cancellationToken)
     {
-        var task = new Task(request.TaskDescription);
+        Task task;
 
-        //await _repository.Save(task, -1);
+        if (request.TaskId.HasValue)
+        {
+            task = await _repository.GetAggregateById<Task>(request.TaskId.Value);
+
+            if (task.Description != request.TaskDescription)
+            {
+                task.ChangeDescription(request.TaskDescription);
+
+                await _repository.Save(task, request.TaskVersion.Value);
+
+                task = await _repository.GetAggregateById<Task>(request.TaskId.Value);
+            }
+        }
+        else
+        {
+            task = new Task(request.TaskDescription);
+
+            await _repository.Save(task, -1);
+        }
 
         var flowtime = new Flowtime(task);
 
@@ -71,16 +89,16 @@ public class FlowtimeApplication :
 
     public async Task<ChangeTaskDescriptionResponse> Handle(ChangeTaskDescriptionRequest request, CancellationToken cancellationToken)
     {
-        var flowtime = await _repository.GetAggregateById<Flowtime>(request.TaskId);
+        var task = await _repository.GetAggregateById<Task>(request.TaskId);
 
-        if (flowtime == null)
+        if (task == null)
         {
             throw new EntityNotFoundException();
         }
 
-        //flowtime.RefineTask(request.TaskDescription);
+        task.ChangeDescription(request.TaskDescription);
 
-        await _repository.Save(flowtime, request.TaskVersion);
+        await _repository.Save(task, request.TaskVersion);
 
         var response = new ChangeTaskDescriptionResponse(request.GetCorrelationId()) { };
 

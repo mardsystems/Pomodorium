@@ -13,13 +13,25 @@ public class Task : AggregateRoot
             throw new ArgumentNullException(nameof(description));
         }
 
-        Apply(new TaskCreated(Id, description));
+        Apply(new TaskCreated(Id, DateTime.Now, description));
     }
 
     public void When(TaskCreated e)
     {
         Id = e.Id;
 
+        CreationDate = e.CreationDate;
+
+        Description = e.Description;
+    }
+
+    public void ChangeDescription(string description)
+    {
+        Apply(new TaskDescriptionChanged(Id, description));
+    }
+
+    public void When(TaskDescriptionChanged e)
+    {
         Description = e.Description;
     }
 

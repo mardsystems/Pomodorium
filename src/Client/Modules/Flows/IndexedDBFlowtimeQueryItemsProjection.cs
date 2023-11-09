@@ -33,6 +33,7 @@ public class IndexedDBFlowtimeQueryItemsProjection :
         var flowtimeQueryItem = new FlowtimeQueryItem
         {
             Id = notification.Id,
+            CreationDate = notification.CreationDate,
             State = notification.State,
             TaskId = notification.TaskId,
             TaskDescription = notification.TaskDescription,
@@ -79,17 +80,16 @@ public class IndexedDBFlowtimeQueryItemsProjection :
 
     public async System.Threading.Tasks.Task Handle(TaskDescriptionChanged notification, CancellationToken cancellationToken)
     {
-        var flowtimeQueryItem = await _db.GetAsync<FlowtimeQueryItem>("FlowtimeQueryItems", notification.Id);
+        var flowtimeQueryItems = await _db.GetAllAsync<FlowtimeQueryItem>("FlowtimeQueryItems");
 
-        if (flowtimeQueryItem == null)
+        var flowtimeQueryItemByTaskId = flowtimeQueryItems.Where(x => x.TaskId == notification.Id);
+
+        foreach (var flowtimeQueryItem in flowtimeQueryItemByTaskId)
         {
-            throw new EntityNotFoundException();
+            flowtimeQueryItem.TaskDescription = notification.Description;
+
+            await _db.PutAsync("FlowtimeQueryItems", flowtimeQueryItem);
         }
-
-        flowtimeQueryItem.TaskDescription = notification.Description;
-        flowtimeQueryItem.Version = notification.Version;
-
-        await _db.PutAsync("FlowtimeQueryItems", flowtimeQueryItem);
     }
 
     public async System.Threading.Tasks.Task Handle(FlowtimeArchived notification, CancellationToken cancellationToken)
