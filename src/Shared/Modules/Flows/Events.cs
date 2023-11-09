@@ -91,6 +91,51 @@ public class FlowtimeStarted : Event
 }
 
 [DataContract]
+public class FlowtimeInterrupted : Event
+{
+    [DataMember(Order = 1)]
+    public Guid Id { get; private set; }
+
+    [DataMember(Order = 2)]
+    public DateTime StopDateTime { get; private set; }
+
+    [DataMember(Order = 3)]
+    public bool Interrupted { get; private set; }
+
+    [DataMember(Order = 4)]
+    public TimeSpan Worktime { get; private set; }
+
+    [DataMember(Order = 5)]
+    public TimeSpan Breaktime { get; private set; }
+
+    [DataMember(Order = 6)]
+    public FlowtimeState State { get; private set; }
+
+    public FlowtimeInterrupted(
+        Guid id,
+        DateTime stopDateTime,
+        bool interrupted,
+        TimeSpan worktime,
+        TimeSpan breaktime,
+        FlowtimeState state)
+    {
+        Id = id;
+
+        StopDateTime = stopDateTime;
+
+        Interrupted = interrupted;
+
+        Worktime = worktime;
+
+        Breaktime = breaktime;
+
+        State = state;
+    }
+
+    private FlowtimeInterrupted() { }
+}
+
+[DataContract]
 public class FlowtimeStopped : Event
 {
     [DataMember(Order = 1)]

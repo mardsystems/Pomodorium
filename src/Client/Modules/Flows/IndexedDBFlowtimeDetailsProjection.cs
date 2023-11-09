@@ -8,6 +8,7 @@ public class IndexedDBFlowtimeDetailsProjection :
     IRequestHandler<GetFlowtimeRequest, GetFlowtimeResponse>,
     INotificationHandler<FlowtimeCreated>,
     INotificationHandler<FlowtimeStarted>,
+    INotificationHandler<FlowtimeInterrupted>,
     INotificationHandler<FlowtimeStopped>,
     INotificationHandler<TaskDescriptionChanged>,
     INotificationHandler<FlowtimeArchived>
@@ -59,6 +60,25 @@ public class IndexedDBFlowtimeDetailsProjection :
         }
 
         flowtimeDetails.StartDateTime = notification.StartDateTime;
+        flowtimeDetails.State = notification.State;
+        flowtimeDetails.Version = notification.Version;
+
+        await _db.PutAsync("FlowtimeDetails", flowtimeDetails);
+    }
+
+    public async System.Threading.Tasks.Task Handle(FlowtimeInterrupted notification, CancellationToken cancellationToken)
+    {
+        var flowtimeDetails = await _db.GetAsync<FlowtimeDetails>("FlowtimeDetails", notification.Id);
+
+        if (flowtimeDetails == null)
+        {
+            throw new EntityNotFoundException();
+        }
+
+        flowtimeDetails.StopDateTime = notification.StopDateTime;
+        flowtimeDetails.Interrupted = notification.Interrupted;
+        flowtimeDetails.Worktime = notification.Worktime;
+        flowtimeDetails.Breaktime = notification.Breaktime;
         flowtimeDetails.State = notification.State;
         flowtimeDetails.Version = notification.Version;
 

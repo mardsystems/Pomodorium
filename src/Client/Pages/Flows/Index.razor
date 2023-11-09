@@ -71,14 +71,15 @@
             <TemplateColumn StickyRight="true" Sortable="false">
                 <CellTemplate>
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Add" OnClick="@(() => Continue(context.Item.TaskId))"></MudIconButton>
-                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => Details(context.Item.Id))">@SharedResource["Details"]</MudIconButton>
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => Details(context.Item.Id))"></MudIconButton>
                     @if (context.Item.State == FlowtimeState.NotStarted)
                     {
-                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.PlayArrow" OnClick="@(() => Start(context.Item.Id, context.Item.Version))">@SharedResource["Start"]</MudIconButton>
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.PlayArrow" OnClick="@(() => Start(context.Item.Id, context.Item.Version))"></MudIconButton>
                     }
                     else if (context.Item.State == FlowtimeState.Flow)
                     {
-                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Stop" OnClick="@(() => Stop(context.Item.Id, context.Item.Version))">@SharedResource["Stop"]</MudIconButton>
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Stop" OnClick="@(() => Stop(context.Item.Id, context.Item.Version))"></MudIconButton>
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Pause" OnClick="@(() => Interrupt(context.Item.Id, context.Item.Version))"></MudIconButton>
                     }
                 </CellTemplate>
             </TemplateColumn>
@@ -165,6 +166,20 @@
             };
 
         var response = await Mediator.Send<StartFlowtimeResponse>(request);
+
+        await Refresh();
+    }
+
+    private async System.Threading.Tasks.Task Interrupt(Guid id, long version)
+    {
+        var request = new InterruptFlowtimeRequest
+            {
+                Id = id,
+                InterruptDateTime = DateTime.Now,
+                Version = version
+            };
+
+        var response = await Mediator.Send<InterruptFlowtimeResponse>(request);
 
         await Refresh();
     }
