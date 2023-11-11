@@ -24,7 +24,7 @@ public class IndexedDBFlowtimeQueryItemsProjection :
     {
         var flowtimeQueryItems = await _db.GetAllAsync<FlowtimeQueryItem>("FlowtimeQueryItems");
 
-        var response = new GetFlowsResponse(request.GetCorrelationId()) { FlowtimeQueryItems = flowtimeQueryItems.OrderByDescending(x => x.StartDateTime) };
+        var response = new GetFlowsResponse(request.GetCorrelationId()) { FlowtimeQueryItems = flowtimeQueryItems.OrderByDescending(x => x.CreationDate) };
 
         return response;
     }

@@ -52,7 +52,9 @@ public class EventHubClient : IDisposable
 
         var response = await _server.InvokeAsync<GetEventsResponse>("GetEvents", request);
 
-        foreach (var eventRecord in response.EventRecords)
+        var eventRecords = response.EventRecords; //.OrderBy(x => x.Date);
+
+        foreach (var eventRecord in eventRecords)
         {
             await DispatchEvent(eventRecord);
         }

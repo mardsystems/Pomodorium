@@ -1,0 +1,133 @@
+﻿@page "/flows/tasks"
+@using MediatR;
+@using Pomodorium.Hubs;
+@using Pomodorium.Modules.Flows;
+@using Pomodorium.Shared
+@using System.DomainModel;
+@using System.DomainModel.Storage;
+@using System.Collections.ObjectModel;
+@using System.Collections.Specialized;
+@using System.Reactive.Linq;
+@using System.Reactive.Threading.Tasks;
+@using System.Reactive.Subjects;
+@inject IMediator Mediator
+@inject NavigationManager NavigationManager
+@inject EventHubClient EventHubClient
+@inject IStringLocalizer<SharedResource> SharedResource
+
+<PageTitle>Tasks</PageTitle>
+
+<MudToolBar>
+    <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="Add" />
+    <MudIconButton Icon="@Icons.Material.Outlined.Refresh" Color="Color.Inherit" OnClick="Refresh" />
+    @if (_selectedItems.Any())
+    {
+        <MudIconButton Icon="@Icons.Material.Outlined.Archive" OnClick="Archive">@SharedResource["Archive"]</MudIconButton>
+    }
+    <MudSpacer />
+    <MudText Typo="Typo.button" Class="mx-4" Style="text-wrap: nowrap">Total: @Model.Items?.Count</MudText>
+    <MudMenu Icon="@Icons.Material.Filled.MoreVert">
+        <MudMenuItem OnClick="@(() => _dataGridDense = !_dataGridDense)">Dense: @(_dataGridDense ? "On" : "Off")</MudMenuItem>
+        </MudMenu>
+    </MudToolBar>
+
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mb-4">
+        <MudDataGrid @ref="_mudDataGrid" Style="white-space: nowrap"
+                     Groupable="true" Items="Model.Items" Dense="_dataGridDense" Hover="true" Striped="true" MultiSelection="true"
+                     SelectOnRowClick="false" T="IndexViewModel.Item" @bind-SelectedItems="_selectedItems">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Tasks</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <Columns>
+                <SelectColumn T="IndexViewModel.Item" />
+                <PropertyColumn Property="x => x.Description" Title="@SharedResource["Description"]" />
+                <PropertyColumn Property="x => x.TotalHours" Title="@SharedResource["Total Hours"]" />
+                <PropertyColumn Property="x => x.CreationDate" Title="@SharedResource["Creation Date"]" Hideable="true" />
+                <TemplateColumn StickyRight="true" Sortable="false">
+                    <CellTemplate>
+                        @* <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Add" OnClick="@(() => Continue(context.Item.TaskId))"></MudIconButton> *@
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => Details(context.Item.Id))"></MudIconButton>
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+</MudContainer>
+
+@code {
+    private IndexViewModel? Model = new();
+
+    private MudDataGrid<IndexViewModel.Item> _mudDataGrid;
+
+    private string _searchString;
+
+    private bool _dataGridDense = false;
+
+    private int _selectedRowNumber = -1;
+
+    private HashSet<IndexViewModel.Item> _selectedItems = new();
+
+    protected override async System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        Model.ItemsChanged.Subscribe((x) =>
+            {
+                StateHasChanged();
+            });
+
+        EventHubClient.Notification
+            .Throttle(TimeSpan.FromSeconds(1))
+            .Subscribe(async (x) =>
+            {
+                await Refresh();
+            });
+
+        await Refresh();
+    }
+
+    protected override async System.Threading.Tasks.Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        if (firstRender)
+        {
+            await _mudDataGrid.SetSortAsync("CreationDate", SortDirection.Descending, (x) => x.CreationDate);
+        }
+    }
+
+    private async System.Threading.Tasks.Task Refresh()
+    {
+        var request = new GetTasksRequest { };
+
+        var response = await Mediator.Send<GetTasksResponse>(request);
+
+        Model.Repopulate(response.TaskQueryItems);
+    }
+
+    private async System.Threading.Tasks.Task Add()
+    {
+        NavigationManager.NavigateTo($"/flows/tasks/new");
+    }
+
+    private async System.Threading.Tasks.Task Details(Guid id)
+    {
+        NavigationManager.NavigateTo($"/flows/tasks/{id}");
+    }
+
+    private async System.Threading.Tasks.Task Archive()
+    {
+        foreach (var item in _selectedItems)
+        {
+            var request = new ArchiveTaskRequest
+                {
+                    Id = item.Id,
+                    Version = item.Version
+                };
+
+            var response = await Mediator.Send<ArchiveTaskResponse>(request);
+        }
+
+        await Refresh();
+    }
+}

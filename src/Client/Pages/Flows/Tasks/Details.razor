@@ -1,0 +1,157 @@
+﻿@page "/flows/tasks/{Id}"
+@using MediatR;
+@using Pomodorium.Modules.Flows;
+@using Pomodorium.Shared
+@using System.DomainModel;
+@using System.DomainModel.Storage;
+@using System.Collections.ObjectModel;
+@using System.Collections.Specialized;
+@using System.Reactive.Linq;
+@using System.Reactive.Threading.Tasks;
+@inject IMediator Mediator
+@inject IStringLocalizer<SharedResource> SharedResource;
+@inject NavigationManager Navigation;
+
+<PageTitle>Task</PageTitle>
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
+    @if (Model == null)
+    {
+        <MudProgressCircular Color="Color.Default" Indeterminate="true" />
+    }
+    else
+    {
+        <EditForm Model="@Model" OnValidSubmit="OnValidSubmit">
+            <DataAnnotationsValidator />
+            <MudGrid>
+                <MudItem xs="12" sm="7">
+                    <MudCard>
+                        <MudCardContent>
+                            <MudTextField @bind-Value="Model.Id" Label="@SharedResource["Id"]" For="@(() => Model.Id)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTextField @bind-Value="Model.Description" Label="@SharedResource["Description"]" For="@(() => Model.Description)" />
+                            <MudTextField @bind-Value="Model.CreationDate" Label="@SharedResource["Creation Date"]" For="@(() => Model.CreationDate)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTextField @bind-Value="Model.Version" Label="@SharedResource["Version"]" For="@(() => Model.Version)" ReadOnly="true" Variant="Variant.Filled" />
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Color="Color.Error" OnClick="Archive" Class="ms-auto me-2">@SharedResource["Archive"]</MudButton>
+                            <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">@SharedResource["Save"]</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+                <MudItem xs="12" sm="5">
+                    <MudPaper Class="pa-4 mud-height-full">
+                        <MudText Typo="Typo.subtitle2">@SharedResource["Validation Summary"]</MudText>
+                        @if (_success)
+                        {
+                            <MudText Color="Color.Success">@SharedResource["Success"]</MudText>
+                        }
+                        else
+                        {
+                            <MudText Color="@Color.Error">
+                                <ValidationSummary />
+                            </MudText>
+                        }
+                    </MudPaper>
+                </MudItem>
+                <MudItem xs="12">
+                    <MudText Typo="Typo.body2" Align="Align.Center">
+                        Fill out the form correctly to see the success message.
+                    </MudText>
+                </MudItem>
+            </MudGrid>
+        </EditForm>
+    }
+</MudContainer>
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public Guid? TaskId { get; set; }
+
+    public DetailsViewModel? Model { get; set; }
+
+    [Inject]
+    private IDialogService DialogService { get; set; }
+
+    private bool _success;
+
+    protected override async System.Threading.Tasks.Task OnInitializedAsync()
+    {
+        if (Id == null || Id == "new")
+        {
+            Model = new DetailsViewModel();
+        }
+        else
+        {
+            var request = new GetTaskRequest { Id = Guid.Parse(Id) };
+
+            var response = await Mediator.Send<GetTaskResponse>(request);
+
+            Model = new DetailsViewModel(
+                response.TaskDetails.Id,
+                response.TaskDetails.CreationDate,
+                response.TaskDetails.Description,
+                response.TaskDetails.Version);
+        }
+    }
+
+    private async System.Threading.Tasks.Task OnValidSubmit(EditContext context)
+    {
+        await Save();
+
+        _success = true;
+
+        StateHasChanged();
+    }
+
+    private async System.Threading.Tasks.Task Save()
+    {
+        if (Id == null || Id == "new")
+        {
+            var now = DateTime.Now;
+
+            var request = new CreateTaskRequest
+                {
+                    Description = Model.Description
+                };
+
+            var response = await Mediator.Send<CreateTaskResponse>(request);
+        }
+        else
+        {
+            var now = DateTime.Now;
+
+            var request = new ChangeTaskDescriptionRequest
+                {
+                    TaskId = Model.Id,
+                    TaskDescription = Model.Description,
+                    TaskVersion = Model.Version
+                };
+
+            var response = await Mediator.Send<ChangeTaskDescriptionResponse>(request);
+        }
+
+        Navigation.NavigateTo("flows");
+    }
+
+    private async System.Threading.Tasks.Task Archive()
+    {
+        if (Id == null || Id == "new")
+        {
+            return;
+        }
+
+        var request = new ArchiveTaskRequest
+            {
+                Id = Guid.Parse(Id),
+                Version = Model.Version
+            };
+
+        var response = await Mediator.Send<ArchiveTaskResponse>(request);
+
+        Navigation.NavigateTo("flows");
+    }
+}
