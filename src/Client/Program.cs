@@ -5,7 +5,9 @@ using MudBlazor.Services;
 using Pomodorium;
 using Pomodorium.Data;
 using Pomodorium.Hubs;
-using Pomodorium.Modules.Pomos;
+using Pomodorium.TaskManagement.ActivityManager;
+using Pomodorium.TimeManagement.FlowTimer;
+using Pomodorium.TimeManagement.PomodoroTimer;
 using System.DomainModel;
 using System.DomainModel.Storage;
 
@@ -47,7 +49,8 @@ else
 
     builder.Services.AddMediatR(config =>
     {
-        config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(PomodoroApplication).Assembly);
+        config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(CreateFlowtimeRequest).Assembly);
+        config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(PostActivityHandler).Assembly);
     });
 }
 

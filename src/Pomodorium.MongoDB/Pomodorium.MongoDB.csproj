@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Pomodorium</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="2.22.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pomodorium.TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
+    <ProjectReference Include="..\Pomodorium.TimeManagement.ApplicationModel\Pomodorium.TimeManagement.ApplicationModel.csproj" />
+  </ItemGroup>
+
+</Project>

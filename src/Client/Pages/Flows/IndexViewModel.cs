@@ -1,4 +1,5 @@
-﻿using Pomodorium.Modules.Flows;
+﻿using Pomodorium.FlowtimeTechnique;
+using Pomodorium.TimeManagement.FlowTimer;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Reactive;

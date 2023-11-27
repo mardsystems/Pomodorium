@@ -1,4 +1,5 @@
-﻿using Pomodorium.Modules.Pomos;
+﻿using Pomodorium.PomodoroTechnique;
+using Pomodorium.TimeManagement.PomodoroTimer;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Reactive;

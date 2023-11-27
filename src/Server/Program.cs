@@ -1,8 +1,8 @@
 using MongoDB.Driver;
-using Pomodorium.Bus;
 using Pomodorium.Data;
 using Pomodorium.Hubs;
-using Pomodorium.Modules.Pomos;
+using Pomodorium.TaskManagement.ActivityManager;
+using Pomodorium.TimeManagement.FlowTimer;
 using RabbitMQ.Client;
 using System.DomainModel;
 using System.DomainModel.Storage;
@@ -43,7 +43,8 @@ var connectionFactory = new ConnectionFactory()
 
 builder.Services.AddMediatR(config =>
 {
-    config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(PomodoroApplication).Assembly);
+    config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(CreateFlowtimeRequest).Assembly);
+    config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(PostActivityHandler).Assembly);
 });
 
 var app = builder.Build();

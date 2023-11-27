@@ -1,7 +1,6 @@
 ﻿@page "/activities"
 @using MediatR;
 @using Pomodorium.Hubs;
-@using Pomodorium.Modules.Activities;
 @using Pomodorium.Shared
 @using System.DomainModel;
 @using System.DomainModel.Storage;
@@ -10,6 +9,7 @@
 @using System.Reactive.Linq;
 @using System.Reactive.Threading.Tasks;
 @using System.Reactive.Subjects;
+@using Pomodorium.TaskManagement.ActivityManager
 @inject IMediator Mediator
 @inject NavigationManager NavigationManager
 @inject EventHubClient EventHubClient

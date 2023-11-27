@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
-using Pomodorium.Events;
 using System.DomainModel.Storage;
 
 namespace Pomodorium.Hubs;

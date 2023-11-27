@@ -1,6 +1,5 @@
 ﻿@page "/activities/{Id}"
 @using MediatR;
-@using Pomodorium.Modules.Activities;
 @using Pomodorium.Shared
 @using System.DomainModel;
 @using System.DomainModel.Storage;
@@ -8,6 +7,7 @@
 @using System.Collections.Specialized;
 @using System.Reactive.Linq;
 @using System.Reactive.Threading.Tasks;
+@using Pomodorium.TaskManagement.ActivityManager
 @inject IMediator Mediator
 @inject IStringLocalizer<SharedResource> SharedResource;
 @inject NavigationManager Navigation;
