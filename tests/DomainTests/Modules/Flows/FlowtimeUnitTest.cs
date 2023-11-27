@@ -145,9 +145,9 @@ public abstract class FlowtimeUnitTest : UnitTest
             }
 
             [Fact]
-            public void State_Should_Be_Finished()
+            public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Finished);
+                Flowtime.State.Should().Be(FlowtimeState.Stopped);
             }
 
             [Fact]
@@ -193,9 +193,9 @@ public abstract class FlowtimeUnitTest : UnitTest
             }
 
             [Fact]
-            public void State_Should_Be_Finished()
+            public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Finished);
+                Flowtime.State.Should().Be(FlowtimeState.Stopped);
             }
 
             [Fact]
@@ -241,9 +241,9 @@ public abstract class FlowtimeUnitTest : UnitTest
             }
 
             [Fact]
-            public void State_Should_Be_Finished()
+            public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Finished);
+                Flowtime.State.Should().Be(FlowtimeState.Stopped);
             }
 
             [Fact]
@@ -289,9 +289,9 @@ public abstract class FlowtimeUnitTest : UnitTest
             }
 
             [Fact]
-            public void State_Should_Be_Finished()
+            public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Finished);
+                Flowtime.State.Should().Be(FlowtimeState.Stopped);
             }
 
             [Fact]
@@ -345,9 +345,9 @@ public abstract class FlowtimeUnitTest : UnitTest
             }
 
             [Fact]
-            public void State_Should_Be_Finished()
+            public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Finished);
+                Flowtime.State.Should().Be(FlowtimeState.Stopped);
             }
 
             [Fact]
@@ -393,9 +393,9 @@ public abstract class FlowtimeUnitTest : UnitTest
             }
 
             [Fact]
-            public void State_Should_Be_Finished()
+            public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Finished);
+                Flowtime.State.Should().Be(FlowtimeState.Stopped);
             }
 
             [Fact]
@@ -441,9 +441,9 @@ public abstract class FlowtimeUnitTest : UnitTest
             }
 
             [Fact]
-            public void State_Should_Be_Finished()
+            public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Finished);
+                Flowtime.State.Should().Be(FlowtimeState.Stopped);
             }
 
             [Fact]
@@ -489,9 +489,9 @@ public abstract class FlowtimeUnitTest : UnitTest
             }
 
             [Fact]
-            public void State_Should_Be_Finished()
+            public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Finished);
+                Flowtime.State.Should().Be(FlowtimeState.Stopped);
             }
 
             [Fact]

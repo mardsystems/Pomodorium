@@ -37,11 +37,11 @@ public class MongoDBStore : IAppendOnlyStore
 
         var filter = builder.Empty;
 
-        var sort = Builders<EventRecord>.Sort
-            .Ascending(x => x.Name)
-            .Ascending(x => x.Version);
+        //var sort = Builders<EventRecord>.Sort
+        //    .Ascending(x => x.Name)
+        //    .Ascending(x => x.Version);
 
-        var events = await _mongoCollection.Find(filter).Sort(sort).ToListAsync();
+        var events = await _mongoCollection.Find(filter).ToListAsync();
 
         return events;
     }

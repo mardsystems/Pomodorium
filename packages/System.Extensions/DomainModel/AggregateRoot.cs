@@ -2,11 +2,13 @@
 
 public abstract class AggregateRoot : Entity
 {
-    public Guid Id { get; internal protected set; }
+    public Guid Id { get; protected set; }
 
     public string UserId { get; private set; }
 
     public bool Archived { get; private set; }
+    
+    public DateTime CreationDate { get; protected set; }
 
     public long Version { get; internal set; }
 
@@ -67,6 +69,8 @@ public abstract class AggregateRoot : Entity
     protected void Mutate(Event e)
     {
         ((dynamic)this).When((dynamic)e);
+
+        Version = e.Version;
     }
 
     public virtual void Archive()

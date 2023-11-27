@@ -11,14 +11,23 @@
 
 <MudLayout>
     <MudAppBar Elevation="0">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-        <MudText Typo="Typo.h6">Activities</MudText>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" OnClick="@((e) => DrawerToggle())" />
+        @if (!_drawerOpen)
+        {
+            <MudText Typo="Typo.h6">Pomodorium</MudText>
+        }        
         <MudSpacer />
-        <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Href="https://mudblazor.com/" Target="_blank" />
-        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Href="https://github.com/MudBlazor/MudBlazor/" Target="_blank" />
-        <MudToggleIconButton @bind-Toggled="@_isDarkMode"
-                             Icon="@Icons.Material.Filled.AlarmOff" Color="@Color.Inherit" Title="Off"
-                             ToggledIcon="@Icons.Material.Filled.AlarmOn" ToggledColor="@Color.Primary" ToggledTitle="On" Edge="Edge.End" />
+        <MudIconButton Icon="@Icons.Material.Filled.CloudDownload" Color="Color.Inherit" OnClick="DispatchEvents" />
+        @* <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Href="https://mudblazor.com/" Target="_blank" /> *@
+        @* <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Href="https://github.com/MudBlazor/MudBlazor/" Target="_blank" /> *@
+        <div Class="d-flex align-center justify-center my-auto">
+            <MudBadge Overlap="true" Color="Color.Success" Origin="Origin.TopRight" Dot="true" Visible="_isHubConnected">
+                <MudToggleIconButton Toggled="@_isHubConnected" ToggledChanged="OnToogleHubConnection"
+                                     Icon="@Icons.Material.Filled.CloudOff" Color="@Color.Inherit" Title="Off"
+                                     ToggledIcon="@Icons.Material.Filled.CloudQueue" ToggledColor="@Color.Inherit" ToggledTitle="On"
+                                      />
+            </MudBadge>
+        </div>
         @* <MudSwitch @bind-Checked="@_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode" /> *@
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
@@ -43,11 +52,13 @@
             }
         };
 
+    private bool _isHubConnected;
+
     private bool _isDarkMode;
 
     bool _drawerOpen = true;
 
-    private long NotificationTotal;
+    private long NotificationTotal = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -58,18 +69,38 @@
             InvokeAsync(StateHasChanged);
         });
 
+        if (HubConnection.State == HubConnectionState.Connected)
+        {
+            _isHubConnected = true;
+        }
+        else
+        {
+            _isHubConnected = false;
+        }
+
         await Task.CompletedTask;
     }
 
-    private async Task ToogleConnection()
+    private async Task OnToogleHubConnection(bool toogled)
     {
-        if (HubConnection.State == HubConnectionState.Disconnected)
+        try
         {
-            await HubConnection.StartAsync();
+            if (HubConnection.State == HubConnectionState.Disconnected)
+            {
+                await HubConnection.StartAsync();
+
+                _isHubConnected = true;
+            }
+            else if (HubConnection.State == HubConnectionState.Connected)
+            {
+                await HubConnection.StopAsync();
+
+                _isHubConnected = false;
+            }
         }
-        else if (HubConnection.State == HubConnectionState.Connected)
+        catch (Exception)
         {
-            await HubConnection.StopAsync();
+            _isHubConnected = false;
         }
     }
 

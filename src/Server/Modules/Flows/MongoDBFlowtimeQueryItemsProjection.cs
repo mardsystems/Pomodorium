@@ -8,6 +8,7 @@ public class MongoDBFlowtimeQueryItemsProjection :
     IRequestHandler<GetFlowsRequest, GetFlowsResponse>,
     INotificationHandler<FlowtimeCreated>,
     INotificationHandler<FlowtimeStarted>,
+    INotificationHandler<FlowtimeInterrupted>,
     INotificationHandler<FlowtimeStopped>,
     INotificationHandler<TaskDescriptionChanged>,
     INotificationHandler<FlowtimeArchived>
@@ -39,6 +40,7 @@ public class MongoDBFlowtimeQueryItemsProjection :
         var flowtimeQueryItem = new FlowtimeQueryItem
         {
             Id = notification.Id,
+            CreationDate = notification.CreationDate,
             State = notification.State,
             TaskId = notification.TaskId,
             TaskDescription = notification.TaskDescription,
@@ -65,6 +67,35 @@ public class MongoDBFlowtimeQueryItemsProjection :
 
         var update = Builders<FlowtimeQueryItem>.Update
             .Set(x => x.StartDateTime, notification.StartDateTime)
+            .Set(x => x.State, notification.State)
+            .Set(x => x.Version, notification.Version);
+
+        await _mongoCollection.UpdateOneAsync(filter, update, null, cancellationToken);
+    }
+
+    public async System.Threading.Tasks.Task Handle(FlowtimeInterrupted notification, CancellationToken cancellationToken)
+    {
+        var filter = Builders<FlowtimeQueryItem>.Filter.Eq(x => x.Id, notification.Id);
+
+        var flowtimeQueryItem = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
+
+        if (flowtimeQueryItem == null)
+        {
+            throw new EntityNotFoundException();
+        }
+
+        flowtimeQueryItem.StopDateTime = notification.StopDateTime;
+        flowtimeQueryItem.Interrupted = notification.Interrupted;
+        flowtimeQueryItem.Worktime = notification.Worktime;
+        flowtimeQueryItem.Breaktime = notification.Breaktime;
+        flowtimeQueryItem.State = notification.State;
+        flowtimeQueryItem.Version = notification.Version;
+
+        var update = Builders<FlowtimeQueryItem>.Update
+            .Set(x => x.StopDateTime, notification.StopDateTime)
+            .Set(x => x.Interrupted, notification.Interrupted)
+            .Set(x => x.Worktime, notification.Worktime)
+            .Set(x => x.Breaktime, notification.Breaktime)
             .Set(x => x.State, notification.State)
             .Set(x => x.Version, notification.Version);
 
@@ -102,23 +133,12 @@ public class MongoDBFlowtimeQueryItemsProjection :
 
     public async System.Threading.Tasks.Task Handle(TaskDescriptionChanged notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<FlowtimeQueryItem>.Filter.Eq(x => x.Id, notification.Id);
-
-        var flowtimeQueryItem = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
-
-        if (flowtimeQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
-        flowtimeQueryItem.TaskDescription = notification.Description;
-        flowtimeQueryItem.Version = notification.Version;
+        var filter = Builders<FlowtimeQueryItem>.Filter.Eq(x => x.TaskId, notification.Id);
 
         var update = Builders<FlowtimeQueryItem>.Update
-            .Set(x => x.TaskDescription, notification.Description)
-            .Set(x => x.Version, notification.Version);
+            .Set(x => x.TaskDescription, notification.Description);
 
-        await _mongoCollection.UpdateOneAsync(filter, update, null, cancellationToken);
+        await _mongoCollection.UpdateManyAsync(filter, update, null, cancellationToken);
     }
 
     public async System.Threading.Tasks.Task Handle(FlowtimeArchived notification, CancellationToken cancellationToken)

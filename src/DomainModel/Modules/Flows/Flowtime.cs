@@ -1,5 +1,4 @@
-﻿using Pomodorium.Modules.Pomos;
-using System.DomainModel;
+﻿using System.DomainModel;
 
 namespace Pomodorium.Modules.Flows;
 
@@ -30,12 +29,14 @@ public class Flowtime : AggregateRoot
 
         var initialState = FlowtimeState.NotStarted;
 
-        Apply(new FlowtimeCreated(Id, task.Id, task.Description, initialState));
+        Apply(new FlowtimeCreated(Id, DateTime.Now, task.Id, task.Description, task.Version, initialState));
     }
 
     public void When(FlowtimeCreated e)
     {
         Id = e.Id;
+
+        CreationDate = e.CreationDate;
 
         TaskId = e.TaskId;
 
@@ -51,7 +52,7 @@ public class Flowtime : AggregateRoot
 
         var initialState = FlowtimeState.NotStarted;
 
-        Apply(new FlowtimeCreated(Id, task.Id, task.Description, initialState));
+        Apply(new FlowtimeCreated(Id, DateTime.Now, task.Id, task.Description, task.Version, initialState));
 
         ExpectedDuration = expectedDuration;
     }
@@ -76,7 +77,7 @@ public class Flowtime : AggregateRoot
 
         if (Worktime >= ExpectedDuration)
         {
-            State = FlowtimeState.Limbo;
+            //State = FlowtimeState.Limbo;
         }
     }
 
@@ -89,30 +90,47 @@ public class Flowtime : AggregateRoot
 
     public void Interrupt(DateTime now)
     {
-        Worktime = now - StartDateTime;
+        var worktime = now - StartDateTime;
 
-        Interrupted = true;
+        var interrupted = true;
 
-        StopDateTime = now;
+        var newState = FlowtimeState.Stopped;
 
-        State = FlowtimeState.Finished;
+        TimeSpan breaktime;
 
-        if (Worktime <= TimeSpan.FromMinutes(25))
+        if (worktime <= TimeSpan.FromMinutes(25))
         {
-            Breaktime = TimeSpan.FromMinutes(5);
+            breaktime = TimeSpan.FromMinutes(5);
         }
-        else if (Worktime <= TimeSpan.FromMinutes(50))
+        else if (worktime <= TimeSpan.FromMinutes(50))
         {
-            Breaktime = TimeSpan.FromMinutes(8);
+            breaktime = TimeSpan.FromMinutes(8);
         }
-        else if (Worktime <= TimeSpan.FromMinutes(90))
+        else if (worktime <= TimeSpan.FromMinutes(90))
         {
-            Breaktime = TimeSpan.FromMinutes(10);
+            breaktime = TimeSpan.FromMinutes(10);
         }
         else
         {
-            Breaktime = TimeSpan.FromMinutes(15);
+            breaktime = TimeSpan.FromMinutes(15);
         }
+
+        Apply(new FlowtimeInterrupted(Id, now, interrupted, worktime.Value, breaktime, newState));
+    }
+
+    public void When(FlowtimeInterrupted e)
+    {
+        Worktime = e.Worktime;
+
+        StopDateTime = e.StopDateTime;
+
+        Interrupted = e.Interrupted;
+
+        Worktime = e.Worktime;
+
+        Breaktime = e.Breaktime;
+
+        State = e.State;
     }
 
     public void Stop(DateTime now)
@@ -121,7 +139,7 @@ public class Flowtime : AggregateRoot
 
         var interrupted = false;
 
-        var newState = FlowtimeState.Finished;
+        var newState = FlowtimeState.Stopped;
 
         TimeSpan breaktime;
 

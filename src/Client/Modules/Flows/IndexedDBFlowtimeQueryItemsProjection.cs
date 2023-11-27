@@ -8,6 +8,7 @@ public class IndexedDBFlowtimeQueryItemsProjection :
     IRequestHandler<GetFlowsRequest, GetFlowsResponse>,
     INotificationHandler<FlowtimeCreated>,
     INotificationHandler<FlowtimeStarted>,
+    INotificationHandler<FlowtimeInterrupted>,
     INotificationHandler<FlowtimeStopped>,
     INotificationHandler<TaskDescriptionChanged>,
     INotificationHandler<FlowtimeArchived>
@@ -23,7 +24,7 @@ public class IndexedDBFlowtimeQueryItemsProjection :
     {
         var flowtimeQueryItems = await _db.GetAllAsync<FlowtimeQueryItem>("FlowtimeQueryItems");
 
-        var response = new GetFlowsResponse(request.GetCorrelationId()) { FlowtimeQueryItems = flowtimeQueryItems.OrderByDescending(x => x.StartDateTime) };
+        var response = new GetFlowsResponse(request.GetCorrelationId()) { FlowtimeQueryItems = flowtimeQueryItems.OrderByDescending(x => x.CreationDate) };
 
         return response;
     }
@@ -33,6 +34,7 @@ public class IndexedDBFlowtimeQueryItemsProjection :
         var flowtimeQueryItem = new FlowtimeQueryItem
         {
             Id = notification.Id,
+            CreationDate = notification.CreationDate,
             State = notification.State,
             TaskId = notification.TaskId,
             TaskDescription = notification.TaskDescription,
@@ -52,6 +54,25 @@ public class IndexedDBFlowtimeQueryItemsProjection :
         }
 
         flowtimeQueryItem.StartDateTime = notification.StartDateTime;
+        flowtimeQueryItem.State = notification.State;
+        flowtimeQueryItem.Version = notification.Version;
+
+        await _db.PutAsync("FlowtimeQueryItems", flowtimeQueryItem);
+    }
+
+    public async System.Threading.Tasks.Task Handle(FlowtimeInterrupted notification, CancellationToken cancellationToken)
+    {
+        var flowtimeQueryItem = await _db.GetAsync<FlowtimeQueryItem>("FlowtimeQueryItems", notification.Id);
+
+        if (flowtimeQueryItem == null)
+        {
+            throw new EntityNotFoundException();
+        }
+
+        flowtimeQueryItem.StopDateTime = notification.StopDateTime;
+        flowtimeQueryItem.Interrupted = notification.Interrupted;
+        flowtimeQueryItem.Worktime = notification.Worktime;
+        flowtimeQueryItem.Breaktime = notification.Breaktime;
         flowtimeQueryItem.State = notification.State;
         flowtimeQueryItem.Version = notification.Version;
 
@@ -79,17 +100,16 @@ public class IndexedDBFlowtimeQueryItemsProjection :
 
     public async System.Threading.Tasks.Task Handle(TaskDescriptionChanged notification, CancellationToken cancellationToken)
     {
-        var flowtimeQueryItem = await _db.GetAsync<FlowtimeQueryItem>("FlowtimeQueryItems", notification.Id);
+        var flowtimeQueryItems = await _db.GetAllAsync<FlowtimeQueryItem>("FlowtimeQueryItems");
 
-        if (flowtimeQueryItem == null)
+        var flowtimeQueryItemByTaskId = flowtimeQueryItems.Where(x => x.TaskId == notification.Id);
+
+        foreach (var flowtimeQueryItem in flowtimeQueryItemByTaskId)
         {
-            throw new EntityNotFoundException();
+            flowtimeQueryItem.TaskDescription = notification.Description;
+
+            await _db.PutAsync("FlowtimeQueryItems", flowtimeQueryItem);
         }
-
-        flowtimeQueryItem.TaskDescription = notification.Description;
-        flowtimeQueryItem.Version = notification.Version;
-
-        await _db.PutAsync("FlowtimeQueryItems", flowtimeQueryItem);
     }
 
     public async System.Threading.Tasks.Task Handle(FlowtimeArchived notification, CancellationToken cancellationToken)

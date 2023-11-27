@@ -4,6 +4,8 @@ public enum FlowtimeState
 {
     NotStarted,
     Flow,
-    Limbo,
-    Finished
+    //Limbo,
+    Stopped
+    //Break,
+    //Finished
 }

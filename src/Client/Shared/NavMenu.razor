@@ -2,51 +2,5 @@
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
     <MudNavLink Href="activities" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Task">Activities</MudNavLink>
     <MudNavLink Href="flows" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.ArrowRight">Flows</MudNavLink>
-    <MudNavLink Href="pomos" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Timer">Pomos</MudNavLink>
+    <MudNavLink Href="pomos" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Timer">Pomos</MudNavLink>        
 </MudNavMenu>
-
-@* <div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Pomodorium</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
-
-<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="activities">
-                <span class="oi oi-task" aria-hidden="true"></span> Activities
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="flows">
-                <span class="oi oi-arrow-right" aria-hidden="true"></span> Flows
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="pomos">
-                <span class="oi oi-timer" aria-hidden="true"></span> Pomos
-            </NavLink>
-        </div>
-    </nav>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
- *@

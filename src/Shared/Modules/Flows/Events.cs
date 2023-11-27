@@ -10,11 +10,16 @@ public class TaskCreated : Event
     public Guid Id { get; private set; }
 
     [DataMember(Order = 2)]
+    public DateTime CreationDate { get; private set; }
+
+    [DataMember(Order = 3)]
     public string Description { get; private set; }
 
-    public TaskCreated(Guid id, string description)
+    public TaskCreated(Guid id, DateTime creationDate, string description)
     {
         Id = id;
+
+        CreationDate = creationDate;
 
         Description = description;
     }
@@ -29,24 +34,31 @@ public class FlowtimeCreated : Event
     public Guid Id { get; private set; }
 
     [DataMember(Order = 2)]
-    public Guid TaskId { get; private set; }
+    public DateTime CreationDate { get; private set; }
 
     [DataMember(Order = 3)]
-    public string TaskDescription { get; private set; }
+    public Guid TaskId { get; private set; }
 
     [DataMember(Order = 4)]
-    public long TaskVersion { get; private set; }
+    public string TaskDescription { get; private set; }
 
     [DataMember(Order = 5)]
+    public long TaskVersion { get; private set; }
+
+    [DataMember(Order = 6)]
     public FlowtimeState State { get; private set; }
 
-    public FlowtimeCreated(Guid id, Guid taskId, string taskDescription, FlowtimeState state)
+    public FlowtimeCreated(Guid id, DateTime creationDate, Guid taskId, string taskDescription, long taskVersion, FlowtimeState state)
     {
         Id = id;
+
+        CreationDate = creationDate;
 
         TaskId = taskId;
 
         TaskDescription = taskDescription;
+
+        TaskVersion = taskVersion;
 
         State = state;
     }
@@ -76,6 +88,51 @@ public class FlowtimeStarted : Event
     }
 
     private FlowtimeStarted() { }
+}
+
+[DataContract]
+public class FlowtimeInterrupted : Event
+{
+    [DataMember(Order = 1)]
+    public Guid Id { get; private set; }
+
+    [DataMember(Order = 2)]
+    public DateTime StopDateTime { get; private set; }
+
+    [DataMember(Order = 3)]
+    public bool Interrupted { get; private set; }
+
+    [DataMember(Order = 4)]
+    public TimeSpan Worktime { get; private set; }
+
+    [DataMember(Order = 5)]
+    public TimeSpan Breaktime { get; private set; }
+
+    [DataMember(Order = 6)]
+    public FlowtimeState State { get; private set; }
+
+    public FlowtimeInterrupted(
+        Guid id,
+        DateTime stopDateTime,
+        bool interrupted,
+        TimeSpan worktime,
+        TimeSpan breaktime,
+        FlowtimeState state)
+    {
+        Id = id;
+
+        StopDateTime = stopDateTime;
+
+        Interrupted = interrupted;
+
+        Worktime = worktime;
+
+        Breaktime = breaktime;
+
+        State = state;
+    }
+
+    private FlowtimeInterrupted() { }
 }
 
 [DataContract]

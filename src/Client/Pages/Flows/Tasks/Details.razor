@@ -1,6 +1,6 @@
-﻿@page "/pomos/{Id}"
+﻿@page "/flows/tasks/{Id}"
 @using MediatR;
-@using Pomodorium.Modules.Pomos;
+@using Pomodorium.Modules.Flows;
 @using Pomodorium.Shared
 @using System.DomainModel;
 @using System.DomainModel.Storage;
@@ -12,7 +12,7 @@
 @inject IStringLocalizer<SharedResource> SharedResource;
 @inject NavigationManager Navigation;
 
-<PageTitle>Pomodoro</PageTitle>
+<PageTitle>Task</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
     @if (Model == null)
@@ -28,22 +28,12 @@
                     <MudCard>
                         <MudCardContent>
                             <MudTextField @bind-Value="Model.Id" Label="@SharedResource["Id"]" For="@(() => Model.Id)" ReadOnly="true" Variant="Variant.Filled" />
-                            <MudTextField @bind-Value="Model.State" Label="@SharedResource["State"]" For="@(() => Model.State)" ReadOnly="true" Variant="Variant.Filled" />
-                            <MudTextField @bind-Value="Model.Task" Label="@SharedResource["Task"]" For="@(() => Model.Task)" />
-                            <MudDatePicker @bind-Date="Model.StartDate" Label="@SharedResource["Start Date"]" For="@(() => Model.StartDate)" ReadOnly="true" Variant="Variant.Filled" />
-                            <MudTimePicker @bind-Time="Model.StartTime" Label="@SharedResource["Start Time"]" For="@(() => Model.StartTime)" ReadOnly="true" Variant="Variant.Filled" />
-                            <MudDatePicker @bind-Date="Model.StopDate" Label="@SharedResource["Stop Date"]" For="@(() => Model.StopDate)" ReadOnly="true" Variant="Variant.Filled" />
-                            <MudTimePicker @bind-Time="Model.StopTime" Label="@SharedResource["Stop Time"]" For="@(() => Model.StopTime)" ReadOnly="true" Variant="Variant.Filled" />
-                            <MudTimePicker @bind-Time="Model.Timer" Label="@SharedResource["Timer"]" For="@(() => Model.Timer)" />
-                            <MudTimePicker @bind-Time="Model.Countdown" Label="@SharedResource["Countdown"]" For="@(() => Model.Countdown)" ReadOnly="true" Variant="Variant.Filled" />
+                            <MudTextField @bind-Value="Model.Description" Label="@SharedResource["Description"]" For="@(() => Model.Description)" />
+                            <MudTextField @bind-Value="Model.CreationDate" Label="@SharedResource["Creation Date"]" For="@(() => Model.CreationDate)" ReadOnly="true" Variant="Variant.Filled" />
                             <MudTextField @bind-Value="Model.Version" Label="@SharedResource["Version"]" For="@(() => Model.Version)" ReadOnly="true" Variant="Variant.Filled" />
                         </MudCardContent>
                         <MudCardActions>
                             <MudButton Color="Color.Error" OnClick="Archive" Class="ms-auto me-2">@SharedResource["Archive"]</MudButton>
-                            @if (Model.State == PomodoroState.Stopped)
-                            {
-                                <MudButton Color="Color.Success" OnClick="Check" Class="me-2">@SharedResource["Check"]</MudButton>
-                            }
                             <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">@SharedResource["Save"]</MudButton>
                         </MudCardActions>
                     </MudCard>
@@ -77,6 +67,10 @@
     [Parameter]
     public string? Id { get; set; }
 
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public Guid? TaskId { get; set; }
+
     public DetailsViewModel? Model { get; set; }
 
     [Inject]
@@ -84,7 +78,7 @@
 
     private bool _success;
 
-    protected override async Task OnInitializedAsync()
+    protected override async System.Threading.Tasks.Task OnInitializedAsync()
     {
         if (Id == null || Id == "new")
         {
@@ -92,39 +86,19 @@
         }
         else
         {
-            var request = new GetPomodoroRequest { Id = Guid.Parse(Id) };
+            var request = new GetTaskRequest { Id = Guid.Parse(Id) };
 
-            var response = await Mediator.Send<GetPomodoroResponse>(request);
+            var response = await Mediator.Send<GetTaskResponse>(request);
 
             Model = new DetailsViewModel(
-                response.PomodoroDetails.Id,
-                response.PomodoroDetails.Task,
-                response.PomodoroDetails.Timer,
-                response.PomodoroDetails.StartDateTime,
-                response.PomodoroDetails.State,
-                response.PomodoroDetails.Version);
-
-            Model.CountdownChanges.Subscribe(x =>
-            {
-                StateHasChanged();
-            });
+                response.TaskDetails.Id,
+                response.TaskDetails.CreationDate,
+                response.TaskDetails.Description,
+                response.TaskDetails.Version);
         }
     }
 
-    private async Task Check()
-    {
-        var request = new CheckPomodoroRequest
-            {
-                Id = Guid.Parse(Id),
-                Version = Model.Version
-            };
-
-        var response = await Mediator.Send<CheckPomodoroResponse>(request);
-
-        Navigation.NavigateTo("pomos");
-    }
-
-    private async Task OnValidSubmit(EditContext context)
+    private async System.Threading.Tasks.Task OnValidSubmit(EditContext context)
     {
         await Save();
 
@@ -133,50 +107,51 @@
         StateHasChanged();
     }
 
-    private async Task Save()
+    private async System.Threading.Tasks.Task Save()
     {
         if (Id == null || Id == "new")
         {
             var now = DateTime.Now;
 
-            var request = new CreatePomodoroRequest
+            var request = new CreateTaskRequest
                 {
-                    Task = Model.Task,
-                    Timer = Model.Timer.Value
+                    Description = Model.Description
                 };
 
-            var response = await Mediator.Send<CreatePomodoroResponse>(request);
+            var response = await Mediator.Send<CreateTaskResponse>(request);
         }
         else
         {
-            var request = new RefinePomodoroTaskRequest
+            var now = DateTime.Now;
+
+            var request = new ChangeTaskDescriptionRequest
                 {
-                    Id = Guid.Parse(Id),
-                    Task = Model.Task,
-                    Version = Model.Version
+                    TaskId = Model.Id,
+                    TaskDescription = Model.Description,
+                    TaskVersion = Model.Version
                 };
 
-            var response = await Mediator.Send<RefinePomodoroTaskResponse>(request);
+            var response = await Mediator.Send<ChangeTaskDescriptionResponse>(request);
         }
 
-        Navigation.NavigateTo("pomos");
+        Navigation.NavigateTo("flows");
     }
 
-    private async Task Archive()
+    private async System.Threading.Tasks.Task Archive()
     {
         if (Id == null || Id == "new")
         {
             return;
         }
 
-        var request = new ArchivePomodoroRequest
+        var request = new ArchiveTaskRequest
             {
                 Id = Guid.Parse(Id),
                 Version = Model.Version
             };
 
-        var response = await Mediator.Send<ArchivePomodoroResponse>(request);
+        var response = await Mediator.Send<ArchiveTaskResponse>(request);
 
-        Navigation.NavigateTo("pomos");
+        Navigation.NavigateTo("flows");
     }
 }
