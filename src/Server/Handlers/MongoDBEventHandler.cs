@@ -1,6 +1,4 @@
 ﻿using MediatR;
-using Pomodorium.Data;
-using Pomodorium.Events;
 using System.DomainModel.Storage;
 
 namespace Pomodorium.Handlers;

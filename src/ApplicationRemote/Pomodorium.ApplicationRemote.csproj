@@ -4,13 +4,11 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>Pomodorium</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
-    <ProjectReference Include="..\ApplicationModel\Pomodorium.ApplicationModel.csproj" />
-    <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
+    <ProjectReference Include="..\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
+    <ProjectReference Include="..\TimeManagement.ApplicationModel\Pomodorium.TimeManagement.ApplicationModel.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿using Pomodorium.Modules.Flows;
+﻿using Pomodorium.FlowtimeTechnique.Model;
 using System.Reactive.Linq;
 
 namespace Pomodorium.Pages.Flows;

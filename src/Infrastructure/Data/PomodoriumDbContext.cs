@@ -1,4 +1,4 @@
-﻿using Pomodorium.Modules.Pomos;
+﻿using Pomodorium.Features.PomodoroTimer;
 using System.Collections.ObjectModel;
 
 namespace Pomodorium.Data;

@@ -8,10 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Features\TimeTracker\" />
+    <Folder Include="Features\Timer\" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
-    <ProjectReference Include="..\ApplicationModel\Pomodorium.ApplicationModel.csproj" />
-    <ProjectReference Include="..\DomainModel\Pomodorium.DomainModel.csproj" />
-    <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
+    <ProjectReference Include="..\FlowtimeTechnique.DomainModel\Pomodorium.FlowtimeTechnique.DomainModel.csproj" />
+    <ProjectReference Include="..\PomodoroTechnique.DomainModel\Pomodorium.PomodoroTechnique.DomainModel.csproj" />
+    <ProjectReference Include="..\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
+    <ProjectReference Include="..\TaskManagement.DomainModel\Pomodorium.TaskManagement.DomainModel.csproj" />
+    <ProjectReference Include="..\TimeManagement.ApplicationModel\Pomodorium.TimeManagement.ApplicationModel.csproj" />
+    <ProjectReference Include="..\TimeTracking.DomainModel\Pomodorium.TimeTracking.DomainModel.csproj" />
   </ItemGroup>
 
 </Project>

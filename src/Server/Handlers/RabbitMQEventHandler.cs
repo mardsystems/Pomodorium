@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Pomodorium.Bus;
+﻿using Pomodorium.Bus;
 using System.DomainModel.Storage;
 
 namespace Pomodorium.Handlers;

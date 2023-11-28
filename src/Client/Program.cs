@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor.Services;
 using Pomodorium;
 using Pomodorium.Data;
+using Pomodorium.Features.ActivityManager;
+using Pomodorium.Features.FlowTimer;
+using Pomodorium.Features.PomodoroTimer;
 using Pomodorium.Hubs;
-using Pomodorium.Modules.Pomos;
 using System.DomainModel;
 using System.DomainModel.Storage;
 
@@ -47,7 +49,11 @@ else
 
     builder.Services.AddMediatR(config =>
     {
-        config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(PomodoroApplication).Assembly);
+        config.RegisterServicesFromAssemblies(
+            typeof(Program).Assembly,
+            typeof(CreateFlowtimeHandler).Assembly,
+            typeof(IndexedDBFlowtimeQueryItemsProjection).Assembly,
+            typeof(PostActivityHandler).Assembly);
     });
 }
 
@@ -65,7 +71,7 @@ if (!APP_REMOTE)
     {
         await indexedDB.InitializeAsync();
     }
-    
+
     await hubConnection.StartAsync();
 }
 

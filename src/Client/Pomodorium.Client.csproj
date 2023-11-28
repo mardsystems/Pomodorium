@@ -21,10 +21,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
-    <ProjectReference Include="..\ApplicationCore\Pomodorium.ApplicationCore.csproj" />
-    <ProjectReference Include="..\ApplicationModel\Pomodorium.ApplicationModel.csproj" />
-    <ProjectReference Include="..\ApplicationRemote\Pomodorium.ApplicationRemote.csproj" />
     <ProjectReference Include="..\Infrastructure\Pomodorium.Infrastructure.csproj" />
+    <ProjectReference Include="..\ApplicationCore\Pomodorium.ApplicationCore.csproj" />
+    <ProjectReference Include="..\ApplicationRemote\Pomodorium.ApplicationRemote.csproj" />
+    <ProjectReference Include="..\Data.Sqlite\Pomodorium.Data.Sqlite.csproj" />
+    <ProjectReference Include="..\IndexDB\Pomodorium.IndexDB.csproj" />
+    <ProjectReference Include="..\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
+    <ProjectReference Include="..\TimeManagement.ApplicationModel\Pomodorium.TimeManagement.ApplicationModel.csproj" />
     <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
   </ItemGroup>
 

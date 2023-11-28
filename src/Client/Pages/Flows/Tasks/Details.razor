@@ -1,6 +1,5 @@
 ﻿@page "/flows/tasks/{Id}"
 @using MediatR;
-@using Pomodorium.Modules.Flows;
 @using Pomodorium.Shared
 @using System.DomainModel;
 @using System.DomainModel.Storage;
@@ -8,6 +7,7 @@
 @using System.Collections.Specialized;
 @using System.Reactive.Linq;
 @using System.Reactive.Threading.Tasks;
+@using Pomodorium.Features.TaskManager
 @inject IMediator Mediator
 @inject IStringLocalizer<SharedResource> SharedResource;
 @inject NavigationManager Navigation;
