@@ -1,8 +1,8 @@
 using MongoDB.Driver;
 using Pomodorium.Data;
+using Pomodorium.Features.ActivityManager;
+using Pomodorium.Features.FlowTimer;
 using Pomodorium.Hubs;
-using Pomodorium.TaskManagement.ActivityManager;
-using Pomodorium.TimeManagement.FlowTimer;
 using RabbitMQ.Client;
 using System.DomainModel;
 using System.DomainModel.Storage;

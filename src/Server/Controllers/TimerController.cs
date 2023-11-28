@@ -1,6 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Pomodorium.TimeManagement.Timer;
+using Pomodorium.Features.Timer;
 
 namespace Pomodorium.Controllers;
 

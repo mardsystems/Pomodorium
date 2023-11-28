@@ -1,4 +1,4 @@
-﻿using Pomodorium.TaskManagement.TaskManager;
+﻿using Pomodorium.Features.TaskManager;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Reactive;

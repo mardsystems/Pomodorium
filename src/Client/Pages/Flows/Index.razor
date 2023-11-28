@@ -1,6 +1,6 @@
 ﻿@page "/flows"
 @using MediatR;
-@using Pomodorium.FlowtimeTechnique
+@using Pomodorium.FlowtimeTechnique.Model
 @using Pomodorium.Hubs;
 @using Pomodorium.Shared
 @using System.DomainModel;
@@ -10,7 +10,7 @@
 @using System.Reactive.Linq;
 @using System.Reactive.Threading.Tasks;
 @using System.Reactive.Subjects;
-@using Pomodorium.TimeManagement.FlowTimer
+@using Pomodorium.Features.FlowTimer
 @inject IMediator Mediator
 @inject NavigationManager NavigationManager
 @inject EventHubClient EventHubClient

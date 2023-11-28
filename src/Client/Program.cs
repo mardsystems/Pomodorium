@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor.Services;
 using Pomodorium;
 using Pomodorium.Data;
+using Pomodorium.Features.ActivityManager;
+using Pomodorium.Features.FlowTimer;
+using Pomodorium.Features.PomodoroTimer;
 using Pomodorium.Hubs;
-using Pomodorium.TaskManagement.ActivityManager;
-using Pomodorium.TimeManagement.FlowTimer;
-using Pomodorium.TimeManagement.PomodoroTimer;
 using System.DomainModel;
 using System.DomainModel.Storage;
 

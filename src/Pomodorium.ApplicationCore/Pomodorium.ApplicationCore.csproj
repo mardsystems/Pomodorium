@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Pomodorium</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\TimeTracker\" />
+    <Folder Include="Features\Timer\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
+    <ProjectReference Include="..\Pomodorium.FlowtimeTechnique.DomainModel\Pomodorium.FlowtimeTechnique.DomainModel.csproj" />
+    <ProjectReference Include="..\Pomodorium.PomodoroTechnique.DomainModel\Pomodorium.PomodoroTechnique.DomainModel.csproj" />
+    <ProjectReference Include="..\Pomodorium.TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
+    <ProjectReference Include="..\Pomodorium.TaskManagement.DomainModel\Pomodorium.TaskManagement.DomainModel.csproj" />
+    <ProjectReference Include="..\Pomodorium.TimeManagement.ApplicationModel\Pomodorium.TimeManagement.ApplicationModel.csproj" />
+    <ProjectReference Include="..\Pomodorium.TimeTracking.DomainModel\Pomodorium.TimeTracking.DomainModel.csproj" />
+  </ItemGroup>
+
+</Project>

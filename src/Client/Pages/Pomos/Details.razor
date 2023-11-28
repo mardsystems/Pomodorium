@@ -1,6 +1,6 @@
 ﻿@page "/pomos/{Id}"
 @using MediatR;
-@using Pomodorium.PomodoroTechnique
+@using Pomodorium.PomodoroTechnique.Model
 @using Pomodorium.Shared
 @using System.DomainModel;
 @using System.DomainModel.Storage;
@@ -8,7 +8,7 @@
 @using System.Collections.Specialized;
 @using System.Reactive.Linq;
 @using System.Reactive.Threading.Tasks;
-@using Pomodorium.TimeManagement.PomodoroTimer
+@using Pomodorium.Features.PomodoroTimer
 @inject IMediator Mediator
 @inject IStringLocalizer<SharedResource> SharedResource;
 @inject NavigationManager Navigation;

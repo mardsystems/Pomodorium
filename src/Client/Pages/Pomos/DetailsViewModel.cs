@@ -1,4 +1,4 @@
-﻿using Pomodorium.PomodoroTechnique;
+﻿using Pomodorium.PomodoroTechnique.Model;
 using System.Reactive.Linq;
 
 namespace Pomodorium.Pages.Pomos;

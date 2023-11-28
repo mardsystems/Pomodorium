@@ -1,4 +1,4 @@
-﻿using Pomodorium.TaskManagement.Activities;
+﻿using Pomodorium.TaskManagement.Model.Activities;
 
 namespace Pomodorium.Pages.Activities;
 
