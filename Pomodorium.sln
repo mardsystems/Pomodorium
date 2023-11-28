@@ -26,33 +26,33 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.Infrastructure",
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{183B7F33-38BE-41D9-B69A-438019FFE06D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.TaskManagement.DomainModel", "src\Pomodorium.TaskManagement.DomainModel\Pomodorium.TaskManagement.DomainModel.csproj", "{9CC7EB5D-1ADD-4D93-BC9C-5D51983742B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.TaskManagement.DomainModel", "src\TaskManagement.DomainModel\Pomodorium.TaskManagement.DomainModel.csproj", "{9CC7EB5D-1ADD-4D93-BC9C-5D51983742B8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.TaskManagement.ApplicationModel", "src\Pomodorium.TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj", "{89E16C7B-9016-48AB-A27B-9CED77BF8B47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.TaskManagement.ApplicationModel", "src\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj", "{89E16C7B-9016-48AB-A27B-9CED77BF8B47}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.FlowtimeTechnique.DomainModel", "src\Pomodorium.FlowtimeTechnique.DomainModel\Pomodorium.FlowtimeTechnique.DomainModel.csproj", "{0F1E0370-73E1-49B9-8B1A-B21C6F9926F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.FlowtimeTechnique.DomainModel", "src\FlowtimeTechnique.DomainModel\Pomodorium.FlowtimeTechnique.DomainModel.csproj", "{0F1E0370-73E1-49B9-8B1A-B21C6F9926F8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.TimeManagement.ApplicationModel", "src\Pomodorium.TimeManagement.ApplicationModel\Pomodorium.TimeManagement.ApplicationModel.csproj", "{F890A756-6CFC-42DC-8A51-F81155E815E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.TimeManagement.ApplicationModel", "src\TimeManagement.ApplicationModel\Pomodorium.TimeManagement.ApplicationModel.csproj", "{F890A756-6CFC-42DC-8A51-F81155E815E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.TimeTracking.DomainModel", "src\Pomodorium.TimeTracking.DomainModel\Pomodorium.TimeTracking.DomainModel.csproj", "{611AE9B2-C11A-4320-82C9-764B1B4E8B0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.TimeTracking.DomainModel", "src\TimeTracking.DomainModel\Pomodorium.TimeTracking.DomainModel.csproj", "{611AE9B2-C11A-4320-82C9-764B1B4E8B0E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.PomodoroTechnique.DomainModel", "src\Pomodorium.PomodoroTechnique.DomainModel\Pomodorium.PomodoroTechnique.DomainModel.csproj", "{4355D629-88DA-4417-AF6E-9ACEB5FE3B5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.PomodoroTechnique.DomainModel", "src\PomodoroTechnique.DomainModel\Pomodorium.PomodoroTechnique.DomainModel.csproj", "{4355D629-88DA-4417-AF6E-9ACEB5FE3B5B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.FlowtimeTechnique.DomainTests", "tests\Pomodorium.FlowtimeTechnique.DomainTests\Pomodorium.FlowtimeTechnique.DomainTests.csproj", "{9AAFC7F7-29CD-497A-9BA6-CB8A81BE53AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.FlowtimeTechnique.DomainTests", "tests\FlowtimeTechnique.DomainTests\Pomodorium.FlowtimeTechnique.DomainTests.csproj", "{9AAFC7F7-29CD-497A-9BA6-CB8A81BE53AB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.PomodoroTechnique.DomainTests", "tests\Pomodorium.PomodoroTechnique.DomainTests\Pomodorium.PomodoroTechnique.DomainTests.csproj", "{6C1A5D18-259E-4E24-91ED-FED2FD242AE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.PomodoroTechnique.DomainTests", "tests\PomodoroTechnique.DomainTests\Pomodorium.PomodoroTechnique.DomainTests.csproj", "{6C1A5D18-259E-4E24-91ED-FED2FD242AE9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data Services", "Data Services", "{F9A4E5D7-BD89-4EB0-A12E-C9BD9D887C66}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.MongoDB", "src\Pomodorium.MongoDB\Pomodorium.MongoDB.csproj", "{6DC1A1CF-5EB4-4E0E-8B37-7D6CD602E65D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.MongoDB", "src\MongoDB\Pomodorium.MongoDB.csproj", "{6DC1A1CF-5EB4-4E0E-8B37-7D6CD602E65D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.IndexDB", "src\Pomodorium.IndexDB\Pomodorium.IndexDB.csproj", "{01EE1672-896B-423C-B9F2-DBE0FE61063F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.IndexDB", "src\IndexDB\Pomodorium.IndexDB.csproj", "{01EE1672-896B-423C-B9F2-DBE0FE61063F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.Data.Sqlite", "src\Pomodorium.Data.Sqlite\Pomodorium.Data.Sqlite.csproj", "{0DFCA311-3AF8-4E13-9ABC-88238A5B9027}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.Data.Sqlite", "src\Data.Sqlite\Pomodorium.Data.Sqlite.csproj", "{0DFCA311-3AF8-4E13-9ABC-88238A5B9027}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodorium.ApplicationCore", "src\Pomodorium.ApplicationCore\Pomodorium.ApplicationCore.csproj", "{BA4A789D-E3A2-4451-A26F-7DEB527E2404}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.ApplicationCore", "src\ApplicationCore\Pomodorium.ApplicationCore.csproj", "{BA4A789D-E3A2-4451-A26F-7DEB527E2404}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodorium.ApplicationRemote", "src\Pomodorium.ApplicationRemote\Pomodorium.ApplicationRemote.csproj", "{0D1EDCB9-8374-436A-87F9-11F756C45699}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.ApplicationRemote", "src\ApplicationRemote\Pomodorium.ApplicationRemote.csproj", "{0D1EDCB9-8374-436A-87F9-11F756C45699}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

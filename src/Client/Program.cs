@@ -49,7 +49,8 @@ else
 
     builder.Services.AddMediatR(config =>
     {
-        config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(CreateFlowtimeRequest).Assembly);
+        config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(CreateFlowtimeHandler).Assembly);
+        config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(IndexedDBFlowtimeQueryItemsProjection).Assembly);
         config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(PostActivityHandler).Assembly);
     });
 }
