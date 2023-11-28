@@ -5,6 +5,8 @@ public class GetTasksRequest : Request<GetTasksResponse>
     public int PageSize { get; set; }
 
     public int PageIndex { get; set; }
+
+    public string ExternalSourceId { get; set; }
 }
 
 public class GetTasksResponse : Response
@@ -29,6 +31,8 @@ public class TaskQueryItem
     public string? Description { get; set; }
 
     public double? TotalHours { get; set; }
+
+    public string? ExternalSourceId { get; set; }
 
     public long Version { get; set; }
 }

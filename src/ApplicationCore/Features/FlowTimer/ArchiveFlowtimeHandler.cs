@@ -6,9 +6,9 @@ public class ArchiveFlowtimeHandler : IRequestHandler<ArchiveFlowtimeRequest, Ar
 {
     private readonly Repository _repository;
 
-    public ArchiveFlowtimeHandler(Repository flowtimeRepository)
+    public ArchiveFlowtimeHandler(Repository repository)
     {
-        _repository = flowtimeRepository;
+        _repository = repository;
     }
 
     public async Task<ArchiveFlowtimeResponse> Handle(ArchiveFlowtimeRequest request, CancellationToken cancellationToken)

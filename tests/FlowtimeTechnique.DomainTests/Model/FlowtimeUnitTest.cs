@@ -25,7 +25,7 @@ public abstract class FlowtimeUnitTest : UnitTest
             {
                 Id = Guid.NewGuid();
 
-                Task = new TaskManagement.Model.Tasks.Task("Test");
+                Task = new TaskManagement.Model.Tasks.Task("Test", null);
             }
 
             [Fact]
@@ -82,7 +82,7 @@ public abstract class FlowtimeUnitTest : UnitTest
         {
             public override void Arrange()
             {
-                Task = new TaskManagement.Model.Tasks.Task("Test");
+                Task = new TaskManagement.Model.Tasks.Task("Test", null);
 
                 StartDateTime = DateTime.Now;
 
@@ -127,7 +127,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             public override void Arrange()
             {
-                Task = new TaskManagement.Model.Tasks.Task("Test");
+                Task = new TaskManagement.Model.Tasks.Task("Test", null);
 
                 Flowtime = new Flowtime(Task);
 
@@ -175,7 +175,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             public override void Arrange()
             {
-                Task = new TaskManagement.Model.Tasks.Task("Test");
+                Task = new TaskManagement.Model.Tasks.Task("Test", null);
 
                 Flowtime = new Flowtime(Task);
 
@@ -223,7 +223,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             public override void Arrange()
             {
-                Task = new TaskManagement.Model.Tasks.Task("Test");
+                Task = new TaskManagement.Model.Tasks.Task("Test", null);
 
                 Flowtime = new Flowtime(Task);
 
@@ -271,7 +271,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             public override void Arrange()
             {
-                Task = new TaskManagement.Model.Tasks.Task("Test");
+                Task = new TaskManagement.Model.Tasks.Task("Test", null);
 
                 Flowtime = new Flowtime(Task);
 
@@ -327,7 +327,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             public override void Arrange()
             {
-                Task = new TaskManagement.Model.Tasks.Task("Test");
+                Task = new TaskManagement.Model.Tasks.Task("Test", null);
 
                 Flowtime = new Flowtime(Task);
 
@@ -375,7 +375,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             public override void Arrange()
             {
-                Task = new TaskManagement.Model.Tasks.Task("Test");
+                Task = new TaskManagement.Model.Tasks.Task("Test", null);
 
                 Flowtime = new Flowtime(Task);
 
@@ -423,7 +423,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             public override void Arrange()
             {
-                Task = new TaskManagement.Model.Tasks.Task("Test");
+                Task = new TaskManagement.Model.Tasks.Task("Test", null);
 
                 Flowtime = new Flowtime(Task);
 
@@ -471,7 +471,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             public override void Arrange()
             {
-                Task = new TaskManagement.Model.Tasks.Task("Test");
+                Task = new TaskManagement.Model.Tasks.Task("Test", null);
 
                 Flowtime = new Flowtime(Task);
 

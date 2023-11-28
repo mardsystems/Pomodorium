@@ -6,9 +6,9 @@ public class InterruptFlowtimeHandler : IRequestHandler<InterruptFlowtimeRequest
 {
     private readonly Repository _repository;
 
-    public InterruptFlowtimeHandler(Repository flowtimeRepository)
+    public InterruptFlowtimeHandler(Repository repository)
     {
-        _repository = flowtimeRepository;
+        _repository = repository;
     }
 
     public async Task<InterruptFlowtimeResponse> Handle(InterruptFlowtimeRequest request, CancellationToken cancellationToken)

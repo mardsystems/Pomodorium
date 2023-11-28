@@ -49,9 +49,11 @@ else
 
     builder.Services.AddMediatR(config =>
     {
-        config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(CreateFlowtimeHandler).Assembly);
-        config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(IndexedDBFlowtimeQueryItemsProjection).Assembly);
-        config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(PostActivityHandler).Assembly);
+        config.RegisterServicesFromAssemblies(
+            typeof(Program).Assembly,
+            typeof(CreateFlowtimeHandler).Assembly,
+            typeof(IndexedDBFlowtimeQueryItemsProjection).Assembly,
+            typeof(PostActivityHandler).Assembly);
     });
 }
 
@@ -69,7 +71,7 @@ if (!APP_REMOTE)
     {
         await indexedDB.InitializeAsync();
     }
-    
+
     await hubConnection.StartAsync();
 }
 

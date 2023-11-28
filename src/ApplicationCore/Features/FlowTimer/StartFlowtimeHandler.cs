@@ -6,9 +6,9 @@ public class StartFlowtimeHandler : IRequestHandler<StartFlowtimeRequest, StartF
 {
     private readonly Repository _repository;
 
-    public StartFlowtimeHandler(Repository flowtimeRepository)
+    public StartFlowtimeHandler(Repository repository)
     {
-        _repository = flowtimeRepository;
+        _repository = repository;
     }
 
     public async Task<StartFlowtimeResponse> Handle(StartFlowtimeRequest request, CancellationToken cancellationToken)

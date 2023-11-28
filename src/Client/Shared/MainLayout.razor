@@ -1,5 +1,7 @@
 ﻿@inherits LayoutComponentBase
+@using MediatR
 @using Microsoft.AspNetCore.SignalR.Client;
+@using Pomodorium.Features.TaskManager
 @using Pomodorium.Hubs;
 @inject HubConnection HubConnection
 @inject EventHubClient EventHubClient
@@ -15,8 +17,9 @@
         @if (!_drawerOpen)
         {
             <MudText Typo="Typo.h6">Pomodorium</MudText>
-        }        
+        }
         <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Filled.Task" Color="Color.Inherit" OnClick="SyncTasksWithTFS" />
         <MudIconButton Icon="@Icons.Material.Filled.CloudDownload" Color="Color.Inherit" OnClick="DispatchEvents" />
         @* <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Href="https://mudblazor.com/" Target="_blank" /> *@
         @* <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Href="https://github.com/MudBlazor/MudBlazor/" Target="_blank" /> *@
@@ -24,8 +27,7 @@
             <MudBadge Overlap="true" Color="Color.Success" Origin="Origin.TopRight" Dot="true" Visible="_isHubConnected">
                 <MudToggleIconButton Toggled="@_isHubConnected" ToggledChanged="OnToogleHubConnection"
                                      Icon="@Icons.Material.Filled.CloudOff" Color="@Color.Inherit" Title="Off"
-                                     ToggledIcon="@Icons.Material.Filled.CloudQueue" ToggledColor="@Color.Inherit" ToggledTitle="On"
-                                      />
+                                     ToggledIcon="@Icons.Material.Filled.CloudQueue" ToggledColor="@Color.Inherit" ToggledTitle="On" />
             </MudBadge>
         </div>
         @* <MudSwitch @bind-Checked="@_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode" /> *@
@@ -42,6 +44,8 @@
 </MudLayout>
 
 @code {
+    [Inject] private IMediator Mediator { get; set; }
+
     private MudTheme _theme = new()
         {
             Palette = new PaletteLight()
@@ -107,6 +111,16 @@
     private async Task DispatchEvents()
     {
         await EventHubClient.DispatchEvents();
+    }
+
+    private async Task SyncTasksWithTFS()
+    {
+        var request = new SyncTasksWithTFSRequest
+            {
+                ProjectName = ""
+            };
+
+        await Mediator.Send<SyncTasksWithTFSResponse>(request);
     }
 
     void DrawerToggle()

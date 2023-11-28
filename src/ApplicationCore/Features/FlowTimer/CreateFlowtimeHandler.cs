@@ -6,9 +6,9 @@ public class CreateFlowtimeHandler : IRequestHandler<CreateFlowtimeRequest, Crea
 {
     private readonly Repository _repository;
 
-    public CreateFlowtimeHandler(Repository flowtimeRepository)
+    public CreateFlowtimeHandler(Repository repository)
     {
-        _repository = flowtimeRepository;
+        _repository = repository;
     }
 
     public async Task<CreateFlowtimeResponse> Handle(CreateFlowtimeRequest request, CancellationToken cancellationToken)
@@ -30,7 +30,7 @@ public class CreateFlowtimeHandler : IRequestHandler<CreateFlowtimeRequest, Crea
         }
         else
         {
-            task = new TaskManagement.Model.Tasks.Task(request.TaskDescription);
+            task = new TaskManagement.Model.Tasks.Task(request.TaskDescription, null);
 
             await _repository.Save(task, -1);
         }

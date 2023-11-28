@@ -4,9 +4,9 @@ public class ChangeTaskDescriptionHandler : IRequestHandler<ChangeTaskDescriptio
 {
     private readonly Repository _repository;
 
-    public ChangeTaskDescriptionHandler(Repository flowtimeRepository)
+    public ChangeTaskDescriptionHandler(Repository repository)
     {
-        _repository = flowtimeRepository;
+        _repository = repository;
     }
 
     public async Task<ChangeTaskDescriptionResponse> Handle(ChangeTaskDescriptionRequest request, CancellationToken cancellationToken)

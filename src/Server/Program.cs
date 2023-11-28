@@ -1,8 +1,10 @@
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Pomodorium.Data;
 using Pomodorium.Features.ActivityManager;
 using Pomodorium.Features.FlowTimer;
 using Pomodorium.Hubs;
+using Pomodorium.TeamFoundationServer;
 using RabbitMQ.Client;
 using System.DomainModel;
 using System.DomainModel.Storage;
@@ -41,11 +43,17 @@ var connectionFactory = new ConnectionFactory()
 
 //builder.Services.AddScoped((factory) => new RabbitMQPublisher(connection));
 
+builder.Services.AddScoped<QueryExecutor>()
+    .AddOptions<TeamFoundationServerOptions>()
+    .Bind(builder.Configuration.GetSection(TeamFoundationServerOptions.CONFIGURATION_SECTION_NAME));
+
 builder.Services.AddMediatR(config =>
 {
-    config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(CreateFlowtimeHandler).Assembly);
-    config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(MongoDBFlowtimeQueryItemsProjection).Assembly);
-    config.RegisterServicesFromAssemblies(typeof(Program).Assembly, typeof(PostActivityHandler).Assembly);
+    config.RegisterServicesFromAssemblies(
+        typeof(Program).Assembly,
+        typeof(CreateFlowtimeHandler).Assembly,
+        typeof(MongoDBFlowtimeQueryItemsProjection).Assembly,
+        typeof(PostActivityHandler).Assembly);
 });
 
 var app = builder.Build();
