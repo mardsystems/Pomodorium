@@ -32,9 +32,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.TaskManagement.A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.FlowtimeTechnique.DomainModel", "src\FlowtimeTechnique.DomainModel\Pomodorium.FlowtimeTechnique.DomainModel.csproj", "{0F1E0370-73E1-49B9-8B1A-B21C6F9926F8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.TimeManagement.ApplicationModel", "src\TimeManagement.ApplicationModel\Pomodorium.TimeManagement.ApplicationModel.csproj", "{F890A756-6CFC-42DC-8A51-F81155E815E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.OfficeTimeManagement.ApplicationModel", "src\OfficeTimeManagement.ApplicationModel\Pomodorium.OfficeTimeManagement.ApplicationModel.csproj", "{F890A756-6CFC-42DC-8A51-F81155E815E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.TimeTracking.DomainModel", "src\TimeTracking.DomainModel\Pomodorium.TimeTracking.DomainModel.csproj", "{611AE9B2-C11A-4320-82C9-764B1B4E8B0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.OfficeTimeTracking.DomainModel", "src\OfficeTimeTracking.DomainModel\Pomodorium.OfficeTimeTracking.DomainModel.csproj", "{611AE9B2-C11A-4320-82C9-764B1B4E8B0E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.PomodoroTechnique.DomainModel", "src\PomodoroTechnique.DomainModel\Pomodorium.PomodoroTechnique.DomainModel.csproj", "{4355D629-88DA-4417-AF6E-9ACEB5FE3B5B}"
 EndProject
@@ -58,7 +58,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration Services", "Int
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.TeamFoundationServer", "src\TeamFoundationServer\Pomodorium.TeamFoundationServer.csproj", "{AD5C1B7C-7269-4138-B043-F4651E2F404D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodorium.Trello", "src\Trello\Pomodorium.Trello.csproj", "{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.Trello", "src\Trello\Pomodorium.Trello.csproj", "{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

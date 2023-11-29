@@ -27,7 +27,7 @@
     <ProjectReference Include="..\MongoDB\Pomodorium.MongoDB.csproj" />
     <ProjectReference Include="..\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
     <ProjectReference Include="..\TeamFoundationServer\Pomodorium.TeamFoundationServer.csproj" />
-    <ProjectReference Include="..\TimeManagement.ApplicationModel\Pomodorium.TimeManagement.ApplicationModel.csproj" />
+    <ProjectReference Include="..\OfficeTimeManagement.ApplicationModel\Pomodorium.OfficeTimeManagement.ApplicationModel.csproj" />
     <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
     <ProjectReference Include="..\Trello\Pomodorium.Trello.csproj" />
   </ItemGroup>
