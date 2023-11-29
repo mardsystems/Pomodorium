@@ -18,8 +18,8 @@
     <ProjectReference Include="..\PomodoroTechnique.DomainModel\Pomodorium.PomodoroTechnique.DomainModel.csproj" />
     <ProjectReference Include="..\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
     <ProjectReference Include="..\TaskManagement.DomainModel\Pomodorium.TaskManagement.DomainModel.csproj" />
-    <ProjectReference Include="..\TimeManagement.ApplicationModel\Pomodorium.TimeManagement.ApplicationModel.csproj" />
-    <ProjectReference Include="..\TimeTracking.DomainModel\Pomodorium.TimeTracking.DomainModel.csproj" />
+    <ProjectReference Include="..\OfficeTimeManagement.ApplicationModel\Pomodorium.OfficeTimeManagement.ApplicationModel.csproj" />
+    <ProjectReference Include="..\OfficeTimeTracking.DomainModel\Pomodorium.OfficeTimeTracking.DomainModel.csproj" />
   </ItemGroup>
 
 </Project>
