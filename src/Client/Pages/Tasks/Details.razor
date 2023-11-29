@@ -1,4 +1,4 @@
-﻿@page "/flows/tasks/{Id}"
+﻿@page "/tasks/{Id}"
 @using MediatR;
 @using Pomodorium.Shared
 @using System.DomainModel;
@@ -12,7 +12,7 @@
 @inject IStringLocalizer<SharedResource> SharedResource;
 @inject NavigationManager Navigation;
 
-<PageTitle>Task</PageTitle>
+<PageTitle>Task Details</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-4">
     @if (Model == null)

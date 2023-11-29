@@ -1,4 +1,4 @@
-﻿@page "/flows/tasks"
+﻿@page "/tasks"
 @using MediatR;
 @using Pomodorium.Hubs;
 @using Pomodorium.Shared
@@ -15,19 +15,21 @@
 @inject EventHubClient EventHubClient
 @inject IStringLocalizer<SharedResource> SharedResource
 
-<PageTitle>Tasks</PageTitle>
+<PageTitle>Task Manager</PageTitle>
 
 <MudToolBar>
     <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="Add" />
     <MudIconButton Icon="@Icons.Material.Outlined.Refresh" Color="Color.Inherit" OnClick="Refresh" />
+    <MudIconButton Icon="@Icons.Material.Filled.CloudDownload" Color="Color.Inherit" OnClick="SyncTasksWithTFS" Title="Sync Tasks with TFS" />
+    <MudIconButton Icon="@Icons.Material.Filled.CloudDownload" Color="Color.Inherit" OnClick="SyncTasksWithTrello" Title="Sync Tasks with Trello" />
     @if (_selectedItems.Any())
     {
         <MudIconButton Icon="@Icons.Material.Outlined.Archive" OnClick="Archive">@SharedResource["Archive"]</MudIconButton>
     }
     <MudSpacer />
     <MudText Typo="Typo.button" Class="mx-4" Style="text-wrap: nowrap">Total: @Model.Items?.Count</MudText>
-    <MudMenu Icon="@Icons.Material.Filled.MoreVert">
-        <MudMenuItem OnClick="@(() => _dataGridDense = !_dataGridDense)">Dense: @(_dataGridDense ? "On" : "Off")</MudMenuItem>
+        <MudMenu Icon="@Icons.Material.Filled.MoreVert">
+            <MudMenuItem OnClick="@(() => _dataGridDense = !_dataGridDense)">Dense: @(_dataGridDense ? "On" : "Off")</MudMenuItem>
         </MudMenu>
     </MudToolBar>
 
@@ -36,7 +38,7 @@
                      Groupable="true" Items="Model.Items" Dense="_dataGridDense" Hover="true" Striped="true" MultiSelection="true"
                      SelectOnRowClick="false" T="IndexViewModel.Item" @bind-SelectedItems="_selectedItems">
             <ToolBarContent>
-                <MudText Typo="Typo.h6">Tasks</MudText>
+                <MudText Typo="Typo.h6">Task Manager</MudText>
                 <MudSpacer />
                 <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
@@ -50,13 +52,13 @@
                     <CellTemplate>
                         @* <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Add" OnClick="@(() => Continue(context.Item.TaskId))"></MudIconButton> *@
                         <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => Details(context.Item.Id))"></MudIconButton>
-                </CellTemplate>
-            </TemplateColumn>
-        </Columns>
-    </MudDataGrid>
-</MudContainer>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+        </MudDataGrid>
+    </MudContainer>
 
-@code {
+    @code {
     private IndexViewModel? Model = new();
 
     private MudDataGrid<IndexViewModel.Item> _mudDataGrid;
@@ -107,12 +109,32 @@
 
     private async System.Threading.Tasks.Task Add()
     {
-        NavigationManager.NavigateTo($"/flows/tasks/new");
+        NavigationManager.NavigateTo($"/tasks/new");
+    }
+
+    private async Task SyncTasksWithTFS()
+    {
+        var request = new SyncTasksWithTFSRequest
+            {
+                ProjectName = ""
+            };
+
+        await Mediator.Send<SyncTasksWithTFSResponse>(request);
+    }
+
+    private async Task SyncTasksWithTrello()
+    {
+        var request = new SyncTasksWithTrelloRequest
+            {
+                BoardId = ""
+            };
+
+        await Mediator.Send<SyncTasksWithTrelloResponse>(request);
     }
 
     private async System.Threading.Tasks.Task Details(Guid id)
     {
-        NavigationManager.NavigateTo($"/flows/tasks/{id}");
+        NavigationManager.NavigateTo($"/tasks/{id}");
     }
 
     private async System.Threading.Tasks.Task Archive()

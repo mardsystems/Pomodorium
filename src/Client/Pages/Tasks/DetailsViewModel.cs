@@ -1,4 +1,4 @@
-﻿namespace Pomodorium.Pages.Flows.Tasks;
+﻿namespace Pomodorium.Pages.Tasks;
 
 public class DetailsViewModel
 {
