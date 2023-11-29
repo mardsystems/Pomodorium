@@ -13,7 +13,7 @@
     <ProjectReference Include="..\PomodoroTechnique.DomainModel\Pomodorium.PomodoroTechnique.DomainModel.csproj" />
     <ProjectReference Include="..\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
     <ProjectReference Include="..\TaskManagement.DomainModel\Pomodorium.TaskManagement.DomainModel.csproj" />
-    <ProjectReference Include="..\OfficeTimeTracking.DomainModel\Pomodorium.OfficeTimeTracking.DomainModel.csproj" />
+    <ProjectReference Include="..\RoutineTracking.DomainModel\Pomodorium.RoutineTracking.DomainModel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
