@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.Extensions.Options;
 using MudBlazor.Services;
 using Pomodorium;
 using Pomodorium.Data;
@@ -8,6 +9,7 @@ using Pomodorium.Features.ActivityManager;
 using Pomodorium.Features.FlowTimer;
 using Pomodorium.Features.PomodoroTimer;
 using Pomodorium.Hubs;
+using System;
 using System.DomainModel;
 using System.DomainModel.Storage;
 

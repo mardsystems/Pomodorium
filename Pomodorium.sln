@@ -56,7 +56,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.ApplicationRemot
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration Services", "Integration Services", "{F78E4260-150B-4092-98A5-EEAB69D48F2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodorium.TeamFoundationServer", "src\TeamFoundationServer\Pomodorium.TeamFoundationServer.csproj", "{AD5C1B7C-7269-4138-B043-F4651E2F404D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.TeamFoundationServer", "src\TeamFoundationServer\Pomodorium.TeamFoundationServer.csproj", "{AD5C1B7C-7269-4138-B043-F4651E2F404D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodorium.Trello", "src\Trello\Pomodorium.Trello.csproj", "{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -308,6 +310,18 @@ Global
 		{AD5C1B7C-7269-4138-B043-F4651E2F404D}.Release|x64.Build.0 = Release|Any CPU
 		{AD5C1B7C-7269-4138-B043-F4651E2F404D}.Release|x86.ActiveCfg = Release|Any CPU
 		{AD5C1B7C-7269-4138-B043-F4651E2F404D}.Release|x86.Build.0 = Release|Any CPU
+		{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}.Debug|x64.Build.0 = Debug|Any CPU
+		{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}.Debug|x86.Build.0 = Debug|Any CPU
+		{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}.Release|x64.ActiveCfg = Release|Any CPU
+		{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}.Release|x64.Build.0 = Release|Any CPU
+		{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}.Release|x86.ActiveCfg = Release|Any CPU
+		{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -334,6 +348,7 @@ Global
 		{0D1EDCB9-8374-436A-87F9-11F756C45699} = {1A2B9716-F138-4889-9AE8-39438830950D}
 		{F78E4260-150B-4092-98A5-EEAB69D48F2E} = {30C4743E-AB9E-49BD-8F48-D376813B8824}
 		{AD5C1B7C-7269-4138-B043-F4651E2F404D} = {F78E4260-150B-4092-98A5-EEAB69D48F2E}
+		{2F4714ED-DDF9-4123-9C31-AD875BB9A26F} = {F78E4260-150B-4092-98A5-EEAB69D48F2E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {882EBB42-21F4-4BC0-805A-088422CBB28C}
