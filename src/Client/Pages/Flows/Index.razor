@@ -21,7 +21,6 @@
 <MudToolBar>
     <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="Add" />
     <MudIconButton Icon="@Icons.Material.Outlined.Refresh" Color="Color.Inherit" OnClick="Refresh" />
-    <MudIconButton Icon="@Icons.Material.Outlined.Task" OnClick="NavigateToTasks" />
     @if (_selectedItems.Any())
     {
         <MudIconButton Icon="@Icons.Material.Outlined.Archive" OnClick="Archive">@SharedResource["Archive"]</MudIconButton>
@@ -156,11 +155,6 @@
     private async System.Threading.Tasks.Task Continue(Guid taskId)
     {
         NavigationManager.NavigateTo($"/flows/continuation?TaskId={taskId}");
-    }
-
-    private async System.Threading.Tasks.Task NavigateToTasks()
-    {
-        NavigationManager.NavigateTo($"/flows/tasks");
     }
 
     private async System.Threading.Tasks.Task Start(Guid id, long version)

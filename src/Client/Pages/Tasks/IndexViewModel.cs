@@ -4,7 +4,7 @@ using System.Collections.Specialized;
 using System.Reactive;
 using System.Reactive.Linq;
 
-namespace Pomodorium.Pages.Flows.Tasks;
+namespace Pomodorium.Pages.Tasks;
 
 public class IndexViewModel
 {

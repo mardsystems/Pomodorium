@@ -16,8 +16,4 @@
     <ProjectReference Include="..\RoutineTracking.DomainModel\Pomodorium.RoutineTracking.DomainModel.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\TimeTracker\" />
-  </ItemGroup>
-
 </Project>
