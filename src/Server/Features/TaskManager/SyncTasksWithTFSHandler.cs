@@ -8,14 +8,14 @@ public class SyncTasksWithTFSHandler : IRequestHandler<SyncTasksWithTFSRequest, 
 {
     private readonly IMediator _mediator;
 
-    private readonly QueryExecutor _workItemAdapter;
+    private readonly WorkItemAdapter _workItemAdapter;
 
     private readonly Repository _repository;
 
     public SyncTasksWithTFSHandler(
         IMediator mediator,
         Repository repository,
-        QueryExecutor workItemAdapter)
+        WorkItemAdapter workItemAdapter)
     {
         _mediator = mediator;
 
@@ -39,13 +39,13 @@ public class SyncTasksWithTFSHandler : IRequestHandler<SyncTasksWithTFSRequest, 
 
             var taskQueryItem = getTasksResponse.TaskQueryItems.FirstOrDefault();
 
-            var workItemSystemTitle = $"{workItem.Fields["System.Title"]} (#{workItem.Id})";
+            var workItemTitle = $"{workItem.Fields["System.Title"]} (#{workItem.Id})";
 
             TaskManagement.Model.Tasks.Task task;
 
             if (taskQueryItem == default)
             {
-                task = new TaskManagement.Model.Tasks.Task(workItemSystemTitle, workItem.Id.ToString());
+                task = new TaskManagement.Model.Tasks.Task(workItemTitle, workItem.Id.ToString());
             }
             else
             {
@@ -53,15 +53,15 @@ public class SyncTasksWithTFSHandler : IRequestHandler<SyncTasksWithTFSRequest, 
 
                 if (taskExisting == null)
                 {
-                    task = new TaskManagement.Model.Tasks.Task(workItemSystemTitle, workItem.Id.ToString());
+                    task = new TaskManagement.Model.Tasks.Task(workItemTitle, workItem.Id.ToString());
                 }
                 else
                 {
                     task = taskExisting;
 
-                    if (task.Description != workItemSystemTitle)
+                    if (task.Description != workItemTitle)
                     {
-                        task.ChangeDescription(workItemSystemTitle);
+                        task.ChangeDescription(workItemTitle);
                     }
                 }
             }

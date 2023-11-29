@@ -5,13 +5,13 @@ using Microsoft.VisualStudio.Services.Common;
 
 namespace Pomodorium.TeamFoundationServer;
 
-public class QueryExecutor
+public class WorkItemAdapter
 {
     private readonly Uri _uri;
     private readonly string _personalAccessToken;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="QueryExecutor" /> class.
+    ///     Initializes a new instance of the <see cref="WorkItemAdapter" /> class.
     /// </summary>
     /// <param name="orgName">
     ///     An organization in Azure DevOps Services. If you don't have one, you can create one for free:
@@ -21,7 +21,7 @@ public class QueryExecutor
     ///     A Personal Access Token, find out how to create one:
     ///     <see href="/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops" />.
     /// </param>
-    public QueryExecutor(IOptions<TeamFoundationServerOptions> optionsInterface)
+    public WorkItemAdapter(IOptions<TeamFoundationServerOptions> optionsInterface)
     {
         var options = optionsInterface.Value;
 
@@ -37,7 +37,7 @@ public class QueryExecutor
     /// <returns>A list of <see cref="WorkItem"/> objects representing all the open bugs.</returns>
     public async Task<IEnumerable<WorkItem>> QueryTasks(string project)
     {
-        var credentials = new VssBasicCredential(string.Empty, this._personalAccessToken);
+        var credentials = new VssBasicCredential(string.Empty, _personalAccessToken);
 
         // create a wiql object and build our query
         var wiql = new Wiql()
@@ -52,7 +52,7 @@ public class QueryExecutor
         };
 
         // create instance of work item tracking http client
-        using (var httpClient = new WorkItemTrackingHttpClient(this._uri, credentials))
+        using (var httpClient = new WorkItemTrackingHttpClient(_uri, credentials))
         {
             // execute the query to get the list of work items in the results
             var result = await httpClient.QueryByWiqlAsync(wiql).ConfigureAwait(false);

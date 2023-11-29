@@ -21,11 +21,20 @@ public class TaskManagerController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost("", Name = "PostSyncTasksWithTFSRequest")]
+    [HttpPost("syncTasksWithTFS", Name = "PostSyncTasksWithTFS")]
     [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(SyncTasksWithTFSResponse))]
-    public async Task<SyncTasksWithTFSResponse> PostSyncTasksWithTFSRequest(SyncTasksWithTFSRequest request)
+    public async Task<SyncTasksWithTFSResponse> SyncTasksWithTFS(SyncTasksWithTFSRequest request)
     {
         var response = await _mediator.Send<SyncTasksWithTFSResponse>(request);
+
+        return response;
+    }
+
+    [HttpPost("syncTasksWithTrello", Name = "SyncTasksWithTrelloRequest")]
+    [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(SyncTasksWithTrelloResponse))]
+    public async Task<SyncTasksWithTrelloResponse> SyncTasksWithTrello(SyncTasksWithTrelloRequest request)
+    {
+        var response = await _mediator.Send<SyncTasksWithTrelloResponse>(request);
 
         return response;
     }

@@ -20,6 +20,7 @@
         }
         <MudSpacer />
         <MudIconButton Icon="@Icons.Material.Filled.Task" Color="Color.Inherit" OnClick="SyncTasksWithTFS" />
+        <MudIconButton Icon="@Icons.Material.Filled.Task" Color="Color.Inherit" OnClick="SyncTasksWithTrello" />
         <MudIconButton Icon="@Icons.Material.Filled.CloudDownload" Color="Color.Inherit" OnClick="DispatchEvents" />
         @* <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Href="https://mudblazor.com/" Target="_blank" /> *@
         @* <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Href="https://github.com/MudBlazor/MudBlazor/" Target="_blank" /> *@
@@ -121,6 +122,16 @@
             };
 
         await Mediator.Send<SyncTasksWithTFSResponse>(request);
+    }
+
+    private async Task SyncTasksWithTrello()
+    {
+        var request = new SyncTasksWithTrelloRequest
+            {
+                BoardId = ""
+            };
+
+        await Mediator.Send<SyncTasksWithTrelloResponse>(request);
     }
 
     void DrawerToggle()

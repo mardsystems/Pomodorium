@@ -2,7 +2,7 @@
 
 public class TeamFoundationServerOptions
 {
-    public const string CONFIGURATION_SECTION_NAME = "TeamFoundationServer";
+    public const string NAME = "TeamFoundationServer";
 
     public string OrganizationName { get; set; }
 

@@ -15,7 +15,7 @@ public class SyncTasksWithTFSHandler : IRequestHandler<SyncTasksWithTFSRequest, 
 
     public async Task<SyncTasksWithTFSResponse> Handle(SyncTasksWithTFSRequest request, CancellationToken cancellationToken)
     {
-        var httpResponse = await _httpClient.PostAsJsonAsync("api/taskmanager", request, cancellationToken);
+        var httpResponse = await _httpClient.PostAsJsonAsync("api/taskmanager/syncTasksWithTFS", request, cancellationToken);
 
         var response = await httpResponse.Content.ReadFromJsonAsync<SyncTasksWithTFSResponse>(JsonSerializerOptions.Default, cancellationToken);
 

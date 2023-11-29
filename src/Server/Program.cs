@@ -1,10 +1,10 @@
-using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Pomodorium.Data;
 using Pomodorium.Features.ActivityManager;
 using Pomodorium.Features.FlowTimer;
 using Pomodorium.Hubs;
 using Pomodorium.TeamFoundationServer;
+using Pomodorium.Trello;
 using RabbitMQ.Client;
 using System.DomainModel;
 using System.DomainModel.Storage;
@@ -43,9 +43,10 @@ var connectionFactory = new ConnectionFactory()
 
 //builder.Services.AddScoped((factory) => new RabbitMQPublisher(connection));
 
-builder.Services.AddScoped<QueryExecutor>()
-    .AddOptions<TeamFoundationServerOptions>()
-    .Bind(builder.Configuration.GetSection(TeamFoundationServerOptions.CONFIGURATION_SECTION_NAME));
+builder.Services.AddOptions<TeamFoundationServerOptions>()
+    .Bind(builder.Configuration.GetSection(TeamFoundationServerOptions.NAME));
+
+builder.Services.AddScoped<WorkItemAdapter>();
 
 builder.Services.AddMediatR(config =>
 {
@@ -55,6 +56,18 @@ builder.Services.AddMediatR(config =>
         typeof(MongoDBFlowtimeQueryItemsProjection).Assembly,
         typeof(PostActivityHandler).Assembly);
 });
+
+builder.Services.AddHttpClient(TrelloOptions.NAME, client =>
+{
+    client.BaseAddress = new Uri("https://api.trello.com/");
+});
+
+
+builder.Services.AddOptions<TrelloOptions>()
+    .Bind(builder.Configuration.GetSection(TrelloOptions.NAME));
+
+builder.Services.AddScoped<BoardsAdapter>();
+builder.Services.AddScoped<ListsAdapter>();
 
 var app = builder.Build();
 
