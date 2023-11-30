@@ -26,6 +26,10 @@ builder.Services.AddScoped<IAppendOnlyStore, MongoDBStore>(factory =>
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
+
 builder.Services.AddRazorPages();
 
 builder.Services.AddSignalR();
@@ -42,9 +46,6 @@ var connectionFactory = new ConnectionFactory()
 //var connection = connectionFactory.CreateConnection();
 
 //builder.Services.AddScoped((factory) => new RabbitMQPublisher(connection));
-
-builder.Services.AddOptions<TeamFoundationServerOptions>()
-    .Bind(builder.Configuration.GetSection(TeamFoundationServerOptions.NAME));
 
 builder.Services.AddScoped<WorkItemAdapter>();
 
@@ -75,10 +76,15 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    
+    app.UseSwagger();
+    
+    app.UseSwaggerUI();
 }
 else
 {
     app.UseExceptionHandler("/Error");
+
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }

@@ -6,22 +6,22 @@ namespace Pomodorium.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class PomosController : ControllerBase
+public class PomodoroTimerController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    private readonly ILogger<PomosController> _logger;
+    private readonly ILogger<PomodoroTimerController> _logger;
 
-    public PomosController(
+    public PomodoroTimerController(
         IMediator mediator,
-        ILogger<PomosController> logger)
+        ILogger<PomodoroTimerController> logger)
     {
         _mediator = mediator;
 
         _logger = logger;
     }
 
-    [HttpGet("", Name = "GetPomos")]
+    [HttpGet("Pomos", Name = "GetPomos")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetPomosResponse))]
     public async Task<GetPomosResponse> GetPomos([FromQuery] GetPomosRequest request)
     {
@@ -30,7 +30,7 @@ public class PomosController : ControllerBase
         return response;
     }
 
-    [HttpPost("", Name = "PostPomodoro")]
+    [HttpPost("Pomos", Name = "PostPomodoro")]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreatePomodoroResponse))]
     public async Task<CreatePomodoroResponse> PostPomodoro(CreatePomodoroRequest request)
     {
@@ -39,7 +39,7 @@ public class PomosController : ControllerBase
         return response;
     }
 
-    [HttpGet("{id}", Name = "GetPomodoro")]
+    [HttpGet("Pomos/{id}", Name = "GetPomodoro")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetPomodoroResponse))]
     public async Task<GetPomodoroResponse> GetPomodoro(Guid id)
     {
@@ -50,7 +50,7 @@ public class PomosController : ControllerBase
         return response;
     }
 
-    [HttpPut("{id}", Name = "PutPomodoro")]
+    [HttpPut("Pomos/{id}", Name = "PutPomodoro")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RefinePomodoroTaskResponse))]
     public async Task<RefinePomodoroTaskResponse> PutPomodoro(Guid id, RefinePomodoroTaskRequest request)
     {
@@ -61,7 +61,7 @@ public class PomosController : ControllerBase
         return response;
     }
 
-    [HttpDelete("{id}", Name = "DeletePomodoro")]
+    [HttpDelete("Pomos/{id}", Name = "DeletePomodoro")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ArchivePomodoroResponse))]
     public async Task<ArchivePomodoroResponse> DeletePomodoro(Guid id, long version)
     {

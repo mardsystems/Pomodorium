@@ -1,10 +1,11 @@
 ﻿using MediatR;
-using Pomodorium.Trello;
+using Pomodorium.Features.TaskManager;
+using Pomodorium.Features.TaskSynchronizer;
 using System.DomainModel;
 
-namespace Pomodorium.Features.TaskManager;
+namespace Pomodorium.Trello;
 
-public class SyncTasksWithTrelloHandler : IRequestHandler<SyncTasksWithTrelloRequest, SyncTasksWithTrelloResponse>
+public class SyncTasksWithTrelloHandler : IRequestHandler<SyncTasksFromTrelloRequest, SyncTasksFromTrelloResponse>
 {
     private readonly IMediator _mediator;
 
@@ -29,7 +30,7 @@ public class SyncTasksWithTrelloHandler : IRequestHandler<SyncTasksWithTrelloReq
         _listsAdapter = listsAdapter;
     }
 
-    public async Task<SyncTasksWithTrelloResponse> Handle(SyncTasksWithTrelloRequest request, CancellationToken cancellationToken)
+    public async Task<SyncTasksFromTrelloResponse> Handle(SyncTasksFromTrelloRequest request, CancellationToken cancellationToken)
     {
         var lists = await _boardsAdapter.GetLists(request.BoardId).ConfigureAwait(false);
 
@@ -79,7 +80,7 @@ public class SyncTasksWithTrelloHandler : IRequestHandler<SyncTasksWithTrelloReq
             }
         }
 
-        var response = new SyncTasksWithTrelloResponse(request.GetCorrelationId()) { };
+        var response = new SyncTasksFromTrelloResponse(request.GetCorrelationId()) { };
 
         return response;
     }

@@ -6,22 +6,22 @@ namespace Pomodorium.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class EventsController : ControllerBase
+public class StorageController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    private readonly ILogger<EventsController> _logger;
+    private readonly ILogger<StorageController> _logger;
 
-    public EventsController(
+    public StorageController(
         IMediator mediator,
-        ILogger<EventsController> logger)
+        ILogger<StorageController> logger)
     {
         _mediator = mediator;
 
         _logger = logger;
     }
 
-    [HttpGet("", Name = "GetEvents")]
+    [HttpGet("events", Name = "GetEvents")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetEventsResponse))]
     public async Task<GetEventsResponse> GetEvents([FromQuery] GetEventsRequest request)
     {

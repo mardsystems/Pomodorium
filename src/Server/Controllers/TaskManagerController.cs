@@ -1,6 +1,5 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Pomodorium.Features.TaskManager;
 
 namespace Pomodorium.Controllers;
 
@@ -19,23 +18,5 @@ public class TaskManagerController : ControllerBase
         _mediator = mediator;
 
         _logger = logger;
-    }
-
-    [HttpPost("syncTasksWithTFS", Name = "PostSyncTasksWithTFS")]
-    [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(SyncTasksWithTFSResponse))]
-    public async Task<SyncTasksWithTFSResponse> SyncTasksWithTFS(SyncTasksWithTFSRequest request)
-    {
-        var response = await _mediator.Send<SyncTasksWithTFSResponse>(request);
-
-        return response;
-    }
-
-    [HttpPost("syncTasksWithTrello", Name = "SyncTasksWithTrelloRequest")]
-    [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(SyncTasksWithTrelloResponse))]
-    public async Task<SyncTasksWithTrelloResponse> SyncTasksWithTrello(SyncTasksWithTrelloRequest request)
-    {
-        var response = await _mediator.Send<SyncTasksWithTrelloResponse>(request);
-
-        return response;
     }
 }
