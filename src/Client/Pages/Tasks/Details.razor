@@ -86,7 +86,7 @@
         }
         else
         {
-            var request = new GetTaskRequest { Id = Guid.Parse(Id) };
+            var request = new GetTaskRequest { TaskId = Guid.Parse(Id) };
 
             var response = await Mediator.Send<GetTaskResponse>(request);
 
@@ -146,8 +146,8 @@
 
         var request = new ArchiveTaskRequest
             {
-                Id = Guid.Parse(Id),
-                Version = Model.Version
+                TaskId = Guid.Parse(Id),
+                TaskVersion = Model.Version
             };
 
         var response = await Mediator.Send<ArchiveTaskResponse>(request);

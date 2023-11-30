@@ -1,4 +1,5 @@
-﻿using Pomodorium.Features.TaskManager;
+﻿using Pomodorium.Features.Settings;
+using Pomodorium.Features.TaskManager;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Reactive;
@@ -30,6 +31,10 @@ public class IndexViewModel
                 item.CreationDate,
                 item.Description,
                 item.TotalHours,
+                item.IntegrationType,
+                item.IntegrationId,
+                item.IntegrationName,
+                item.ExternalReference,
                 item.Version));
         }
     }
@@ -44,6 +49,14 @@ public class IndexViewModel
 
         public double TotalHours { get; set; }
 
+        public IntegrationType? IntegrationType { get; set; }
+
+        public Guid? IntegrationId { get; set; }
+
+        public string? IntegrationName { get; set; }
+
+        public string? ExternalReference { get; set; }
+
         public long Version { get; set; }
 
         public IObservable<long> BreakCountdownChanges { get; set; }
@@ -53,6 +66,10 @@ public class IndexViewModel
             DateTime? creationDate,
             string? description,
             double? totalHours,
+            IntegrationType? integrationType,
+            Guid? integrationId,
+            string? integrationName,
+            string? externalReference,
             long version)
         {
             var now = DateTime.Now;
@@ -71,6 +88,14 @@ public class IndexViewModel
             {
                 TotalHours = 0;
             }
+
+            IntegrationType = integrationType;
+
+            IntegrationId = integrationId;
+
+            IntegrationName = integrationName;
+
+            ExternalReference = externalReference;
 
             Version = version;
         }

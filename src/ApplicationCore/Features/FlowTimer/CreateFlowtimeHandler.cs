@@ -30,7 +30,7 @@ public class CreateFlowtimeHandler : IRequestHandler<CreateFlowtimeRequest, Crea
         }
         else
         {
-            task = new TaskManagement.Model.Tasks.Task(request.TaskDescription, null);
+            task = new TaskManagement.Model.Tasks.Task(request.TaskDescription);
 
             await _repository.Save(task, -1);
         }

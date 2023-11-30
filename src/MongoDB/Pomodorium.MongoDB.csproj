@@ -16,4 +16,8 @@
     <ProjectReference Include="..\OfficeTimeManagement.ApplicationModel\Pomodorium.OfficeTimeManagement.ApplicationModel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\TaskSynchronizer\" />
+  </ItemGroup>
+
 </Project>

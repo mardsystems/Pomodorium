@@ -2,7 +2,7 @@
 
 public class GetTaskRequest : Request<GetTaskResponse>
 {
-    public Guid Id { get; set; }
+    public Guid TaskId { get; set; }
 }
 
 public class GetTaskResponse : Response

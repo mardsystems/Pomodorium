@@ -11,10 +11,12 @@ public class CreateTaskRequest : Request<CreateTaskResponse>
 
 public class CreateTaskResponse : Response
 {
-    public CreateTaskResponse(Guid correlationId)
+    public Guid TaskId { get; }
+
+    public CreateTaskResponse(Guid correlationId, Guid taskId)
         : base(correlationId)
     {
-
+        TaskId = taskId;
     }
 
     public CreateTaskResponse() { }

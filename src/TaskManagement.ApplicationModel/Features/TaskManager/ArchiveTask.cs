@@ -2,9 +2,9 @@
 
 public class ArchiveTaskRequest : Request<ArchiveTaskResponse>
 {
-    public Guid Id { get; set; }
+    public Guid TaskId { get; set; }
 
-    public long Version { get; set; }
+    public long TaskVersion { get; set; }
 }
 
 public class ArchiveTaskResponse : Response

@@ -21,24 +21,6 @@ public class TaskSynchronizerController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("TfsIntegration", Name = "GetTfsIntegrationList")]
-    [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(GetTfsIntegrationListResponse))]
-    public async Task<GetTfsIntegrationListResponse> SyncTasksFromTfs([FromQuery] GetTfsIntegrationListRequest request)
-    {
-        var response = await _mediator.Send<GetTfsIntegrationListResponse>(request);
-
-        return response;
-    }
-
-    [HttpPost("TfsIntegration/Create", Name = "PostCreateTfsIntegration")]
-    [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(CreateTfsIntegrationResponse))]
-    public async Task<CreateTfsIntegrationResponse> PostCreateTfsIntegration(CreateTfsIntegrationRequest request)
-    {
-        var response = await _mediator.Send<CreateTfsIntegrationResponse>(request);
-
-        return response;
-    }
-
     [HttpPost("SyncTasksFromTfs", Name = "PostSyncTasksFromTfs")]
     [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(SyncTasksFromTfsResponse))]
     public async Task<SyncTasksFromTfsResponse> SyncTasksFromTfs(SyncTasksFromTfsRequest request)

@@ -1,5 +1,7 @@
 ﻿using MediatR;
+using Pomodorium.Features.Settings;
 using Pomodorium.Features.TaskManager;
+using Pomodorium.TaskManagement.Model.Integrations;
 using Pomodorium.TeamFoundationServer;
 using System.DomainModel;
 
@@ -42,7 +44,7 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
             {
                 var getTasksRequest = new GetTasksRequest
                 {
-                    ExternalSourceId = taskInfo.Reference
+                    ExternalReference = taskInfo.Reference
                 };
 
                 var getTasksResponse = await _mediator.Send<GetTasksResponse>(getTasksRequest);
@@ -53,7 +55,7 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
 
                 if (taskQueryItem == default)
                 {
-                    task = new TaskManagement.Model.Tasks.Task(taskInfo.Name, taskInfo.Reference);
+                    task = new TaskManagement.Model.Tasks.Task(taskInfo.Name);                    
                 }
                 else
                 {
@@ -61,7 +63,7 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
 
                     if (taskExisting == null)
                     {
-                        task = new TaskManagement.Model.Tasks.Task(taskInfo.Name, taskInfo.Reference);
+                        task = new TaskManagement.Model.Tasks.Task(taskInfo.Name);
                     }
                     else
                     {
@@ -75,6 +77,10 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
                 }
 
                 await _repository.Save(task, -1);
+
+                var taskIntegration = new TaskIntegration(task, taskInfo);
+
+                await _repository.Save(taskIntegration, -1);
             }
         }
 

@@ -1,4 +1,6 @@
-﻿namespace Pomodorium.Features.TaskManager;
+﻿using Pomodorium.Features.Settings;
+
+namespace Pomodorium.Features.TaskManager;
 
 public class GetTasksRequest : Request<GetTasksResponse>
 {
@@ -6,7 +8,9 @@ public class GetTasksRequest : Request<GetTasksResponse>
 
     public int PageIndex { get; set; }
 
-    public string ExternalSourceId { get; set; }
+    public string? Description { get; set; }
+
+    public string? ExternalReference { get; set; }
 }
 
 public class GetTasksResponse : Response
@@ -32,7 +36,13 @@ public class TaskQueryItem
 
     public double? TotalHours { get; set; }
 
-    public string? ExternalSourceId { get; set; }
+    public IntegrationType? IntegrationType { get; set; }
+
+    public Guid? IntegrationId { get; set; }
+
+    public string? IntegrationName { get; set; }
+
+    public string? ExternalReference { get; set; }
 
     public long Version { get; set; }
 }
