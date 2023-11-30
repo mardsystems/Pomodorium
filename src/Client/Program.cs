@@ -7,6 +7,7 @@ using Pomodorium.Data;
 using Pomodorium.Features.ActivityManager;
 using Pomodorium.Features.FlowTimer;
 using Pomodorium.Features.PomodoroTimer;
+using Pomodorium.Features.TaskSynchronizer;
 using Pomodorium.Hubs;
 using System.DomainModel;
 using System.DomainModel.Storage;
@@ -32,7 +33,7 @@ if (APP_REMOTE)
 {
     builder.Services.AddMediatR(config =>
     {
-        config.RegisterServicesFromAssembly(typeof(HttpClientPomosFacade).Assembly);
+        config.RegisterServicesFromAssembly(typeof(GetPomosHandler).Assembly);
     });
 }
 else

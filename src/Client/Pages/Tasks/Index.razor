@@ -10,6 +10,7 @@
 @using System.Reactive.Threading.Tasks;
 @using System.Reactive.Subjects;
 @using Pomodorium.Features.TaskManager
+@using Pomodorium.Features.TaskSynchronizer
 @inject IMediator Mediator
 @inject NavigationManager NavigationManager
 @inject EventHubClient EventHubClient
@@ -20,8 +21,8 @@
 <MudToolBar>
     <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="Add" />
     <MudIconButton Icon="@Icons.Material.Outlined.Refresh" Color="Color.Inherit" OnClick="Refresh" />
-    <MudIconButton Icon="@Icons.Material.Filled.CloudDownload" Color="Color.Inherit" OnClick="SyncTasksWithTFS" Title="Sync Tasks with TFS" />
-    <MudIconButton Icon="@Icons.Material.Filled.CloudDownload" Color="Color.Inherit" OnClick="SyncTasksWithTrello" Title="Sync Tasks with Trello" />
+    <MudIconButton Icon="@Icons.Material.Filled.CloudDownload" Color="Color.Inherit" OnClick="SyncTasksFromTFS" Title="Sync Tasks with TFS" />
+    <MudIconButton Icon="@Icons.Material.Filled.CloudDownload" Color="Color.Inherit" OnClick="SyncTasksFromTrello" Title="Sync Tasks with Trello" />
     @if (_selectedItems.Any())
     {
         <MudIconButton Icon="@Icons.Material.Outlined.Archive" OnClick="Archive">@SharedResource["Archive"]</MudIconButton>
@@ -112,24 +113,24 @@
         NavigationManager.NavigateTo($"/tasks/new");
     }
 
-    private async Task SyncTasksWithTFS()
+    private async Task SyncTasksFromTFS()
     {
-        var request = new SyncTasksWithTFSRequest
-            {
-                ProjectName = ""
-            };
+        var request = new SyncTasksFromTfsRequest
+        {
 
-        await Mediator.Send<SyncTasksWithTFSResponse>(request);
+        };
+
+        await Mediator.Send<SyncTasksFromTfsResponse>(request);
     }
 
-    private async Task SyncTasksWithTrello()
+    private async Task SyncTasksFromTrello()
     {
-        var request = new SyncTasksWithTrelloRequest
-            {
-                BoardId = ""
-            };
+        var request = new SyncTasksFromTrelloRequest
+        {
+            BoardId = ""
+        };
 
-        await Mediator.Send<SyncTasksWithTrelloResponse>(request);
+        await Mediator.Send<SyncTasksFromTrelloResponse>(request);
     }
 
     private async System.Threading.Tasks.Task Details(Guid id)

@@ -21,9 +21,9 @@ public class TimerController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("", Name = "PostTimerCheck")]
+    [HttpPost("check", Name = "PostTimerCheck")]
     [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(PostTimerCheckResponse))]
-    public async Task<PostTimerCheckResponse> PostTimerCheck([FromQuery] PostTimerCheckRequest request)
+    public async Task<PostTimerCheckResponse> PostTimerCheck(PostTimerCheckRequest request)
     {
         var response = await _mediator.Send<PostTimerCheckResponse>(request);
 
