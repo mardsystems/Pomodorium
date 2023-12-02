@@ -4,16 +4,14 @@ public class Task : AggregateRoot
 {
     public string Description { get; private set; }
 
-    public string ExternalSourceId { get; private set; }
-
-    public Task(string description, string externalSourceId)
+    public Task(string description)
     {
         if (description == null)
         {
             throw new ArgumentNullException(nameof(description));
         }
 
-        Apply(new TaskCreated(Id, DateTime.Now, description, externalSourceId));
+        Apply(new TaskCreated(Id, DateTime.Now, description));
     }
 
     public void When(TaskCreated e)
@@ -23,8 +21,6 @@ public class Task : AggregateRoot
         CreationDate = e.CreationDate;
 
         Description = e.Description;
-
-        ExternalSourceId = e.ExternalSourceId;
     }
 
     public void ChangeDescription(string description)

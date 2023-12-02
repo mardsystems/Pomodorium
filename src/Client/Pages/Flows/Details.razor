@@ -106,7 +106,7 @@
         }
         else if (Id == "continuation")
         {
-            var request = new GetTaskRequest { Id = TaskId.Value };
+            var request = new GetTaskRequest { TaskId = TaskId.Value };
 
             var response = await Mediator.Send<GetTaskResponse>(request);
 

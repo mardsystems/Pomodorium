@@ -14,18 +14,13 @@ public class TaskCreated : Event
     [DataMember(Order = 3)]
     public string Description { get; private set; }
 
-    [DataMember(Order = 4)]
-    public string ExternalSourceId { get; private set; }
-
-    public TaskCreated(Guid id, DateTime creationDate, string description, string externalSourceId)
+    public TaskCreated(Guid id, DateTime creationDate, string description)
     {
         Id = id;
 
         CreationDate = creationDate;
 
         Description = description;
-
-        ExternalSourceId = externalSourceId;
     }
 
     private TaskCreated() { }

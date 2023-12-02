@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
     <ProjectReference Include="..\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
     <ProjectReference Include="..\TaskManagement.DomainModel\Pomodorium.TaskManagement.DomainModel.csproj" />
   </ItemGroup>

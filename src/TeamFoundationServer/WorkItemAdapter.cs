@@ -1,7 +1,8 @@
 ﻿using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using Microsoft.VisualStudio.Services.Common;
-using Pomodorium.Features.TaskSynchronizer;
+using Pomodorium.Features.Settings;
+using Pomodorium.TaskManagement.Model.Integrations;
 
 namespace Pomodorium.TeamFoundationServer;
 
@@ -12,7 +13,7 @@ public class WorkItemAdapter
     /// </summary>
     public WorkItemAdapter()
     {
-        
+
     }
 
     /// <summary>
@@ -58,7 +59,7 @@ public class WorkItemAdapter
             // get work items for the ids found in query
             var workItems = await httpClient.GetWorkItemsAsync(ids, fields, result.AsOf).ConfigureAwait(false);
 
-            var tasks = workItems.Select(TaskInfoTranslator.ToTaskInfo);
+            var tasks = workItems.Select(x => TaskInfoTranslator.ToTaskInfo(x, tfsIntegration));
 
             return tasks;
         }

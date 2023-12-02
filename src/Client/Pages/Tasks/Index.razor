@@ -48,6 +48,8 @@
                 <SelectColumn T="IndexViewModel.Item" />
                 <PropertyColumn Property="x => x.Description" Title="@SharedResource["Description"]" />
                 <PropertyColumn Property="x => x.TotalHours" Title="@SharedResource["Total Hours"]" />
+                <PropertyColumn Property="x => x.IntegrationName" Title="@SharedResource["Integration"]" />
+                <PropertyColumn Property="x => x.ExternalReference" Title="@SharedResource["Ext. Ref."]" />
                 <PropertyColumn Property="x => x.CreationDate" Title="@SharedResource["Creation Date"]" Hideable="true" />
                 <TemplateColumn StickyRight="true" Sortable="false">
                     <CellTemplate>
@@ -144,8 +146,8 @@
         {
             var request = new ArchiveTaskRequest
                 {
-                    Id = item.Id,
-                    Version = item.Version
+                    TaskId = item.Id,
+                    TaskVersion = item.Version
                 };
 
             var response = await Mediator.Send<ArchiveTaskResponse>(request);
