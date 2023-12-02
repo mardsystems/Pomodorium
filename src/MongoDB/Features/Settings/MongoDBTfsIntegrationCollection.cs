@@ -1,11 +1,9 @@
-﻿using MediatR;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
+using Pomodorium.Models;
 
 namespace Pomodorium.Features.Settings;
 
-public class MongoDBTfsIntegrationCollection :
-    IRequestHandler<GetTfsIntegrationListRequest, GetTfsIntegrationListResponse>,
-    IRequestHandler<CreateTfsIntegrationRequest, CreateTfsIntegrationResponse>
+public class MongoDBTfsIntegrationCollection
 {
     private readonly MongoClient _mongoClient;
 
@@ -18,32 +16,52 @@ public class MongoDBTfsIntegrationCollection :
         _mongoCollection = _mongoClient.GetDatabase("Pomodorium").GetCollection<TfsIntegration>("TfsIntegrationCollection");
     }
 
-    public async Task<GetTfsIntegrationListResponse> Handle(GetTfsIntegrationListRequest request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<TfsIntegration>> GetTfsIntegrationList(TfsIntegration criteria = default, CancellationToken cancellationToken = default)
     {
         var filter = Builders<TfsIntegration>.Filter.Empty;
 
         var tfsIntegrationList = await _mongoCollection.Find(filter).ToListAsync(cancellationToken);
 
-        var response = new GetTfsIntegrationListResponse(request.GetCorrelationId()) { TfsIntegrationList = tfsIntegrationList };
-
-        return response;
+        return tfsIntegrationList;
     }
 
-    public async Task<CreateTfsIntegrationResponse> Handle(CreateTfsIntegrationRequest request, CancellationToken cancellationToken)
+    public async Task<TfsIntegration> CreateTfsIntegration(TfsIntegration tfsIntegration, CancellationToken cancellationToken = default)
     {
-        var tfsIntegrationInfo = new TfsIntegration
-        {
-            Id = Guid.NewGuid(),
-            Name = request.Name,
-            OrganizationName = request.OrganizationName,
-            PersonalAccessToken = request.PersonalAccessToken,
-            ProjectName = request.ProjectName
-        };
+        await _mongoCollection.InsertOneAsync(tfsIntegration, null, cancellationToken);
 
-        await _mongoCollection.InsertOneAsync(tfsIntegrationInfo, null, cancellationToken);
+        return tfsIntegration;
+    }
 
-        var response = new CreateTfsIntegrationResponse(request.GetCorrelationId()) { };
+    public async Task<TfsIntegration> GetTfsIntegration(Guid id, CancellationToken cancellationToken = default)
+    {
+        var filter = Builders<TfsIntegration>.Filter.Eq(x => x.Id, id);
 
-        return response;
+        var tfsIntegration = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
+
+        return tfsIntegration;
+    }
+
+    public async Task<TfsIntegration> UpdateTfsIntegration(TfsIntegration tfsIntegration, CancellationToken cancellationToken = default)
+    {
+        var filter = Builders<TfsIntegration>.Filter.Eq(x => x.Id, tfsIntegration.Id);
+
+        var update = Builders<TfsIntegration>.Update
+            .Set(x => x.Name, tfsIntegration.Name)
+            .Set(x => x.OrganizationName, tfsIntegration.OrganizationName)
+            .Set(x => x.PersonalAccessToken, tfsIntegration.PersonalAccessToken)
+            .Set(x => x.ProjectName, tfsIntegration.ProjectName);
+
+        await _mongoCollection.UpdateManyAsync(filter, update, null, cancellationToken);
+
+        var tfsIntegrationUpdated = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
+
+        return tfsIntegrationUpdated;
+    }
+
+    public async Task DeleteTfsIntegration(Guid id, CancellationToken cancellationToken = default)
+    {
+        var filter = Builders<TfsIntegration>.Filter.Eq(x => x.Id, id);
+
+        await _mongoCollection.DeleteOneAsync(filter, cancellationToken);
     }
 }

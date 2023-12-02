@@ -2,6 +2,7 @@ using MongoDB.Driver;
 using Pomodorium.Data;
 using Pomodorium.Features.ActivityManager;
 using Pomodorium.Features.FlowTimer;
+using Pomodorium.Features.Settings;
 using Pomodorium.Hubs;
 using Pomodorium.TeamFoundationServer;
 using Pomodorium.Trello;
@@ -29,6 +30,8 @@ public class Program
             new MongoDBStore(
                 new MongoClient(writeDatabaseConnectionString),
                 factory.GetRequiredService<ILogger<MongoDBStore>>()));
+
+        builder.Services.AddScoped<MongoDBTfsIntegrationCollection>();
 
         builder.Services.AddControllersWithViews();
 

@@ -1,4 +1,4 @@
-﻿using Pomodorium.Features.Settings;
+﻿using Pomodorium.Enums;
 using Pomodorium.Features.TaskManager;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -49,7 +49,7 @@ public class IndexViewModel
 
         public double TotalHours { get; set; }
 
-        public IntegrationType? IntegrationType { get; set; }
+        public IntegrationTypeEnum? IntegrationType { get; set; }
 
         public Guid? IntegrationId { get; set; }
 
@@ -66,7 +66,7 @@ public class IndexViewModel
             DateTime? creationDate,
             string? description,
             double? totalHours,
-            IntegrationType? integrationType,
+            IntegrationTypeEnum? integrationType,
             Guid? integrationId,
             string? integrationName,
             string? externalReference,

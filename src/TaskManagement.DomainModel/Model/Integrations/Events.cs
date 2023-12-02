@@ -1,4 +1,4 @@
-﻿using Pomodorium.Features.Settings;
+﻿using Pomodorium.Enums;
 using System.Runtime.Serialization;
 
 namespace Pomodorium.TaskManagement.Model.Integrations;
@@ -13,7 +13,7 @@ public class TaskIntegrated : Event
     public Guid TaskId { get; private set; }
 
     [DataMember(Order = 3)]
-    public IntegrationType IntegrationType { get; private set; }
+    public IntegrationTypeEnum IntegrationType { get; private set; }
 
     [DataMember(Order = 4)]
     public Guid IntegrationId { get; private set; }
@@ -27,7 +27,7 @@ public class TaskIntegrated : Event
     public TaskIntegrated(
         Guid id,
         Guid taskId,
-        IntegrationType integrationType,
+        IntegrationTypeEnum integrationType,
         Guid integrationId,
         string integrationName,
         string externalReference)

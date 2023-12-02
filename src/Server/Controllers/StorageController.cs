@@ -21,7 +21,7 @@ public class StorageController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("events", Name = "GetEvents")]
+    [HttpGet("Events", Name = "GetEvents")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetEventsResponse))]
     public async Task<GetEventsResponse> GetEvents([FromQuery] GetEventsRequest request)
     {
