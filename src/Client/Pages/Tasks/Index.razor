@@ -56,16 +56,22 @@
                 <PropertyColumn Property="x => x.CreationDate" Title="@SharedResource["Creation Date"]" Hideable="true" />
                 <TemplateColumn StickyRight="true" Sortable="false">
                     <CellTemplate>
-                        @* <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Add" OnClick="@(() => Continue(context.Item.TaskId))"></MudIconButton> *@
                         <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => Details(context.Item.Id))"></MudIconButton>
-                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.PlayArrow" OnClick="@(() => FocusWithFlowtime(context.Item.Id))"></MudIconButton>
-                    </CellTemplate>
-                </TemplateColumn>
-            </Columns>
-        </MudDataGrid>
-    </MudContainer>
+                        @if (context.Item.HasFocus == true)
+                    {
 
-    @code {
+                    }
+                    else
+                    {
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.PlayArrow" OnClick="@(() => FocusWithFlowtime(context.Item.Id))"></MudIconButton>
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+</MudContainer>
+
+@code {
     private IndexViewModel? Model = new();
 
     private MudDataGrid<IndexViewModel.Item> _mudDataGrid;

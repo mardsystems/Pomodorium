@@ -85,14 +85,7 @@ public class IndexedDBTaskQueryItemsProjection :
             throw new EntityNotFoundException();
         }
 
-        if (taskQueryItem.TotalHours.HasValue)
-        {
-            taskQueryItem.TotalHours += notification.Worktime.TotalHours;
-        }
-        else
-        {
-            taskQueryItem.TotalHours = notification.Worktime.TotalHours;
-        }
+        taskQueryItem.TotalHours += notification.Worktime.TotalHours;
 
         taskQueryItem.HasFocus = false;
 
@@ -108,14 +101,7 @@ public class IndexedDBTaskQueryItemsProjection :
             throw new EntityNotFoundException();
         }
 
-        if (taskQueryItem.TotalHours.HasValue)
-        {
-            taskQueryItem.TotalHours += notification.Worktime.TotalHours;
-        }
-        else
-        {
-            taskQueryItem.TotalHours = notification.Worktime.TotalHours;
-        }
+        taskQueryItem.TotalHours += notification.Worktime.TotalHours;
 
         taskQueryItem.HasFocus = false;
 

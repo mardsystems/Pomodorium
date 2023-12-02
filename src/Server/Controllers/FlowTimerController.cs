@@ -32,8 +32,10 @@ public class FlowTimerController : ControllerBase
 
     [HttpPost("Flows/{id}/Stop", Name = "StopFlowtime")]
     [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(StopFlowtimeResponse))]
-    public async Task<StopFlowtimeResponse> StopFlowtime(StopFlowtimeRequest request)
+    public async Task<StopFlowtimeResponse> StopFlowtime(Guid id, StopFlowtimeRequest request)
     {
+        request.Id = id;
+
         var response = await _mediator.Send<StopFlowtimeResponse>(request);
 
         return response;

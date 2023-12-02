@@ -64,9 +64,9 @@ public class TaskManagerController : ControllerBase
 
     [HttpPost("Tasks/{id}/FocusWithFlowtime", Name = "FocusWithFlowtime")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StartFlowtimeFromTaskResponse))]
-    public async Task<StartFlowtimeFromTaskResponse> FocusWithFlowtime(Guid id)
+    public async Task<StartFlowtimeFromTaskResponse> FocusWithFlowtime(Guid id, StartFlowtimeFromTaskRequest request)
     {
-        var request = new StartFlowtimeFromTaskRequest { TaskId = id };
+        request.TaskId = id;
 
         var response = await _mediator.Send<StartFlowtimeFromTaskResponse>(request);
 
