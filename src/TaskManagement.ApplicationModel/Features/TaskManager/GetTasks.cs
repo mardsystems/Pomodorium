@@ -1,4 +1,4 @@
-﻿using Pomodorium.Features.Settings;
+﻿using Pomodorium.Enums;
 
 namespace Pomodorium.Features.TaskManager;
 
@@ -36,7 +36,7 @@ public class TaskQueryItem
 
     public double? TotalHours { get; set; }
 
-    public IntegrationType? IntegrationType { get; set; }
+    public IntegrationTypeEnum? IntegrationType { get; set; }
 
     public Guid? IntegrationId { get; set; }
 

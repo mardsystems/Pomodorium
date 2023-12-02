@@ -1,7 +1,6 @@
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Pomodorium.Features.Settings;
-using Pomodorium.Features.TaskSynchronizer;
+using Pomodorium.Models;
 
 namespace Pomodorium.Controllers;
 
@@ -9,34 +8,127 @@ namespace Pomodorium.Controllers;
 [Route("api/[controller]")]
 public class SettingsController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly MongoDBTfsIntegrationCollection _tfsIntegrationRepository;
+
+    private readonly MongoDBTrelloIntegrationCollection _trelloIntegrationRepository;
 
     private readonly ILogger<SettingsController> _logger;
 
     public SettingsController(
-        IMediator mediator,
+        MongoDBTfsIntegrationCollection tfsIntegrationRepository,
+        MongoDBTrelloIntegrationCollection trelloIntegrationRepository,
         ILogger<SettingsController> logger)
     {
-        _mediator = mediator;
+        _tfsIntegrationRepository = tfsIntegrationRepository;
+
+        _trelloIntegrationRepository = trelloIntegrationRepository;
 
         _logger = logger;
     }
 
     [HttpGet("TfsIntegration", Name = "GetTfsIntegrationList")]
-    [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(GetTfsIntegrationListResponse))]
-    public async Task<GetTfsIntegrationListResponse> SyncTasksFromTfs([FromQuery] GetTfsIntegrationListRequest request)
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TfsIntegration>))]
+    public async Task<IActionResult> GetTfsIntegrationList([FromQuery] TfsIntegration criteria)
     {
-        var response = await _mediator.Send<GetTfsIntegrationListResponse>(request);
+        var tfsIntegrationList = await _tfsIntegrationRepository.GetTfsIntegrationList(criteria);
 
-        return response;
+        return Ok(tfsIntegrationList);
     }
 
-    [HttpPost("TfsIntegration/Create", Name = "PostCreateTfsIntegration")]
-    [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(CreateTfsIntegrationResponse))]
-    public async Task<CreateTfsIntegrationResponse> PostCreateTfsIntegration(CreateTfsIntegrationRequest request)
+    [HttpPost("TfsIntegration", Name = "PostTfsIntegration")]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TfsIntegration))]
+    public async Task<IActionResult> PostTfsIntegration(TfsIntegration tfsIntegration)
     {
-        var response = await _mediator.Send<CreateTfsIntegrationResponse>(request);
+        var tfsIntegrationCreated = await _tfsIntegrationRepository.CreateTfsIntegration(tfsIntegration);
 
-        return response;
+        return CreatedAtAction(nameof(GetTfsIntegration), new { id = tfsIntegrationCreated.Id }, tfsIntegrationCreated);
+    }
+
+    [HttpGet("TfsIntegration/{id}", Name = "GetTfsIntegration")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TfsIntegration>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetTfsIntegration(Guid id)
+    {
+        var tfsIntegration = await _tfsIntegrationRepository.GetTfsIntegration(id);
+
+        if (tfsIntegration == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(tfsIntegration);
+    }
+
+    [HttpPut("TfsIntegration/{id}", Name = "PutTfsIntegration")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TfsIntegration))]
+    public async Task<IActionResult> PutTfsIntegration(Guid id, TfsIntegration tfsIntegration)
+    {
+        tfsIntegration.Id = id;
+
+        var tfsIntegrationUpdated = await _tfsIntegrationRepository.UpdateTfsIntegration(tfsIntegration);
+
+        return Ok(tfsIntegrationUpdated);
+    }
+
+    [HttpDelete("TfsIntegration/{id}", Name = "DeleteTfsIntegration")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TfsIntegration))]
+    public async Task<IActionResult> DeleteTfsIntegration(Guid id)
+    {
+        await _tfsIntegrationRepository.DeleteTfsIntegration(id);
+
+        return NoContent();
+    }
+
+    [HttpGet("TrelloIntegration", Name = "GetTrelloIntegrationList")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TrelloIntegration>))]
+    public async Task<IActionResult> GetTrelloIntegrationList([FromQuery] TrelloIntegration criteria)
+    {
+        var trelloIntegrationList = await _trelloIntegrationRepository.GetTrelloIntegrationList(criteria);
+
+        return Ok(trelloIntegrationList);
+    }
+
+    [HttpPost("TrelloIntegration", Name = "PostTrelloIntegration")]
+    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TrelloIntegration))]
+    public async Task<IActionResult> PostTrelloIntegration(TrelloIntegration trelloIntegration)
+    {
+        var trelloIntegrationCreated = await _trelloIntegrationRepository.CreateTrelloIntegration(trelloIntegration);
+
+        return CreatedAtAction(nameof(GetTrelloIntegration), new { id = trelloIntegrationCreated.Id }, trelloIntegrationCreated);
+    }
+
+    [HttpGet("TrelloIntegration/{id}", Name = "GetTrelloIntegration")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TrelloIntegration>))]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetTrelloIntegration(Guid id)
+    {
+        var trelloIntegration = await _trelloIntegrationRepository.GetTrelloIntegration(id);
+
+        if (trelloIntegration == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(trelloIntegration);
+    }
+
+    [HttpPut("TrelloIntegration/{id}", Name = "PutTrelloIntegration")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TrelloIntegration))]
+    public async Task<IActionResult> PutTrelloIntegration(Guid id, TrelloIntegration trelloIntegration)
+    {
+        trelloIntegration.Id = id;
+
+        var trelloIntegrationUpdated = await _trelloIntegrationRepository.UpdateTrelloIntegration(trelloIntegration);
+
+        return Ok(trelloIntegrationUpdated);
+    }
+
+    [HttpDelete("TrelloIntegration/{id}", Name = "DeleteTrelloIntegration")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TrelloIntegration))]
+    public async Task<IActionResult> DeleteTrelloIntegration(Guid id)
+    {
+        await _trelloIntegrationRepository.DeleteTrelloIntegration(id);
+
+        return NoContent();
     }
 }

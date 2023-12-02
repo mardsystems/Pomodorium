@@ -1,10 +1,10 @@
-﻿using Pomodorium.Features.Settings;
+﻿using Pomodorium.Enums;
 
 namespace Pomodorium.TaskManagement.Model.Integrations;
 
 public class TaskInfo
 {
-    public IntegrationType IntegrationType { get; }
+    public IntegrationTypeEnum IntegrationType { get; }
 
     public Guid IntegrationId { get; }
 
@@ -15,7 +15,7 @@ public class TaskInfo
     public string Name { get; }
 
     public TaskInfo(
-        IntegrationType integrationType,
+        IntegrationTypeEnum integrationType,
         Guid integrationId,
         string integrationName,
         string reference,

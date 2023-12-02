@@ -21,7 +21,7 @@ public class TimerController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost("check", Name = "PostTimerCheck")]
+    [HttpPost("Check", Name = "PostTimerCheck")]
     [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(PostTimerCheckResponse))]
     public async Task<PostTimerCheckResponse> PostTimerCheck(PostTimerCheckRequest request)
     {

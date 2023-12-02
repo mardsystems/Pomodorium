@@ -2,6 +2,7 @@ using MongoDB.Driver;
 using Pomodorium.Data;
 using Pomodorium.Features.ActivityManager;
 using Pomodorium.Features.FlowTimer;
+using Pomodorium.Features.Settings;
 using Pomodorium.Hubs;
 using Pomodorium.TeamFoundationServer;
 using Pomodorium.Trello;
@@ -30,6 +31,10 @@ public class Program
                 new MongoClient(writeDatabaseConnectionString),
                 factory.GetRequiredService<ILogger<MongoDBStore>>()));
 
+        builder.Services.AddScoped<MongoDBTfsIntegrationCollection>();
+
+        builder.Services.AddScoped<MongoDBTrelloIntegrationCollection>();
+
         builder.Services.AddControllersWithViews();
 
         builder.Services.AddEndpointsApiExplorer();
@@ -53,6 +58,9 @@ public class Program
 
         //builder.Services.AddScoped((factory) => new RabbitMQPublisher(connection));
 
+        builder.Services.AddOptions<TfsIntegrationOptions>()
+            .Bind(builder.Configuration.GetSection(TfsIntegrationOptions.CONFIGURATION_SECTION_NAME));
+
         builder.Services.AddScoped<WorkItemAdapter>();
 
         builder.Services.AddMediatR(config =>
@@ -64,17 +72,19 @@ public class Program
                 typeof(PostActivityHandler).Assembly);
         });
 
-        builder.Services.AddHttpClient(TrelloOptions.NAME, client =>
+        var trelloConfigurationSection = builder.Configuration.GetSection(TrelloIntegrationOptions.CONFIGURATION_SECTION_NAME);
+
+        var trelloIntegrationOptions = trelloConfigurationSection.Get<TrelloIntegrationOptions>();
+
+        builder.Services.AddOptions<TrelloIntegrationOptions>()
+            .Bind(trelloConfigurationSection);
+
+        builder.Services.AddHttpClient(TrelloIntegrationOptions.CONFIGURATION_SECTION_NAME, client =>
         {
-            client.BaseAddress = new Uri("https://api.trello.com/");
+            client.BaseAddress = new Uri(trelloIntegrationOptions.BaseAddress);
         });
 
-
-        builder.Services.AddOptions<TrelloOptions>()
-            .Bind(builder.Configuration.GetSection(TrelloOptions.NAME));
-
-        builder.Services.AddScoped<BoardsAdapter>();
-        builder.Services.AddScoped<ListsAdapter>();
+        builder.Services.AddScoped<CardAdapter>();
 
         var app = builder.Build();
 

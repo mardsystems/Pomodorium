@@ -2,7 +2,7 @@
 
 public class SyncTasksFromTrelloRequest : Request<SyncTasksFromTrelloResponse>
 {
-    public string BoardId { get; set; }
+    
 }
 
 public class SyncTasksFromTrelloResponse : Response

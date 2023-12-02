@@ -11,16 +11,21 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
 {
     private readonly IMediator _mediator;
 
+    private readonly MongoDBTfsIntegrationCollection _tfsIntegrationRepository;
+
     private readonly WorkItemAdapter _workItemAdapter;
 
     private readonly Repository _repository;
 
     public SyncTasksFromTfsHandler(
         IMediator mediator,
+        MongoDBTfsIntegrationCollection tfsIntegrationRepository,
         Repository repository,
         WorkItemAdapter workItemAdapter)
     {
         _mediator = mediator;
+
+        _tfsIntegrationRepository = tfsIntegrationRepository;
 
         _repository = repository;
 
@@ -29,16 +34,11 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
 
     public async Task<SyncTasksFromTfsResponse> Handle(SyncTasksFromTfsRequest request, CancellationToken cancellationToken)
     {
-        var getTfsIntegrationListRequest = new GetTfsIntegrationListRequest
+        var tfsIntegrationList = await _tfsIntegrationRepository.GetTfsIntegrationList();
+
+        foreach (var tfsIntegration in tfsIntegrationList)
         {
-
-        };
-
-        var getTfsIntegrationListResponse = await _mediator.Send<GetTfsIntegrationListResponse>(getTfsIntegrationListRequest);
-
-        foreach (var tfsIntegration in getTfsIntegrationListResponse.TfsIntegrationList)
-        {
-            var taskInfoList = await _workItemAdapter.GetTaskInfoListBy(tfsIntegration).ConfigureAwait(false);
+            var taskInfoList = await _workItemAdapter.GetTaskInfoList(tfsIntegration).ConfigureAwait(false);
 
             foreach (var taskInfo in taskInfoList)
             {
