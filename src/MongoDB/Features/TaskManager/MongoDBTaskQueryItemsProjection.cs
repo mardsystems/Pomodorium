@@ -166,13 +166,6 @@ public class MongoDBTaskQueryItemsProjection :
     {
         var filter = Builders<TaskQueryItem>.Filter.Eq(x => x.Id, notification.Id);
 
-        var taskQueryItem = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
-
-        if (taskQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
         await _mongoCollection.DeleteOneAsync(filter, cancellationToken);
     }
 }
