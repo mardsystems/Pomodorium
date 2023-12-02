@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Pomodorium.Features.FlowTimer;
 using Pomodorium.Features.TaskManager;
 
 namespace Pomodorium.Controllers;
@@ -57,6 +58,17 @@ public class TaskManagerController : ControllerBase
         request.TaskId = id;
 
         var response = await _mediator.Send<ChangeTaskDescriptionResponse>(request);
+
+        return response;
+    }
+
+    [HttpPost("Tasks/{id}/FocusWithFlowtime", Name = "FocusWithFlowtime")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(StartFlowtimeFromTaskResponse))]
+    public async Task<StartFlowtimeFromTaskResponse> FocusWithFlowtime(Guid id)
+    {
+        var request = new StartFlowtimeFromTaskRequest { TaskId = id };
+
+        var response = await _mediator.Send<StartFlowtimeFromTaskResponse>(request);
 
         return response;
     }
