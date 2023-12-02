@@ -98,68 +98,22 @@ public class MongoDBTaskQueryItemsProjection :
     {
         var filter = Builders<TaskQueryItem>.Filter.Eq(x => x.Id, notification.TaskId);
 
-        var taskQueryItem = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
-
-        if (taskQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
-        if (taskQueryItem.TotalHours.HasValue)
-        {
-            taskQueryItem.TotalHours += notification.Worktime.TotalHours;
-        }
-        else
-        {
-            taskQueryItem.TotalHours = notification.Worktime.TotalHours;
-        }
-
         var update = Builders<TaskQueryItem>.Update
+            .Inc(x => x.TotalHours, notification.Worktime.TotalHours)
             .Set(x => x.HasFocus, false);
 
-        //var update = Builders<TaskQueryItem>.Update
-        //    .Set(x => x.StopDateTime, notification.StopDateTime)
-        //    .Set(x => x.Interrupted, notification.Interrupted)
-        //    .Set(x => x.Worktime, notification.Worktime)
-        //    .Set(x => x.Breaktime, notification.Breaktime)
-        //    .Set(x => x.State, notification.State)
-        //    .Set(x => x.Version, notification.Version);
-
-        //await _mongoCollection.UpdateOneAsync(filter, update, null, cancellationToken);
+        await _mongoCollection.UpdateManyAsync(filter, update, null, cancellationToken);
     }
 
     public async System.Threading.Tasks.Task Handle(FlowtimeStopped notification, CancellationToken cancellationToken)
     {
         var filter = Builders<TaskQueryItem>.Filter.Eq(x => x.Id, notification.TaskId);
 
-        var taskQueryItem = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
-
-        if (taskQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
-        if (taskQueryItem.TotalHours.HasValue)
-        {
-            taskQueryItem.TotalHours += notification.Worktime.TotalHours;
-        }
-        else
-        {
-            taskQueryItem.TotalHours = notification.Worktime.TotalHours;
-        }
-
         var update = Builders<TaskQueryItem>.Update
+            .Inc(x => x.TotalHours, notification.Worktime.TotalHours)
             .Set(x => x.HasFocus, false);
 
-        //var update = Builders<TaskQueryItem>.Update
-        //    .Set(x => x.StopDateTime, notification.StopDateTime)
-        //    .Set(x => x.Interrupted, notification.Interrupted)
-        //    .Set(x => x.Worktime, notification.Worktime)
-        //    .Set(x => x.Breaktime, notification.Breaktime)
-        //    .Set(x => x.State, notification.State)
-        //    .Set(x => x.Version, notification.Version);
-
-        //await _mongoCollection.UpdateOneAsync(filter, update, null, cancellationToken);
+        await _mongoCollection.UpdateManyAsync(filter, update, null, cancellationToken);
     }
 
     public async System.Threading.Tasks.Task Handle(TaskArchived notification, CancellationToken cancellationToken)
