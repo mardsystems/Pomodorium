@@ -44,5 +44,7 @@ public class TaskQueryItem
 
     public string? ExternalReference { get; set; }
 
+    public bool? HasFocus { get; set; }
+
     public long Version { get; set; }
 }

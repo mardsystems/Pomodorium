@@ -46,7 +46,7 @@
                         </MudCardContent>
                         <MudCardActions>
                             <MudButton Color="Color.Error" OnClick="Archive" Class="ms-auto me-2">@SharedResource["Archive"]</MudButton>
-                            @if (Model.State == FlowtimeState.NotStarted)
+                                @if (Model.State == FlowtimeState.NotStarted)
                             {
                                 <MudButton OnClick="Start" Class="me-2">@SharedResource["Start"]</MudButton>
                             }
@@ -55,13 +55,13 @@
                                 <MudButton OnClick="Stop" Class="me-2">@SharedResource["Stop"]</MudButton>
                             }
                             <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">@SharedResource["Save"]</MudButton>
-                        </MudCardActions>
-                    </MudCard>
-                </MudItem>
-                <MudItem xs="12" sm="5">
-                    <MudPaper Class="pa-4 mud-height-full">
-                        <MudText Typo="Typo.subtitle2">@SharedResource["Validation Summary"]</MudText>
-                        @if (_success)
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                    <MudItem xs="12" sm="5">
+                        <MudPaper Class="pa-4 mud-height-full">
+                            <MudText Typo="Typo.subtitle2">@SharedResource["Validation Summary"]</MudText>
+                            @if (_success)
                         {
                             <MudText Color="Color.Success">@SharedResource["Success"]</MudText>
                         }

@@ -12,6 +12,7 @@ public class MongoDBTaskQueryItemsProjection :
     INotificationHandler<TaskCreated>,
     INotificationHandler<TaskIntegrated>,
     INotificationHandler<TaskDescriptionChanged>,
+    INotificationHandler<FlowtimeStarted>,
     INotificationHandler<FlowtimeInterrupted>,
     INotificationHandler<FlowtimeStopped>,
     INotificationHandler<TaskArchived>
@@ -83,9 +84,19 @@ public class MongoDBTaskQueryItemsProjection :
         await _mongoCollection.UpdateManyAsync(filter, update, null, cancellationToken);
     }
 
+    public async System.Threading.Tasks.Task Handle(FlowtimeStarted notification, CancellationToken cancellationToken)
+    {
+        var filter = Builders<TaskQueryItem>.Filter.Eq(x => x.Id, notification.TaskId);
+
+        var update = Builders<TaskQueryItem>.Update
+            .Set(x => x.HasFocus, true);
+
+        await _mongoCollection.UpdateManyAsync(filter, update, null, cancellationToken);
+    }
+
     public async System.Threading.Tasks.Task Handle(FlowtimeInterrupted notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<TaskQueryItem>.Filter.Eq(x => x.Id, notification.Id);
+        var filter = Builders<TaskQueryItem>.Filter.Eq(x => x.Id, notification.TaskId);
 
         var taskQueryItem = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
 
@@ -102,6 +113,9 @@ public class MongoDBTaskQueryItemsProjection :
         {
             taskQueryItem.TotalHours = notification.Worktime.TotalHours;
         }
+
+        var update = Builders<TaskQueryItem>.Update
+            .Set(x => x.HasFocus, false);
 
         //var update = Builders<TaskQueryItem>.Update
         //    .Set(x => x.StopDateTime, notification.StopDateTime)
@@ -116,7 +130,7 @@ public class MongoDBTaskQueryItemsProjection :
 
     public async System.Threading.Tasks.Task Handle(FlowtimeStopped notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<TaskQueryItem>.Filter.Eq(x => x.Id, notification.Id);
+        var filter = Builders<TaskQueryItem>.Filter.Eq(x => x.Id, notification.TaskId);
 
         var taskQueryItem = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
 
@@ -133,6 +147,9 @@ public class MongoDBTaskQueryItemsProjection :
         {
             taskQueryItem.TotalHours = notification.Worktime.TotalHours;
         }
+
+        var update = Builders<TaskQueryItem>.Update
+            .Set(x => x.HasFocus, false);
 
         //var update = Builders<TaskQueryItem>.Update
         //    .Set(x => x.StopDateTime, notification.StopDateTime)
