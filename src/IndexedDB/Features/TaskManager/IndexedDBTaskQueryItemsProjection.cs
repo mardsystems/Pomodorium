@@ -12,19 +12,16 @@ public class IndexedDBTaskQueryItemsProjection :
     INotificationHandler<TaskCreated>,
     INotificationHandler<TaskIntegrated>,
     INotificationHandler<TaskDescriptionChanged>,
+    INotificationHandler<FlowtimeStarted>,
     INotificationHandler<FlowtimeInterrupted>,
     INotificationHandler<FlowtimeStopped>,
     INotificationHandler<TaskArchived>
 {
     private readonly IndexedDBAccessor _db;
 
-    private readonly Repository _repository;
-
-    public IndexedDBTaskQueryItemsProjection(IndexedDBAccessor db, Repository repository)
+    public IndexedDBTaskQueryItemsProjection(IndexedDBAccessor db)
     {
         _db = db;
-
-        _repository = repository;
     }
 
     public async Task<GetTasksResponse> Handle(GetTasksRequest request, CancellationToken cancellationToken)
@@ -70,58 +67,43 @@ public class IndexedDBTaskQueryItemsProjection :
         await _db.PutAsync("TaskQueryItems", taskQueryItem);
     }
 
+    public async System.Threading.Tasks.Task Handle(FlowtimeStarted notification, CancellationToken cancellationToken)
+    {
+        var taskQueryItem = await _db.GetAsync<TaskQueryItem>("TaskQueryItems", notification.TaskId);
+
+        taskQueryItem.HasFocus = true;
+
+        await _db.PutAsync("TaskQueryItems", taskQueryItem);
+    }
+
     public async System.Threading.Tasks.Task Handle(FlowtimeInterrupted notification, CancellationToken cancellationToken)
     {
-        var flowtime = await _repository.GetAggregateById<Flowtime>(notification.Id);
-
-        if (flowtime == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
-        var taskQueryItem = await _db.GetAsync<TaskQueryItem>("TaskQueryItems", flowtime.TaskId);
+        var taskQueryItem = await _db.GetAsync<TaskQueryItem>("TaskQueryItems", notification.TaskId);
 
         if (taskQueryItem == null)
         {
             throw new EntityNotFoundException();
         }
 
-        if (taskQueryItem.TotalHours.HasValue)
-        {
-            taskQueryItem.TotalHours += notification.Worktime.TotalHours;
-        }
-        else
-        {
-            taskQueryItem.TotalHours = notification.Worktime.TotalHours;
-        }
+        taskQueryItem.TotalHours += notification.Worktime.TotalHours;
+
+        taskQueryItem.HasFocus = false;
 
         await _db.PutAsync("TaskQueryItems", taskQueryItem);
     }
 
     public async System.Threading.Tasks.Task Handle(FlowtimeStopped notification, CancellationToken cancellationToken)
     {
-        var flowtime = await _repository.GetAggregateById<Flowtime>(notification.Id);
-
-        if (flowtime == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
-        var taskQueryItem = await _db.GetAsync<TaskQueryItem>("TaskQueryItems", flowtime.TaskId);
+        var taskQueryItem = await _db.GetAsync<TaskQueryItem>("TaskQueryItems", notification.TaskId);
 
         if (taskQueryItem == null)
         {
             throw new EntityNotFoundException();
         }
 
-        if (taskQueryItem.TotalHours.HasValue)
-        {
-            taskQueryItem.TotalHours += notification.Worktime.TotalHours;
-        }
-        else
-        {
-            taskQueryItem.TotalHours = notification.Worktime.TotalHours;
-        }
+        taskQueryItem.TotalHours += notification.Worktime.TotalHours;
+
+        taskQueryItem.HasFocus = false;
 
         await _db.PutAsync("TaskQueryItems", taskQueryItem);
     }

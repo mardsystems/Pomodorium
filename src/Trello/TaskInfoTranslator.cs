@@ -8,11 +8,13 @@ public static class TaskInfoTranslator
 {
     public static TaskInfo ToTaskInfo(this Card card, IntegrationBase integrationBase)
     {
+        var cardId = card.id;
+
         return new TaskInfo(
             IntegrationTypeEnum.Trello,
             integrationBase.Id.Value,
             integrationBase.Name,
             card.id,
-            $"{card.name} (#{card.id.Substring(0, 4)})");
+            $"{card.name} (#{cardId.Substring(cardId.Length - 4, 4)})");
     }
 }

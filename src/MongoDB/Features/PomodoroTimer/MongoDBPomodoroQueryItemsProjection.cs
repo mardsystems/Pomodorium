@@ -53,13 +53,6 @@ public class MongoDBPomodoroQueryItemsProjection :
     {
         var filter = Builders<PomodoroQueryItem>.Filter.Eq(x => x.Id, notification.Id);
 
-        var pomodoroQueryItem = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
-
-        if (pomodoroQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
         var update = Builders<PomodoroQueryItem>.Update
             .Set(x => x.State, notification.State)
             .Set(x => x.Version, notification.Version);
@@ -71,13 +64,6 @@ public class MongoDBPomodoroQueryItemsProjection :
     {
         var filter = Builders<PomodoroQueryItem>.Filter.Eq(x => x.Id, notification.Id);
 
-        var pomodoroQueryItem = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
-
-        if (pomodoroQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
         var update = Builders<PomodoroQueryItem>.Update
             .Set(x => x.Task, notification.Task)
             .Set(x => x.Version, notification.Version);
@@ -88,13 +74,6 @@ public class MongoDBPomodoroQueryItemsProjection :
     public async Task Handle(PomodoroArchived notification, CancellationToken cancellationToken)
     {
         var filter = Builders<PomodoroQueryItem>.Filter.Eq(x => x.Id, notification.Id);
-
-        var pomodoroQueryItem = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
-
-        if (pomodoroQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
 
         await _mongoCollection.DeleteOneAsync(filter, cancellationToken);
     }

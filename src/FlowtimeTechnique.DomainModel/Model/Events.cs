@@ -48,14 +48,19 @@ public class FlowtimeStarted : Event
     public Guid Id { get; private set; }
 
     [DataMember(Order = 2)]
-    public DateTime StartDateTime { get; private set; }
+    public Guid TaskId { get; private set; }
 
     [DataMember(Order = 3)]
+    public DateTime StartDateTime { get; private set; }
+
+    [DataMember(Order = 4)]
     public FlowtimeState State { get; private set; }
 
-    public FlowtimeStarted(Guid id, DateTime startDateTime, FlowtimeState state)
+    public FlowtimeStarted(Guid id, Guid taskId, DateTime startDateTime, FlowtimeState state)
     {
         Id = id;
+
+        TaskId = taskId;
 
         StartDateTime = startDateTime;
 
@@ -72,22 +77,26 @@ public class FlowtimeInterrupted : Event
     public Guid Id { get; private set; }
 
     [DataMember(Order = 2)]
-    public DateTime StopDateTime { get; private set; }
+    public Guid TaskId { get; private set; }
 
     [DataMember(Order = 3)]
-    public bool Interrupted { get; private set; }
+    public DateTime StopDateTime { get; private set; }
 
     [DataMember(Order = 4)]
-    public TimeSpan Worktime { get; private set; }
+    public bool Interrupted { get; private set; }
 
     [DataMember(Order = 5)]
-    public TimeSpan Breaktime { get; private set; }
+    public TimeSpan Worktime { get; private set; }
 
     [DataMember(Order = 6)]
+    public TimeSpan Breaktime { get; private set; }
+
+    [DataMember(Order = 7)]
     public FlowtimeState State { get; private set; }
 
     public FlowtimeInterrupted(
         Guid id,
+        Guid taskId,
         DateTime stopDateTime,
         bool interrupted,
         TimeSpan worktime,
@@ -95,6 +104,8 @@ public class FlowtimeInterrupted : Event
         FlowtimeState state)
     {
         Id = id;
+
+        TaskId = taskId;
 
         StopDateTime = stopDateTime;
 
@@ -117,22 +128,26 @@ public class FlowtimeStopped : Event
     public Guid Id { get; private set; }
 
     [DataMember(Order = 2)]
-    public DateTime StopDateTime { get; private set; }
+    public Guid TaskId { get; private set; }
 
     [DataMember(Order = 3)]
-    public bool Interrupted { get; private set; }
+    public DateTime StopDateTime { get; private set; }
 
     [DataMember(Order = 4)]
-    public TimeSpan Worktime { get; private set; }
+    public bool Interrupted { get; private set; }
 
     [DataMember(Order = 5)]
-    public TimeSpan Breaktime { get; private set; }
+    public TimeSpan Worktime { get; private set; }
 
     [DataMember(Order = 6)]
+    public TimeSpan Breaktime { get; private set; }
+
+    [DataMember(Order = 7)]
     public FlowtimeState State { get; private set; }
 
     public FlowtimeStopped(
         Guid id,
+        Guid taskId,
         DateTime stopDateTime,
         bool interrupted,
         TimeSpan worktime,
@@ -140,6 +155,8 @@ public class FlowtimeStopped : Event
         FlowtimeState state)
     {
         Id = id;
+
+        TaskId = taskId;
 
         StopDateTime = stopDateTime;
 

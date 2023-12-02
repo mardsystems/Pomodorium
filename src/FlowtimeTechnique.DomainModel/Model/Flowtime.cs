@@ -59,7 +59,7 @@ public class Flowtime : AggregateRoot
     {
         var newState = FlowtimeState.Flow;
 
-        Apply(new FlowtimeStarted(Id, now, newState));
+        Apply(new FlowtimeStarted(Id, TaskId, now, newState));
     }
 
     public void When(FlowtimeStarted e)
@@ -113,7 +113,7 @@ public class Flowtime : AggregateRoot
             breaktime = TimeSpan.FromMinutes(15);
         }
 
-        Apply(new FlowtimeInterrupted(Id, now, interrupted, worktime.Value, breaktime, newState));
+        Apply(new FlowtimeInterrupted(Id, TaskId, now, interrupted, worktime.Value, breaktime, newState));
     }
 
     public void When(FlowtimeInterrupted e)
@@ -158,7 +158,7 @@ public class Flowtime : AggregateRoot
             breaktime = TimeSpan.FromMinutes(15);
         }
 
-        Apply(new FlowtimeStopped(Id, now, interrupted, worktime.Value, breaktime, newState));
+        Apply(new FlowtimeStopped(Id, TaskId, now, interrupted, worktime.Value, breaktime, newState));
     }
 
     public void When(FlowtimeStopped e)

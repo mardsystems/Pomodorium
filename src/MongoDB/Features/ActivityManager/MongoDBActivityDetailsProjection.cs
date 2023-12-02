@@ -59,13 +59,6 @@ public class MongoDBActivityDetailsProjection :
     {
         var filter = Builders<ActivityDetails>.Filter.Eq(x => x.Id, notification.Id);
 
-        var activityDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
-
-        if (activityDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
         var update = Builders<ActivityDetails>.Update
             .Set(x => x.Name, notification.Name)
             .Set(x => x.State, notification.State)
@@ -81,13 +74,6 @@ public class MongoDBActivityDetailsProjection :
     public async Task Handle(ActivityDeleted notification, CancellationToken cancellationToken)
     {
         var filter = Builders<ActivityDetails>.Filter.Eq(x => x.Id, notification.Id);
-
-        var activityDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
-
-        if (activityDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
 
         await _mongoCollection.DeleteOneAsync(filter, cancellationToken);
     }

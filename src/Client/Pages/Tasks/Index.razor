@@ -1,5 +1,6 @@
 ﻿@page "/tasks"
 @using MediatR;
+@using Pomodorium.Features.FlowTimer
 @using Pomodorium.Hubs;
 @using Pomodorium.Shared
 @using System.DomainModel;
@@ -16,7 +17,7 @@
 @inject EventHubClient EventHubClient
 @inject IStringLocalizer<SharedResource> SharedResource
 
-<PageTitle>Task Manager</PageTitle>
+<PageTitle>Tasks</PageTitle>
 
 <MudToolBar>
     <MudIconButton Icon="@Icons.Material.Outlined.Add" OnClick="Add" />
@@ -39,7 +40,7 @@
                      Groupable="true" Items="Model.Items" Dense="_dataGridDense" Hover="true" Striped="true" MultiSelection="true"
                      SelectOnRowClick="false" T="IndexViewModel.Item" @bind-SelectedItems="_selectedItems">
             <ToolBarContent>
-                <MudText Typo="Typo.h6">Task Manager</MudText>
+                <MudText Typo="Typo.h6">Tasks</MudText>
                 <MudSpacer />
                 <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
@@ -48,20 +49,29 @@
                 <SelectColumn T="IndexViewModel.Item" />
                 <PropertyColumn Property="x => x.Description" Title="@SharedResource["Description"]" />
                 <PropertyColumn Property="x => x.TotalHours" Title="@SharedResource["Total Hours"]" />
-                <PropertyColumn Property="x => x.IntegrationName" Title="@SharedResource["Integration"]" />
+                <PropertyColumn Property="x => x.IntegrationType" Title="@SharedResource["Integration Type"]" />
+                <PropertyColumn Property="x => x.IntegrationName" Title="@SharedResource["Integration Name"]" />
                 <PropertyColumn Property="x => x.ExternalReference" Title="@SharedResource["Ext. Ref."]" />
+                <PropertyColumn Property="x => x.HasFocus" Title="@SharedResource["Has Focus"]" />
                 <PropertyColumn Property="x => x.CreationDate" Title="@SharedResource["Creation Date"]" Hideable="true" />
                 <TemplateColumn StickyRight="true" Sortable="false">
                     <CellTemplate>
-                        @* <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Add" OnClick="@(() => Continue(context.Item.TaskId))"></MudIconButton> *@
                         <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => Details(context.Item.Id))"></MudIconButton>
-                    </CellTemplate>
-                </TemplateColumn>
-            </Columns>
-        </MudDataGrid>
-    </MudContainer>
+                        @if (context.Item.HasFocus == true)
+                    {
 
-    @code {
+                    }
+                    else
+                    {
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.PlayArrow" OnClick="@(() => FocusWithFlowtime(context.Item.Id))"></MudIconButton>
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid>
+</MudContainer>
+
+@code {
     private IndexViewModel? Model = new();
 
     private MudDataGrid<IndexViewModel.Item> _mudDataGrid;
@@ -129,7 +139,7 @@
     {
         var request = new SyncTasksFromTrelloRequest
         {
-            
+
         };
 
         await Mediator.Send<SyncTasksFromTrelloResponse>(request);
@@ -138,6 +148,19 @@
     private async System.Threading.Tasks.Task Details(Guid id)
     {
         NavigationManager.NavigateTo($"/tasks/{id}");
+    }
+
+    private async System.Threading.Tasks.Task FocusWithFlowtime(Guid taskId)
+    {
+        var request = new StartFlowtimeFromTaskRequest
+            {
+                TaskId = taskId,
+                StartDateTime = DateTime.Now
+            };
+
+        var response = await Mediator.Send<StartFlowtimeFromTaskResponse>(request);
+
+        await Refresh();
     }
 
     private async System.Threading.Tasks.Task Archive()

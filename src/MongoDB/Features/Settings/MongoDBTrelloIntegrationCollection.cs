@@ -20,41 +20,41 @@ public class MongoDBTrelloIntegrationCollection
     {
         var filter = Builders<TrelloIntegration>.Filter.Empty;
 
-        var TrelloIntegrationList = await _mongoCollection.Find(filter).ToListAsync(cancellationToken);
+        var trelloIntegrationList = await _mongoCollection.Find(filter).ToListAsync(cancellationToken);
 
-        return TrelloIntegrationList;
+        return trelloIntegrationList;
     }
 
-    public async Task<TrelloIntegration> CreateTrelloIntegration(TrelloIntegration TrelloIntegration, CancellationToken cancellationToken = default)
+    public async Task<TrelloIntegration> CreateTrelloIntegration(TrelloIntegration trelloIntegration, CancellationToken cancellationToken = default)
     {
-        await _mongoCollection.InsertOneAsync(TrelloIntegration, null, cancellationToken);
+        await _mongoCollection.InsertOneAsync(trelloIntegration, null, cancellationToken);
 
-        return TrelloIntegration;
+        return trelloIntegration;
     }
 
     public async Task<TrelloIntegration> GetTrelloIntegration(Guid id, CancellationToken cancellationToken = default)
     {
         var filter = Builders<TrelloIntegration>.Filter.Eq(x => x.Id, id);
 
-        var TrelloIntegration = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
+        var trelloIntegration = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
 
-        return TrelloIntegration;
+        return trelloIntegration;
     }
 
-    public async Task<TrelloIntegration> UpdateTrelloIntegration(TrelloIntegration TrelloIntegration, CancellationToken cancellationToken = default)
+    public async Task<TrelloIntegration> UpdateTrelloIntegration(TrelloIntegration trelloIntegration, CancellationToken cancellationToken = default)
     {
-        var filter = Builders<TrelloIntegration>.Filter.Eq(x => x.Id, TrelloIntegration.Id);
+        var filter = Builders<TrelloIntegration>.Filter.Eq(x => x.Id, trelloIntegration.Id);
 
         var update = Builders<TrelloIntegration>.Update
-            .Set(x => x.Name, TrelloIntegration.Name)
-            .Set(x => x.Key, TrelloIntegration.Key)
-            .Set(x => x.Token, TrelloIntegration.Token);
+            .Set(x => x.Name, trelloIntegration.Name)
+            .Set(x => x.Key, trelloIntegration.Key)
+            .Set(x => x.Token, trelloIntegration.Token);
 
         await _mongoCollection.UpdateManyAsync(filter, update, null, cancellationToken);
 
-        var TrelloIntegrationUpdated = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
+        var trelloIntegrationUpdated = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
 
-        return TrelloIntegrationUpdated;
+        return trelloIntegrationUpdated;
     }
 
     public async Task DeleteTrelloIntegration(Guid id, CancellationToken cancellationToken = default)

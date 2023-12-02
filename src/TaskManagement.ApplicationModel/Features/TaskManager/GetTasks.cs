@@ -34,7 +34,7 @@ public class TaskQueryItem
 
     public string? Description { get; set; }
 
-    public double? TotalHours { get; set; }
+    public double TotalHours { get; set; }
 
     public IntegrationTypeEnum? IntegrationType { get; set; }
 
@@ -43,6 +43,8 @@ public class TaskQueryItem
     public string? IntegrationName { get; set; }
 
     public string? ExternalReference { get; set; }
+
+    public bool? HasFocus { get; set; }
 
     public long Version { get; set; }
 }
