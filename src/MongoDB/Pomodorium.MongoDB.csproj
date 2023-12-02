@@ -8,16 +8,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Features\TaskSynchronizer\**" />
+    <EmbeddedResource Remove="Features\TaskSynchronizer\**" />
+    <None Remove="Features\TaskSynchronizer\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MongoDB.Driver" Version="2.22.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
     <ProjectReference Include="..\OfficeTimeManagement.ApplicationModel\Pomodorium.OfficeTimeManagement.ApplicationModel.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Features\TaskSynchronizer\" />
   </ItemGroup>
 
 </Project>

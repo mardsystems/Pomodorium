@@ -38,7 +38,7 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
 
         foreach (var tfsIntegration in tfsIntegrationList)
         {
-            var taskInfoList = await _workItemAdapter.GetTaskInfoListBy(tfsIntegration).ConfigureAwait(false);
+            var taskInfoList = await _workItemAdapter.GetTaskInfoList(tfsIntegration).ConfigureAwait(false);
 
             foreach (var taskInfo in taskInfoList)
             {

@@ -2,5 +2,6 @@
 
 public enum IntegrationTypeEnum
 {
-    TFS
+    TFS,
+    Trello
 }

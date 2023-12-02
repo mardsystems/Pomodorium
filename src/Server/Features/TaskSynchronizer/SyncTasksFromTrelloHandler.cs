@@ -1,5 +1,7 @@
 ﻿using MediatR;
+using Pomodorium.Features.Settings;
 using Pomodorium.Features.TaskManager;
+using Pomodorium.TaskManagement.Model.Integrations;
 using Pomodorium.Trello;
 using System.DomainModel;
 
@@ -9,53 +11,51 @@ public class SyncTasksFromTrelloHandler : IRequestHandler<SyncTasksFromTrelloReq
 {
     private readonly IMediator _mediator;
 
-    private readonly BoardsAdapter _boardsAdapter;
+    private readonly MongoDBTrelloIntegrationCollection _trelloIntegrationRepository;
 
-    private readonly ListsAdapter _listsAdapter;
+    private readonly CardAdapter _listsAdapter;
 
     private readonly Repository _repository;
 
     public SyncTasksFromTrelloHandler(
         IMediator mediator,
+        MongoDBTrelloIntegrationCollection trelloIntegrationRepository,
         Repository repository,
-        BoardsAdapter boardsAdapter,
-        ListsAdapter listsAdapter)
+        CardAdapter listsAdapter)
     {
         _mediator = mediator;
 
-        _repository = repository;
+        _trelloIntegrationRepository = trelloIntegrationRepository;
 
-        _boardsAdapter = boardsAdapter;
+        _repository = repository;
 
         _listsAdapter = listsAdapter;
     }
 
     public async Task<SyncTasksFromTrelloResponse> Handle(SyncTasksFromTrelloRequest request, CancellationToken cancellationToken)
     {
-        var lists = await _boardsAdapter.GetLists(request.BoardId).ConfigureAwait(false);
+        var trelloIntegrationList = await _trelloIntegrationRepository.GetTrelloIntegrationList();
 
-        foreach (var list in lists)
+        foreach (var trelloIntegration in trelloIntegrationList)
         {
-            var cards = await _listsAdapter.GetCards(list.id).ConfigureAwait(false);
+            var taskInfoList = await _listsAdapter.GetTaskInfoList(trelloIntegration).ConfigureAwait(false);
 
-            foreach (var card in cards)
+            foreach (var taskInfo in taskInfoList)
             {
                 var getTasksRequest = new GetTasksRequest
                 {
-                    ExternalReference = card.id
+                    ExternalReference = taskInfo.Reference
                 };
 
                 var getTasksResponse = await _mediator.Send<GetTasksResponse>(getTasksRequest);
 
                 var taskQueryItem = getTasksResponse.TaskQueryItems.FirstOrDefault();
 
-                var cardTitle = $"{card.name}";
-
                 TaskManagement.Model.Tasks.Task task;
 
                 if (taskQueryItem == default)
                 {
-                    task = new TaskManagement.Model.Tasks.Task(cardTitle); //card.id
+                    task = new TaskManagement.Model.Tasks.Task(taskInfo.Name);
                 }
                 else
                 {
@@ -63,20 +63,24 @@ public class SyncTasksFromTrelloHandler : IRequestHandler<SyncTasksFromTrelloReq
 
                     if (taskExisting == null)
                     {
-                        task = new TaskManagement.Model.Tasks.Task(cardTitle); //card.id
+                        task = new TaskManagement.Model.Tasks.Task(taskInfo.Name);
                     }
                     else
                     {
                         task = taskExisting;
 
-                        if (task.Description != cardTitle)
+                        if (task.Description != taskInfo.Name)
                         {
-                            task.ChangeDescription(cardTitle);
+                            task.ChangeDescription(taskInfo.Name);
                         }
                     }
                 }
 
                 await _repository.Save(task, -1);
+
+                var taskIntegration = new TaskIntegration(task, taskInfo);
+
+                await _repository.Save(taskIntegration, -1);
             }
         }
 

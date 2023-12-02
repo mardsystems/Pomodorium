@@ -1,4 +1,5 @@
-﻿using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
+﻿using Microsoft.Extensions.Options;
+using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using Microsoft.VisualStudio.Services.Common;
 using Pomodorium.Models;
@@ -8,12 +9,14 @@ namespace Pomodorium.TeamFoundationServer;
 
 public class WorkItemAdapter
 {
+    private readonly TfsIntegrationOptions _tfsIntegrationOptions;
+
     /// <summary>
     ///     Initializes a new instance of the <see cref="WorkItemAdapter" /> class.
     /// </summary>
-    public WorkItemAdapter()
+    public WorkItemAdapter(IOptions<TfsIntegrationOptions> optionsInterface)
     {
-
+        _tfsIntegrationOptions = optionsInterface.Value;
     }
 
     /// <summary>
@@ -21,9 +24,9 @@ public class WorkItemAdapter
     /// </summary>
     /// <param name="project">The name of your project within your organization.</param>
     /// <returns>A list of <see cref="WorkItem"/> objects representing all the open bugs.</returns>
-    public async Task<IEnumerable<TaskInfo>> GetTaskInfoListBy(TfsIntegration tfsIntegration)
+    public async Task<IEnumerable<TaskInfo>> GetTaskInfoList(TfsIntegration tfsIntegration)
     {
-        var uri = new Uri("https://dev.azure.com/" + tfsIntegration.OrganizationName);
+        var uri = new Uri($"{_tfsIntegrationOptions.BaseAddress}/{tfsIntegration.OrganizationName}");
 
         var credentials = new VssBasicCredential(string.Empty, tfsIntegration.PersonalAccessToken);
 
@@ -59,9 +62,9 @@ public class WorkItemAdapter
             // get work items for the ids found in query
             var workItems = await httpClient.GetWorkItemsAsync(ids, fields, result.AsOf).ConfigureAwait(false);
 
-            var tasks = workItems.Select(x => TaskInfoTranslator.ToTaskInfo(x, tfsIntegration));
+            var taskInfoList = workItems.Select(x => TaskInfoTranslator.ToTaskInfo(x, tfsIntegration));
 
-            return tasks;
+            return taskInfoList;
         }
     }
 }
