@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
-    <ProjectReference Include="..\ApplicationCore\Pomodorium.ApplicationCore.csproj" />
     <ProjectReference Include="..\ApplicationRemote\Pomodorium.ApplicationRemote.csproj" />
     <ProjectReference Include="..\Infrastructure.Client\Pomodorium.Infrastructure.Client.csproj" />
     <ProjectReference Include="..\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />

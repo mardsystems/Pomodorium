@@ -1,16 +1,7 @@
-using MongoDB.Driver;
-using Pomodorium.Features.ActivityManager;
-using Pomodorium.Features.FlowTimer;
-using Pomodorium.Features.Settings;
-using Pomodorium.Features.Storage;
-using Pomodorium.Features.TaskSynchronizer;
-using Pomodorium.Handlers;
+using Pomodorium.Extensions.DependencyInjection;
 using Pomodorium.Hubs;
-using Pomodorium.Integrations.TFS;
-using Pomodorium.Integrations.Trello;
-using RabbitMQ.Client;
-using System.DomainModel;
-using System.DomainModel.Storage;
+using System.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Pomodorium;
 
@@ -20,22 +11,11 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
+        builder.Services.AddSystem();
 
-        var readDatabaseConnectionString = builder.Configuration.GetConnectionString("ReadDatabase");
+        builder.Services.AddApplicationCore();
 
-        builder.Services.AddScoped(factory => new MongoClient(readDatabaseConnectionString));
-
-        var writeDatabaseConnectionString = builder.Configuration.GetConnectionString("WriteDatabase");
-
-        builder.Services.AddScoped<IAppendOnlyStore, MongoDBStore>(factory =>
-            new MongoDBStore(
-                new MongoClient(writeDatabaseConnectionString),
-                factory.GetRequiredService<ILogger<MongoDBStore>>()));
-
-        builder.Services.AddScoped<MongoDBTfsIntegrationCollection>();
-
-        builder.Services.AddScoped<MongoDBTrelloIntegrationCollection>();
+        builder.Services.AddServerInfrastructure(builder.Configuration);
 
         builder.Services.AddControllersWithViews();
 
@@ -47,47 +27,10 @@ public class Program
 
         builder.Services.AddSignalR();
 
-        builder.Services.AddScoped<Repository>();
-
-        builder.Services.AddScoped<EventStore>();
-
-        var connectionFactory = new ConnectionFactory()
-        {
-            HostName = builder.Configuration["MessageBroker"]
-        };
-
-        //var connection = connectionFactory.CreateConnection();
-
-        //builder.Services.AddScoped((factory) => new RabbitMQPublisher(connection));
-
-        builder.Services.AddOptions<TfsIntegrationOptions>()
-            .Bind(builder.Configuration.GetSection(TfsIntegrationOptions.CONFIGURATION_SECTION_NAME));
-
-        builder.Services.AddScoped<WorkItemAdapter>();
-
         builder.Services.AddMediatR(config =>
         {
-            config.RegisterServicesFromAssemblies(
-                typeof(Program).Assembly,
-                typeof(MongoDBEventHandler).Assembly,
-                typeof(CreateFlowtimeHandler).Assembly,
-                typeof(MongoDBFlowtimeQueryItemsProjection).Assembly,
-                typeof(PostActivityHandler).Assembly);
+            config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
         });
-
-        var trelloConfigurationSection = builder.Configuration.GetSection(TrelloIntegrationOptions.CONFIGURATION_SECTION_NAME);
-
-        var trelloIntegrationOptions = trelloConfigurationSection.Get<TrelloIntegrationOptions>();
-
-        builder.Services.AddOptions<TrelloIntegrationOptions>()
-            .Bind(trelloConfigurationSection);
-
-        builder.Services.AddHttpClient(TrelloIntegrationOptions.CONFIGURATION_SECTION_NAME, client =>
-        {
-            client.BaseAddress = new Uri(trelloIntegrationOptions.BaseAddress);
-        });
-
-        builder.Services.AddScoped<CardAdapter>();
 
         var app = builder.Build();
 
