@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 using System.DomainModel.Storage;
 
-namespace Pomodorium.Data;
+namespace Pomodorium.Features.Storage;
 
 public class MongoDBStore : IAppendOnlyStore
 {

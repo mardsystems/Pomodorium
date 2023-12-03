@@ -1,7 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using System.DomainModel.Storage;
 
-namespace Pomodorium.Data;
+namespace Pomodorium.Data.Sqlite.Features.Storage;
 
 public class SqliteStore : IAppendOnlyStore
 {
@@ -151,7 +151,7 @@ WHERE Name=@name
         {
             command.Parameters.AddWithValue("@name", name);
 
-            var version = (long)(await command.ExecuteScalarAsync());
+            var version = (long)await command.ExecuteScalarAsync();
 
             if (expectedVersion != -1)
             {

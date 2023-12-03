@@ -7,6 +7,7 @@ using Pomodorium.Data;
 using Pomodorium.Features.ActivityManager;
 using Pomodorium.Features.FlowTimer;
 using Pomodorium.Features.PomodoroTimer;
+using Pomodorium.Features.Storage;
 using Pomodorium.Features.TaskSynchronizer;
 using Pomodorium.Hubs;
 using System.DomainModel;
