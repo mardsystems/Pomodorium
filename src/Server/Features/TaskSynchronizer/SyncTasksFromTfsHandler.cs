@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Pomodorium.Features.Settings;
 using Pomodorium.Features.TaskManager;
-using Pomodorium.TaskManagement.Model.Integrations;
+using Pomodorium.Models.TaskManagement.Integrations;
 using Pomodorium.TeamFoundationServer;
 using System.DomainModel;
 
@@ -51,19 +51,19 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
 
                 var taskQueryItem = getTasksResponse.TaskQueryItems.FirstOrDefault();
 
-                TaskManagement.Model.Tasks.Task task;
+                Models.TaskManagement.Tasks.Task task;
 
                 if (taskQueryItem == default)
                 {
-                    task = new TaskManagement.Model.Tasks.Task(taskInfo.Name);                    
+                    task = new Models.TaskManagement.Tasks.Task(taskInfo.Name);                    
                 }
                 else
                 {
-                    var taskExisting = await _repository.GetAggregateById<TaskManagement.Model.Tasks.Task>(taskQueryItem.Id);
+                    var taskExisting = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(taskQueryItem.Id);
 
                     if (taskExisting == null)
                     {
-                        task = new TaskManagement.Model.Tasks.Task(taskInfo.Name);
+                        task = new Models.TaskManagement.Tasks.Task(taskInfo.Name);
                     }
                     else
                     {

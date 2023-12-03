@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Pomodorium.Data;
-using Pomodorium.FlowtimeTechnique.Model;
-using Pomodorium.TaskManagement.Model.Tasks;
+using Pomodorium.Models.FlowtimeTechnique;
+using Pomodorium.Models.TaskManagement.Tasks;
 using System.DomainModel;
 
 namespace Pomodorium.Features.FlowTimer;

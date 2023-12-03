@@ -11,7 +11,7 @@ public class ChangeTaskDescriptionHandler : IRequestHandler<ChangeTaskDescriptio
 
     public async Task<ChangeTaskDescriptionResponse> Handle(ChangeTaskDescriptionRequest request, CancellationToken cancellationToken)
     {
-        var task = await _repository.GetAggregateById<TaskManagement.Model.Tasks.Task>(request.TaskId);
+        var task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId);
 
         if (task == null)
         {

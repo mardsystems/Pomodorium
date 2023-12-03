@@ -1,6 +1,5 @@
 ﻿using Pomodorium.Enums;
 using Pomodorium.Features.PomodoroTimer;
-using Pomodorium.PomodoroTechnique.Model;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Reactive;

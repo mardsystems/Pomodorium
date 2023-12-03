@@ -3,7 +3,7 @@ using Microsoft.TeamFoundation.WorkItemTracking.WebApi;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using Microsoft.VisualStudio.Services.Common;
 using Pomodorium.Models;
-using Pomodorium.TaskManagement.Model.Integrations;
+using Pomodorium.Models.TaskManagement.Integrations;
 
 namespace Pomodorium.TeamFoundationServer;
 

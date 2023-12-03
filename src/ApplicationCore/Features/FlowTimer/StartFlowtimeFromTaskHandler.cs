@@ -1,4 +1,4 @@
-﻿using Pomodorium.FlowtimeTechnique.Model;
+﻿using Pomodorium.Models.FlowtimeTechnique;
 
 namespace Pomodorium.Features.FlowTimer;
 
@@ -13,7 +13,7 @@ public class StartFlowtimeFromTaskHandler : IRequestHandler<StartFlowtimeFromTas
 
     public async Task<StartFlowtimeFromTaskResponse> Handle(StartFlowtimeFromTaskRequest request, CancellationToken cancellationToken)
     {
-        var task = await _repository.GetAggregateById<TaskManagement.Model.Tasks.Task>(request.TaskId);
+        var task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId);
 
         var flowtime = new Flowtime(task);
 

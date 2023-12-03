@@ -1,4 +1,4 @@
-﻿using Pomodorium.FlowtimeTechnique.Model;
+﻿using Pomodorium.Models.FlowtimeTechnique;
 
 namespace Pomodorium.Features.FlowTimer;
 

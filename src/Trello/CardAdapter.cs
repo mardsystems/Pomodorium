@@ -1,5 +1,5 @@
 ﻿using Pomodorium.Models;
-using Pomodorium.TaskManagement.Model.Integrations;
+using Pomodorium.Models.TaskManagement.Integrations;
 using System.Net.Http.Json;
 using System.Text.Json;
 

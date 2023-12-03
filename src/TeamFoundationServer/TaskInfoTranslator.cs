@@ -1,7 +1,7 @@
 ﻿using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using Pomodorium.Enums;
 using Pomodorium.Models;
-using Pomodorium.TaskManagement.Model.Integrations;
+using Pomodorium.Models.TaskManagement.Integrations;
 
 namespace Pomodorium.TeamFoundationServer;
 

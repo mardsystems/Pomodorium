@@ -1,4 +1,4 @@
-﻿using Pomodorium.PomodoroTechnique.Model;
+﻿using Pomodorium.Models.PomodoroTechnique;
 
 namespace Pomodorium.Features.PomodoroTimer;
 
