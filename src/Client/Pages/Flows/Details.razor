@@ -158,7 +158,6 @@
         var request = new StartFlowtimeRequest
             {
                 Id = Model.Id,
-                StartDateTime = DateTime.Now,
                 Version = Model.Version
             };
 
@@ -172,7 +171,6 @@
         var request = new StopFlowtimeRequest
             {
                 Id = Model.Id,
-                StopDateTime = DateTime.Now,
                 Version = Model.Version
             };
 
@@ -185,8 +183,6 @@
     {
         if (Id == null || Id == "new")
         {
-            var now = DateTime.Now;
-
             var request = new CreateFlowtimeRequest
                 {
                     TaskDescription = Model.TaskDescription
@@ -196,8 +192,6 @@
         }
         else if (Id == "continuation")
         {
-            var now = DateTime.Now;
-
             var request = new CreateFlowtimeRequest
                 {
                     TaskId = Model.TaskId,
@@ -209,8 +203,6 @@
         }
         else
         {
-            var now = DateTime.Now;
-
             var request = new ChangeTaskDescriptionRequest
                 {
                     TaskId = Model.TaskId,

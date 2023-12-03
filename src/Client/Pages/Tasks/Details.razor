@@ -34,14 +34,14 @@
                         </MudCardContent>
                         <MudCardActions>
                             <MudButton Color="Color.Error" OnClick="Archive" Class="ms-auto me-2">@SharedResource["Archive"]</MudButton>
-                            <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">@SharedResource["Save"]</MudButton>
-                        </MudCardActions>
-                    </MudCard>
-                </MudItem>
-                <MudItem xs="12" sm="5">
-                    <MudPaper Class="pa-4 mud-height-full">
-                        <MudText Typo="Typo.subtitle2">@SharedResource["Validation Summary"]</MudText>
-                        @if (_success)
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Submit">@SharedResource["Save"]</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                    <MudItem xs="12" sm="5">
+                        <MudPaper Class="pa-4 mud-height-full">
+                            <MudText Typo="Typo.subtitle2">@SharedResource["Validation Summary"]</MudText>
+                            @if (_success)
                         {
                             <MudText Color="Color.Success">@SharedResource["Success"]</MudText>
                         }
@@ -111,8 +111,6 @@
     {
         if (Id == null || Id == "new")
         {
-            var now = DateTime.Now;
-
             var request = new CreateTaskRequest
                 {
                     Description = Model.Description
@@ -122,8 +120,6 @@
         }
         else
         {
-            var now = DateTime.Now;
-
             var request = new ChangeTaskDescriptionRequest
                 {
                     TaskId = Model.Id,

@@ -17,7 +17,9 @@ public class StartFlowtimeFromTaskHandler : IRequestHandler<StartFlowtimeFromTas
 
         var flowtime = new Flowtime(task);
 
-        flowtime.Start(request.StartDateTime);
+        var now = DateTime.Now;
+
+        flowtime.Start(now);
 
         await _repository.Save(flowtime, -1);
 

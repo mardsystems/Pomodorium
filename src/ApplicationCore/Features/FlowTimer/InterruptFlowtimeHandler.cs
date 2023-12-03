@@ -20,7 +20,9 @@ public class InterruptFlowtimeHandler : IRequestHandler<InterruptFlowtimeRequest
             throw new EntityNotFoundException();
         }
 
-        flowtime.Interrupt(request.InterruptDateTime);
+        var now = DateTime.Now;
+
+        flowtime.Interrupt(now);
 
         await _repository.Save(flowtime, request.Version);
 
