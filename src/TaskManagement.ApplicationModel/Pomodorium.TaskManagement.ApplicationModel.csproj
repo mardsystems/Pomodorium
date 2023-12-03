@@ -10,7 +10,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
     <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
-    <ProjectReference Include="..\TaskManagement.DomainModel\Pomodorium.TaskManagement.DomainModel.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,6 @@
-﻿namespace Pomodorium.TaskManagement.Model.Activities;
+﻿using Pomodorium.Enums;
+
+namespace Pomodorium.TaskManagement.Model.Activities;
 
 public class Activity : AggregateRoot
 {
@@ -8,7 +10,7 @@ public class Activity : AggregateRoot
 
     public DateTime? StopDateTime { get; private set; }
 
-    public ActivityState State { get; set; }
+    public ActivityStateEnum State { get; set; }
 
     public TimeSpan? Duration { get; private set; }
 
@@ -20,22 +22,22 @@ public class Activity : AggregateRoot
         DateTime? stopDateTime,
         string description)
     {
-        ActivityState state;
+        ActivityStateEnum state;
 
         if (startDateTime.HasValue)
         {
             if (stopDateTime.HasValue)
             {
-                state = ActivityState.Stopped;
+                state = ActivityStateEnum.Stopped;
             }
             else
             {
-                state = ActivityState.Started;
+                state = ActivityStateEnum.Started;
             }
         }
         else
         {
-            state = ActivityState.NotStarted;
+            state = ActivityStateEnum.NotStarted;
         }
 
         var duration = stopDateTime - startDateTime;
@@ -66,22 +68,22 @@ public class Activity : AggregateRoot
         DateTime? stopDateTime,
         string description)
     {
-        ActivityState state;
+        ActivityStateEnum state;
 
         if (startDateTime.HasValue)
         {
             if (stopDateTime.HasValue)
             {
-                state = ActivityState.Stopped;
+                state = ActivityStateEnum.Stopped;
             }
             else
             {
-                state = ActivityState.Started;
+                state = ActivityStateEnum.Started;
             }
         }
         else
         {
-            state = ActivityState.NotStarted;
+            state = ActivityStateEnum.NotStarted;
         }
 
         var duration = stopDateTime - startDateTime;

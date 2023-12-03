@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using Pomodorium.Enums;
+using System.Runtime.Serialization;
 
 namespace Pomodorium.TaskManagement.Model.Activities;
 
@@ -18,7 +19,7 @@ public class ActivityCreated : Event
     public DateTime? StopDateTime { get; private set; }
 
     [DataMember(Order = 5)]
-    public ActivityState State { get; set; }
+    public ActivityStateEnum State { get; set; }
 
     [DataMember(Order = 6)]
     public TimeSpan? Duration { get; private set; }
@@ -31,7 +32,7 @@ public class ActivityCreated : Event
         string name,
         DateTime? startDateTime,
         DateTime? stopDateTime,
-        ActivityState state,
+        ActivityStateEnum state,
         TimeSpan? duration,
         string description)
     {
@@ -69,7 +70,7 @@ public class ActivityUpdated : Event
     public DateTime? StopDateTime { get; private set; }
 
     [DataMember(Order = 5)]
-    public ActivityState State { get; set; }
+    public ActivityStateEnum State { get; set; }
 
     [DataMember(Order = 6)]
     public TimeSpan? Duration { get; private set; }
@@ -82,7 +83,7 @@ public class ActivityUpdated : Event
         string name,
         DateTime? startDateTime,
         DateTime? stopDateTime,
-        ActivityState state,
+        ActivityStateEnum state,
         TimeSpan? duration,
         string description)
     {

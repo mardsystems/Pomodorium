@@ -1,4 +1,4 @@
-﻿using Pomodorium.FlowtimeTechnique.Model;
+﻿using Pomodorium.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace Pomodorium.Features.FlowTimer;
@@ -49,7 +49,7 @@ public class FlowtimeDetails
 
     public TimeSpan? ExpectedDuration { get; set; }
 
-    public FlowtimeState? State { get; set; }
+    public FlowtimeStateEnum? State { get; set; }
 
     public long Version { get; set; }
 }

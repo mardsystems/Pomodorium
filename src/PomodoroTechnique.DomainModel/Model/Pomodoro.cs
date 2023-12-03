@@ -1,3 +1,5 @@
+using Pomodorium.Enums;
+
 namespace Pomodorium.PomodoroTechnique.Model;
 
 public class Pomodoro : AggregateRoot
@@ -8,7 +10,7 @@ public class Pomodoro : AggregateRoot
 
     public DateTime StartDateTime { get; private set; }
 
-    public PomodoroState State { get; private set; }
+    public PomodoroStateEnum State { get; private set; }
 
     public Pomodoro(string task, TimeSpan timer, DateTime moment)
     {
@@ -17,7 +19,7 @@ public class Pomodoro : AggregateRoot
             throw new ArgumentNullException(nameof(task));
         }
 
-        Apply(new PomodoroCreated(Id, task, timer, moment, PomodoroState.Unknown));
+        Apply(new PomodoroCreated(Id, task, timer, moment, PomodoroStateEnum.Unknown));
     }
 
     public void When(PomodoroCreated e)
@@ -33,17 +35,17 @@ public class Pomodoro : AggregateRoot
         State = e.State;
     }
 
-    public PomodoroState GetStateAt(DateTime moment)
+    public PomodoroStateEnum GetStateAt(DateTime moment)
     {
         var elapsedTime = moment - StartDateTime;
 
         if (elapsedTime >= Timer)
         {
-            return PomodoroState.Stopped;
+            return PomodoroStateEnum.Stopped;
         }
         else
         {
-            return PomodoroState.Running;
+            return PomodoroStateEnum.Running;
         }
     }
 
@@ -59,7 +61,7 @@ public class Pomodoro : AggregateRoot
 
     public void Check()
     {
-        var state = PomodoroState.Checked;
+        var state = PomodoroStateEnum.Checked;
 
         Apply(new PomodoroChecked(Id, state));
     }

@@ -1,5 +1,6 @@
 ﻿@page "/flows"
 @using MediatR;
+@using Pomodorium.Enums
 @using Pomodorium.FlowtimeTechnique.Model
 @using Pomodorium.Hubs;
 @using Pomodorium.Shared
@@ -47,15 +48,15 @@
                 <TemplateColumn Title="@SharedResource["State"]">
                     <CellTemplate>
                         <MudText Class="d-flex">
-                            @if (@context.Item.State == FlowtimeState.NotStarted)
+                            @if (@context.Item.State == FlowtimeStateEnum.NotStarted)
                         {
                             <MudIcon Icon="@Icons.Material.TwoTone.PauseCircle" Title="Not Started" />
                         }
-                        else if (@context.Item.State == FlowtimeState.Flow)
+                        else if (@context.Item.State == FlowtimeStateEnum.Flow)
                         {
                             <MudIcon Icon="@Icons.Material.TwoTone.ArrowCircleRight" Color="Color.Info" Title="Flow" />
                         }
-                        else if (@context.Item.State == FlowtimeState.Stopped)
+                        else if (@context.Item.State == FlowtimeStateEnum.Stopped)
                         {
                             <MudIcon Icon="@Icons.Material.TwoTone.CheckCircle" Color="Color.Success" Title="Stopped" />
                         }
@@ -73,11 +74,11 @@
                 <CellTemplate>
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Add" OnClick="@(() => Continue(context.Item.TaskId))"></MudIconButton>
                     <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => Details(context.Item.Id))"></MudIconButton>
-                    @if (context.Item.State == FlowtimeState.NotStarted)
+                    @if (context.Item.State == FlowtimeStateEnum.NotStarted)
                     {
                         <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.PlayArrow" OnClick="@(() => Start(context.Item.Id, context.Item.Version))"></MudIconButton>
                     }
-                    else if (context.Item.State == FlowtimeState.Flow)
+                    else if (context.Item.State == FlowtimeStateEnum.Flow)
                     {
                         <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Stop" OnClick="@(() => Stop(context.Item.Id, context.Item.Version))"></MudIconButton>
                         <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Pause" OnClick="@(() => Interrupt(context.Item.Id, context.Item.Version))"></MudIconButton>

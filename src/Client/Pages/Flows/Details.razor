@@ -1,5 +1,6 @@
 ﻿@page "/flows/{Id}"
 @using MediatR;
+@using Pomodorium.Enums
 @using Pomodorium.FlowtimeTechnique.Model
 @using Pomodorium.Shared
 @using System.DomainModel;
@@ -46,11 +47,11 @@
                         </MudCardContent>
                         <MudCardActions>
                             <MudButton Color="Color.Error" OnClick="Archive" Class="ms-auto me-2">@SharedResource["Archive"]</MudButton>
-                                @if (Model.State == FlowtimeState.NotStarted)
+                                @if (Model.State == FlowtimeStateEnum.NotStarted)
                             {
                                 <MudButton OnClick="Start" Class="me-2">@SharedResource["Start"]</MudButton>
                             }
-                            else if (Model.State == FlowtimeState.Flow)
+                            else if (Model.State == FlowtimeStateEnum.Flow)
                             {
                                 <MudButton OnClick="Stop" Class="me-2">@SharedResource["Stop"]</MudButton>
                             }

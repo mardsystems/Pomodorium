@@ -1,4 +1,4 @@
-﻿using Pomodorium.PomodoroTechnique.Model;
+﻿using Pomodorium.Enums;
 
 namespace Pomodorium.Features.PomodoroTimer;
 
@@ -35,7 +35,7 @@ public class PomodoroDetails
 
     public DateTime? StopDateTime { get; set; }
 
-    public PomodoroState State { get; set; }
+    public PomodoroStateEnum State { get; set; }
 
     public long Version { get; set; }
 }

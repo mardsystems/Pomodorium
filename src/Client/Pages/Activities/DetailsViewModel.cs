@@ -1,4 +1,5 @@
-﻿using Pomodorium.TaskManagement.Model.Activities;
+﻿using Pomodorium.Enums;
+using Pomodorium.TaskManagement.Model.Activities;
 
 namespace Pomodorium.Pages.Activities;
 
@@ -16,7 +17,7 @@ public class DetailsViewModel
 
     public TimeSpan? StopTime { get; set; }
 
-    public ActivityState State { get; set; }
+    public ActivityStateEnum State { get; set; }
 
     public TimeSpan? Duration { get; set; }
 
@@ -29,7 +30,7 @@ public class DetailsViewModel
         string name,
         DateTime? startDateTime,
         DateTime? stopDateTime,
-        ActivityState state,
+        ActivityStateEnum state,
         TimeSpan? duration,
         string description,
         long version)

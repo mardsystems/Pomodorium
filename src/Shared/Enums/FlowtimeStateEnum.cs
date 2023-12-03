@@ -1,6 +1,6 @@
-﻿namespace Pomodorium.FlowtimeTechnique.Model;
+﻿namespace Pomodorium.Enums;
 
-public enum FlowtimeState
+public enum FlowtimeStateEnum
 {
     NotStarted,
     Flow,

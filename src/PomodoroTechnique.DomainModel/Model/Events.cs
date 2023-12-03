@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using Pomodorium.Enums;
+using System.Runtime.Serialization;
 
 namespace Pomodorium.PomodoroTechnique.Model;
 
@@ -18,9 +19,9 @@ public class PomodoroCreated : Event
     public DateTime StartDateTime { get; private set; }
 
     [DataMember(Order = 5)]
-    public PomodoroState State { get; private set; }
+    public PomodoroStateEnum State { get; private set; }
 
-    public PomodoroCreated(Guid id, string task, TimeSpan timer, DateTime startDateTime, PomodoroState state)
+    public PomodoroCreated(Guid id, string task, TimeSpan timer, DateTime startDateTime, PomodoroStateEnum state)
     {
         Id = id;
 
@@ -46,9 +47,9 @@ public class PomodoroRinged : Event
     public DateTime StopDateTime { get; private set; }
 
     [DataMember(Order = 5)]
-    public PomodoroState State { get; private set; }
+    public PomodoroStateEnum State { get; private set; }
 
-    public PomodoroRinged(Guid id, DateTime stopDateTime, PomodoroState state)
+    public PomodoroRinged(Guid id, DateTime stopDateTime, PomodoroStateEnum state)
     {
         Id = id;
 
@@ -67,9 +68,9 @@ public class PomodoroChecked : Event
     public Guid Id { get; private set; }
 
     [DataMember(Order = 2)]
-    public PomodoroState State { get; private set; }
+    public PomodoroStateEnum State { get; private set; }
 
-    public PomodoroChecked(Guid id, PomodoroState state)
+    public PomodoroChecked(Guid id, PomodoroStateEnum state)
     {
         Id = id;
 

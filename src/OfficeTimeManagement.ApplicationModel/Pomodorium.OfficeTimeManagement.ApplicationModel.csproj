@@ -9,11 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
-    <ProjectReference Include="..\FlowtimeTechnique.DomainModel\Pomodorium.FlowtimeTechnique.DomainModel.csproj" />
-    <ProjectReference Include="..\PomodoroTechnique.DomainModel\Pomodorium.PomodoroTechnique.DomainModel.csproj" />
-    <ProjectReference Include="..\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
-    <ProjectReference Include="..\TaskManagement.DomainModel\Pomodorium.TaskManagement.DomainModel.csproj" />
-    <ProjectReference Include="..\RoutineTracking.DomainModel\Pomodorium.RoutineTracking.DomainModel.csproj" />
+    <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using Pomodorium.Enums;
+using System.Runtime.Serialization;
 
 namespace Pomodorium.FlowtimeTechnique.Model;
 
@@ -21,9 +22,9 @@ public class FlowtimeCreated : Event
     public long TaskVersion { get; private set; }
 
     [DataMember(Order = 6)]
-    public FlowtimeState State { get; private set; }
+    public FlowtimeStateEnum State { get; private set; }
 
-    public FlowtimeCreated(Guid id, DateTime creationDate, Guid taskId, string taskDescription, long taskVersion, FlowtimeState state)
+    public FlowtimeCreated(Guid id, DateTime creationDate, Guid taskId, string taskDescription, long taskVersion, FlowtimeStateEnum state)
     {
         Id = id;
 
@@ -54,9 +55,9 @@ public class FlowtimeStarted : Event
     public DateTime StartDateTime { get; private set; }
 
     [DataMember(Order = 4)]
-    public FlowtimeState State { get; private set; }
+    public FlowtimeStateEnum State { get; private set; }
 
-    public FlowtimeStarted(Guid id, Guid taskId, DateTime startDateTime, FlowtimeState state)
+    public FlowtimeStarted(Guid id, Guid taskId, DateTime startDateTime, FlowtimeStateEnum state)
     {
         Id = id;
 
@@ -92,7 +93,7 @@ public class FlowtimeInterrupted : Event
     public TimeSpan Breaktime { get; private set; }
 
     [DataMember(Order = 7)]
-    public FlowtimeState State { get; private set; }
+    public FlowtimeStateEnum State { get; private set; }
 
     public FlowtimeInterrupted(
         Guid id,
@@ -101,7 +102,7 @@ public class FlowtimeInterrupted : Event
         bool interrupted,
         TimeSpan worktime,
         TimeSpan breaktime,
-        FlowtimeState state)
+        FlowtimeStateEnum state)
     {
         Id = id;
 
@@ -143,7 +144,7 @@ public class FlowtimeStopped : Event
     public TimeSpan Breaktime { get; private set; }
 
     [DataMember(Order = 7)]
-    public FlowtimeState State { get; private set; }
+    public FlowtimeStateEnum State { get; private set; }
 
     public FlowtimeStopped(
         Guid id,
@@ -152,7 +153,7 @@ public class FlowtimeStopped : Event
         bool interrupted,
         TimeSpan worktime,
         TimeSpan breaktime,
-        FlowtimeState state)
+        FlowtimeStateEnum state)
     {
         Id = id;
 

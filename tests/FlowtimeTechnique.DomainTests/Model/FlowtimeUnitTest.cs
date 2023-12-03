@@ -1,3 +1,5 @@
+using Pomodorium.Enums;
+
 namespace Pomodorium.FlowtimeTechnique.Model;
 
 public abstract class FlowtimeUnitTest : UnitTest
@@ -98,7 +100,7 @@ public abstract class FlowtimeUnitTest : UnitTest
             [Fact]
             public void State_Should_Be_Flow()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Flow);
+                Flowtime.State.Should().Be(FlowtimeStateEnum.Flow);
             }
 
             //[Fact]
@@ -145,7 +147,7 @@ public abstract class FlowtimeUnitTest : UnitTest
             [Fact]
             public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Stopped);
+                Flowtime.State.Should().Be(FlowtimeStateEnum.Stopped);
             }
 
             [Fact]
@@ -193,7 +195,7 @@ public abstract class FlowtimeUnitTest : UnitTest
             [Fact]
             public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Stopped);
+                Flowtime.State.Should().Be(FlowtimeStateEnum.Stopped);
             }
 
             [Fact]
@@ -241,7 +243,7 @@ public abstract class FlowtimeUnitTest : UnitTest
             [Fact]
             public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Stopped);
+                Flowtime.State.Should().Be(FlowtimeStateEnum.Stopped);
             }
 
             [Fact]
@@ -289,7 +291,7 @@ public abstract class FlowtimeUnitTest : UnitTest
             [Fact]
             public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Stopped);
+                Flowtime.State.Should().Be(FlowtimeStateEnum.Stopped);
             }
 
             [Fact]
@@ -345,7 +347,7 @@ public abstract class FlowtimeUnitTest : UnitTest
             [Fact]
             public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Stopped);
+                Flowtime.State.Should().Be(FlowtimeStateEnum.Stopped);
             }
 
             [Fact]
@@ -393,7 +395,7 @@ public abstract class FlowtimeUnitTest : UnitTest
             [Fact]
             public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Stopped);
+                Flowtime.State.Should().Be(FlowtimeStateEnum.Stopped);
             }
 
             [Fact]
@@ -441,7 +443,7 @@ public abstract class FlowtimeUnitTest : UnitTest
             [Fact]
             public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Stopped);
+                Flowtime.State.Should().Be(FlowtimeStateEnum.Stopped);
             }
 
             [Fact]
@@ -489,7 +491,7 @@ public abstract class FlowtimeUnitTest : UnitTest
             [Fact]
             public void State_Should_Be_Stopped()
             {
-                Flowtime.State.Should().Be(FlowtimeState.Stopped);
+                Flowtime.State.Should().Be(FlowtimeStateEnum.Stopped);
             }
 
             [Fact]

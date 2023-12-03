@@ -1,4 +1,6 @@
-﻿namespace Pomodorium.FlowtimeTechnique.Model;
+﻿using Pomodorium.Enums;
+
+namespace Pomodorium.FlowtimeTechnique.Model;
 
 public class Flowtime : AggregateRoot
 {
@@ -16,7 +18,7 @@ public class Flowtime : AggregateRoot
 
     public TimeSpan? ExpectedDuration { get; private set; }
 
-    public FlowtimeState? State { get; private set; }
+    public FlowtimeStateEnum? State { get; private set; }
 
     public Flowtime(TaskManagement.Model.Tasks.Task task)
     {
@@ -25,7 +27,7 @@ public class Flowtime : AggregateRoot
             throw new ArgumentNullException(nameof(task));
         }
 
-        var initialState = FlowtimeState.NotStarted;
+        var initialState = FlowtimeStateEnum.NotStarted;
 
         Apply(new FlowtimeCreated(Id, DateTime.Now, task.Id, task.Description, task.Version, initialState));
     }
@@ -48,7 +50,7 @@ public class Flowtime : AggregateRoot
             throw new ArgumentNullException(nameof(task));
         }
 
-        var initialState = FlowtimeState.NotStarted;
+        var initialState = FlowtimeStateEnum.NotStarted;
 
         Apply(new FlowtimeCreated(Id, DateTime.Now, task.Id, task.Description, task.Version, initialState));
 
@@ -57,7 +59,7 @@ public class Flowtime : AggregateRoot
 
     public void Start(DateTime now)
     {
-        var newState = FlowtimeState.Flow;
+        var newState = FlowtimeStateEnum.Flow;
 
         Apply(new FlowtimeStarted(Id, TaskId, now, newState));
     }
@@ -83,7 +85,7 @@ public class Flowtime : AggregateRoot
     {
         StartDateTime = now;
 
-        State = FlowtimeState.Flow;
+        State = FlowtimeStateEnum.Flow;
     }
 
     public void Interrupt(DateTime now)
@@ -92,7 +94,7 @@ public class Flowtime : AggregateRoot
 
         var interrupted = true;
 
-        var newState = FlowtimeState.Stopped;
+        var newState = FlowtimeStateEnum.Stopped;
 
         TimeSpan breaktime;
 
@@ -137,7 +139,7 @@ public class Flowtime : AggregateRoot
 
         var interrupted = false;
 
-        var newState = FlowtimeState.Stopped;
+        var newState = FlowtimeStateEnum.Stopped;
 
         TimeSpan breaktime;
 
