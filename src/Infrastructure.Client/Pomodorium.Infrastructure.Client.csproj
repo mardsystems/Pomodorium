@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Pomodorium</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Data.Sqlite\Pomodorium.Data.Sqlite.csproj" />
+    <ProjectReference Include="..\IndexedDB\Pomodorium.IndexedDB.csproj" />
+    <ProjectReference Include="..\Infrastructure\Pomodorium.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

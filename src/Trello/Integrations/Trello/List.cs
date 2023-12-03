@@ -1,6 +1,6 @@
-﻿namespace Pomodorium.Trello;
+﻿namespace Pomodorium.Integrations.Trello;
 
-public class Card
+public class List
 {
     public string id { get; set; }
 

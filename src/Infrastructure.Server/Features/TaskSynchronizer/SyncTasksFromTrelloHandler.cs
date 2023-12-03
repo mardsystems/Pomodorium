@@ -1,44 +1,44 @@
 ﻿using MediatR;
 using Pomodorium.Features.Settings;
 using Pomodorium.Features.TaskManager;
+using Pomodorium.Integrations.Trello;
 using Pomodorium.Models.TaskManagement.Integrations;
-using Pomodorium.TeamFoundationServer;
 using System.DomainModel;
 
 namespace Pomodorium.Features.TaskSynchronizer;
 
-public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, SyncTasksFromTfsResponse>
+public class SyncTasksFromTrelloHandler : IRequestHandler<SyncTasksFromTrelloRequest, SyncTasksFromTrelloResponse>
 {
     private readonly IMediator _mediator;
 
-    private readonly MongoDBTfsIntegrationCollection _tfsIntegrationRepository;
+    private readonly MongoDBTrelloIntegrationCollection _trelloIntegrationRepository;
 
-    private readonly WorkItemAdapter _workItemAdapter;
+    private readonly CardAdapter _listsAdapter;
 
     private readonly Repository _repository;
 
-    public SyncTasksFromTfsHandler(
+    public SyncTasksFromTrelloHandler(
         IMediator mediator,
-        MongoDBTfsIntegrationCollection tfsIntegrationRepository,
+        MongoDBTrelloIntegrationCollection trelloIntegrationRepository,
         Repository repository,
-        WorkItemAdapter workItemAdapter)
+        CardAdapter listsAdapter)
     {
         _mediator = mediator;
 
-        _tfsIntegrationRepository = tfsIntegrationRepository;
+        _trelloIntegrationRepository = trelloIntegrationRepository;
 
         _repository = repository;
 
-        _workItemAdapter = workItemAdapter;
+        _listsAdapter = listsAdapter;
     }
 
-    public async Task<SyncTasksFromTfsResponse> Handle(SyncTasksFromTfsRequest request, CancellationToken cancellationToken)
+    public async Task<SyncTasksFromTrelloResponse> Handle(SyncTasksFromTrelloRequest request, CancellationToken cancellationToken)
     {
-        var tfsIntegrationList = await _tfsIntegrationRepository.GetTfsIntegrationList();
+        var trelloIntegrationList = await _trelloIntegrationRepository.GetTrelloIntegrationList();
 
-        foreach (var tfsIntegration in tfsIntegrationList)
+        foreach (var trelloIntegration in trelloIntegrationList)
         {
-            var taskInfoList = await _workItemAdapter.GetTaskInfoList(tfsIntegration).ConfigureAwait(false);
+            var taskInfoList = await _listsAdapter.GetTaskInfoList(trelloIntegration).ConfigureAwait(false);
 
             foreach (var taskInfo in taskInfoList)
             {
@@ -55,7 +55,7 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
 
                 if (taskQueryItem == default)
                 {
-                    task = new Models.TaskManagement.Tasks.Task(taskInfo.Name);                    
+                    task = new Models.TaskManagement.Tasks.Task(taskInfo.Name);
                 }
                 else
                 {
@@ -84,7 +84,7 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
             }
         }
 
-        var response = new SyncTasksFromTfsResponse(request.GetCorrelationId()) { };
+        var response = new SyncTasksFromTrelloResponse(request.GetCorrelationId()) { };
 
         return response;
     }

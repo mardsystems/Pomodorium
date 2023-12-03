@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.Services.Common;
 using Pomodorium.Models;
 using Pomodorium.Models.TaskManagement.Integrations;
 
-namespace Pomodorium.TeamFoundationServer;
+namespace Pomodorium.Integrations.TFS;
 
 public class WorkItemAdapter
 {
@@ -62,7 +62,7 @@ public class WorkItemAdapter
             // get work items for the ids found in query
             var workItems = await httpClient.GetWorkItemsAsync(ids, fields, result.AsOf).ConfigureAwait(false);
 
-            var taskInfoList = workItems.Select(x => TaskInfoTranslator.ToTaskInfo(x, tfsIntegration));
+            var taskInfoList = workItems.Select(x => x.ToTaskInfo(tfsIntegration));
 
             return taskInfoList;
         }

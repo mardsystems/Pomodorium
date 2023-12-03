@@ -2,7 +2,7 @@
 using Pomodorium.Hubs;
 using System.DomainModel.Storage;
 
-namespace Pomodorium.Handlers;
+namespace Pomodorium.Features.Storage;
 
 public class ClientStoredEventHandler : INotificationHandler<EventAppended>
 {

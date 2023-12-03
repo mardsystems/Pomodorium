@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 using Pomodorium.Hubs;
 using System.DomainModel.Storage;
 
-namespace Pomodorium.Handlers;
+namespace Pomodorium.Features.Storage;
 
 public class ServerStoredEventHandler : INotificationHandler<EventAppended>
 {

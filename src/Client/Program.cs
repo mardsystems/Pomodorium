@@ -52,6 +52,7 @@ else
     {
         config.RegisterServicesFromAssemblies(
             typeof(Program).Assembly,
+            typeof(SyncTasksFromTfsHandler).Assembly,
             typeof(CreateFlowtimeHandler).Assembly,
             typeof(IndexedDBFlowtimeQueryItemsProjection).Assembly,
             typeof(PostActivityHandler).Assembly);

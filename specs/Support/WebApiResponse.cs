@@ -1,4 +1,4 @@
-﻿using Pomodorium.Util;
+﻿using Pomodorium.Utils;
 using System.Net;
 
 namespace Pomodorium.Support;

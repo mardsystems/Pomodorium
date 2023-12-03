@@ -3,7 +3,7 @@ using Pomodorium.Models.TaskManagement.Integrations;
 using System.Net.Http.Json;
 using System.Text.Json;
 
-namespace Pomodorium.Trello;
+namespace Pomodorium.Integrations.Trello;
 
 public class CardAdapter
 {
@@ -31,7 +31,7 @@ public class CardAdapter
 
             var cards = await httpClient.GetFromJsonAsync<Card[]>(requestUri, JsonSerializerOptions.Default).ConfigureAwait(false);
 
-            var taskInfoListBuffer = cards.Select(x => TaskInfoTranslator.ToTaskInfo(x, trelloIntegration));
+            var taskInfoListBuffer = cards.Select(x => x.ToTaskInfo(trelloIntegration));
 
             taskInfoList.AddRange(taskInfoListBuffer);
         }

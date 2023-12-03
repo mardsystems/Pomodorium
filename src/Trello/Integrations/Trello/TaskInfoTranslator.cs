@@ -2,7 +2,7 @@
 using Pomodorium.Models;
 using Pomodorium.Models.TaskManagement.Integrations;
 
-namespace Pomodorium.Trello;
+namespace Pomodorium.Integrations.Trello;
 
 public static class TaskInfoTranslator
 {

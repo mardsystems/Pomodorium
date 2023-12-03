@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace Pomodorium.Util;
+namespace Pomodorium.Utils;
 
 public class HttpResponseException : Exception
 {

@@ -1,10 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
-using Pomodorium.Features.Timer;
 using Pomodorium.Hubs;
 using Pomodorium.Models.PomodoroTechnique;
 
-namespace Pomodorium.Timer;
+namespace Pomodorium.Features.Timer;
 
 public class ServerTimerCheckHandler : IRequestHandler<PostTimerCheckRequest, PostTimerCheckResponse>
 {
