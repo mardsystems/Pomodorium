@@ -1,5 +1,5 @@
-﻿using Pomodorium.Features.FlowTimer;
-using Pomodorium.FlowtimeTechnique.Model;
+﻿using Pomodorium.Enums;
+using Pomodorium.Features.FlowTimer;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Reactive;
@@ -31,7 +31,7 @@ public class IndexViewModel
 
     private void OnTick(DateTime moment)
     {
-        var uncheckedItems = Items.Where(x => x.State != FlowtimeState.NotStarted);
+        var uncheckedItems = Items.Where(x => x.State != FlowtimeStateEnum.NotStarted);
 
         foreach (var item in uncheckedItems)
         {
@@ -88,7 +88,7 @@ public class IndexViewModel
 
         public TimeSpan? BreakCountdown { get; set; }
 
-        public FlowtimeState? State { get; set; }
+        public FlowtimeStateEnum? State { get; set; }
 
         public long Version { get; set; }
 
@@ -104,7 +104,7 @@ public class IndexViewModel
             bool? interrupted,
             TimeSpan? worktime,
             TimeSpan? breaktime,
-            FlowtimeState? state,
+            FlowtimeStateEnum? state,
             long version)
         {
             var now = DateTime.Now;

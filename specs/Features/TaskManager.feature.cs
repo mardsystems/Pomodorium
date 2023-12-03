@@ -124,7 +124,7 @@ this.ScenarioInitialize(scenarioInfo);
                 table1.AddRow(new string[] {
                             "Todo it"});
 #line 6
- testRunner.When("Marcelo registers a task as", ((string)(null)), table1, "When ");
+ testRunner.When("Programmer registers a task as", ((string)(null)), table1, "When ");
 #line hidden
 #line 9
  testRunner.Then("the task should be registered as expected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
@@ -169,7 +169,7 @@ this.ScenarioInitialize(scenarioInfo);
                 table2.AddRow(new string[] {
                             "Todo it"});
 #line 13
- testRunner.When("Marcelo registers a task as", ((string)(null)), table2, "When ");
+ testRunner.When("Programmer registers a task as", ((string)(null)), table2, "When ");
 #line hidden
 #line 16
  testRunner.Then("the task should be registered as expected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");

@@ -3,9 +3,11 @@ using Pomodorium.Data;
 using Pomodorium.Features.ActivityManager;
 using Pomodorium.Features.FlowTimer;
 using Pomodorium.Features.Settings;
+using Pomodorium.Features.TaskSynchronizer;
+using Pomodorium.Handlers;
 using Pomodorium.Hubs;
-using Pomodorium.TeamFoundationServer;
-using Pomodorium.Trello;
+using Pomodorium.Integrations.TFS;
+using Pomodorium.Integrations.Trello;
 using RabbitMQ.Client;
 using System.DomainModel;
 using System.DomainModel.Storage;
@@ -67,6 +69,7 @@ public class Program
         {
             config.RegisterServicesFromAssemblies(
                 typeof(Program).Assembly,
+                typeof(MongoDBEventHandler).Assembly,
                 typeof(CreateFlowtimeHandler).Assembly,
                 typeof(MongoDBFlowtimeQueryItemsProjection).Assembly,
                 typeof(PostActivityHandler).Assembly);

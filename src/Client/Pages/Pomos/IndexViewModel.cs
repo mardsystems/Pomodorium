@@ -1,5 +1,5 @@
-﻿using Pomodorium.Features.PomodoroTimer;
-using Pomodorium.PomodoroTechnique.Model;
+﻿using Pomodorium.Enums;
+using Pomodorium.Features.PomodoroTimer;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Reactive;
@@ -31,7 +31,7 @@ public class IndexViewModel
 
     private void OnTick(DateTime moment)
     {
-        var uncheckedItems = Items.Where(x => x.State != PomodoroState.Checked);
+        var uncheckedItems = Items.Where(x => x.State != PomodoroStateEnum.Checked);
 
         foreach (var item in uncheckedItems)
         {
@@ -69,7 +69,7 @@ public class IndexViewModel
 
         public DateTime StopDateTime { get; set; }
 
-        public PomodoroState State { get; set; }
+        public PomodoroStateEnum State { get; set; }
 
         public long Version { get; set; }
 
@@ -80,7 +80,7 @@ public class IndexViewModel
             string? task,
             TimeSpan timer,
             DateTime? startDateTime,
-            PomodoroState state,
+            PomodoroStateEnum state,
             long version)
         {
             var now = DateTime.Now;
@@ -99,7 +99,7 @@ public class IndexViewModel
 
             State = state;
 
-            if (State == PomodoroState.Checked)
+            if (State == PomodoroStateEnum.Checked)
             {
                 Countdown = TimeSpan.Zero;
 
@@ -124,13 +124,13 @@ public class IndexViewModel
 
             if (Countdown > TimeSpan.Zero)
             {
-                State = PomodoroState.Running;
+                State = PomodoroStateEnum.Running;
             }
             else
             {
                 Countdown = TimeSpan.Zero;
 
-                State = PomodoroState.Stopped;
+                State = PomodoroStateEnum.Stopped;
             }
         }
 

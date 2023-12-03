@@ -154,8 +154,7 @@
     {
         var request = new StartFlowtimeFromTaskRequest
             {
-                TaskId = taskId,
-                StartDateTime = DateTime.Now
+                TaskId = taskId
             };
 
         var response = await Mediator.Send<StartFlowtimeFromTaskResponse>(request);

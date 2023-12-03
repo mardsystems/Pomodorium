@@ -4,11 +4,12 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>Pomodorium.PomodoroTechnique</RootNamespace>
+    <RootNamespace>Pomodorium</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
+    <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
   </ItemGroup>
 
 </Project>

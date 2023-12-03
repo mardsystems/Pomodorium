@@ -1,4 +1,4 @@
-﻿using Pomodorium.FlowtimeTechnique.Model;
+﻿using Pomodorium.Models.FlowtimeTechnique;
 
 namespace Pomodorium.Features.FlowTimer;
 
@@ -13,11 +13,11 @@ public class CreateFlowtimeHandler : IRequestHandler<CreateFlowtimeRequest, Crea
 
     public async Task<CreateFlowtimeResponse> Handle(CreateFlowtimeRequest request, CancellationToken cancellationToken)
     {
-        TaskManagement.Model.Tasks.Task task;
+        Models.TaskManagement.Tasks.Task task;
 
         if (request.TaskId.HasValue)
         {
-            task = await _repository.GetAggregateById<TaskManagement.Model.Tasks.Task>(request.TaskId.Value);
+            task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId.Value);
 
             if (task.Description != request.TaskDescription)
             {
@@ -25,12 +25,12 @@ public class CreateFlowtimeHandler : IRequestHandler<CreateFlowtimeRequest, Crea
 
                 await _repository.Save(task, request.TaskVersion.Value);
 
-                task = await _repository.GetAggregateById<TaskManagement.Model.Tasks.Task>(request.TaskId.Value);
+                task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId.Value);
             }
         }
         else
         {
-            task = new TaskManagement.Model.Tasks.Task(request.TaskDescription);
+            task = new Models.TaskManagement.Tasks.Task(request.TaskDescription);
 
             await _repository.Save(task, -1);
         }

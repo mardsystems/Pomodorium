@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using MongoDB.Driver;
-using Pomodorium.PomodoroTechnique.Model;
+using Pomodorium.Models.PomodoroTechnique;
 using System.DomainModel;
 
 namespace Pomodorium.Features.PomodoroTimer;

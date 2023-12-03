@@ -26,8 +26,8 @@ namespace Pomodorium.StepDefinitions
             var task = _taskManagerApiDriver.GetTask(response.TaskId).TaskDetails;
         }
 
-        [When(@"Marcelo registers a task as")]
-        public void WhenMarceloRegistersATaskAs(Table table)
+        [When(@"Programmer registers a task as")]
+        public void WhenProgrammerRegistersATaskAs(Table table)
         {
             _specification = table;
 

@@ -11,7 +11,7 @@ public class CreateTaskHandler : IRequestHandler<CreateTaskRequest, CreateTaskRe
 
     public async Task<CreateTaskResponse> Handle(CreateTaskRequest request, CancellationToken cancellationToken)
     {
-        var task = new TaskManagement.Model.Tasks.Task(request.Description);
+        var task = new Models.TaskManagement.Tasks.Task(request.Description);
 
         await _repository.Save(task, -1);
 

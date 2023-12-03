@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Pomodorium.Data;
-using Pomodorium.TaskManagement.Model.Activities;
+using Pomodorium.Models.TaskManagement.Activities;
 using System.DomainModel;
 
 namespace Pomodorium.Features.ActivityManager;

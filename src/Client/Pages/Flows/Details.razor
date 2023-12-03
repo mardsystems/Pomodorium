@@ -1,6 +1,6 @@
 ﻿@page "/flows/{Id}"
 @using MediatR;
-@using Pomodorium.FlowtimeTechnique.Model
+@using Pomodorium.Enums
 @using Pomodorium.Shared
 @using System.DomainModel;
 @using System.DomainModel.Storage;
@@ -46,11 +46,11 @@
                         </MudCardContent>
                         <MudCardActions>
                             <MudButton Color="Color.Error" OnClick="Archive" Class="ms-auto me-2">@SharedResource["Archive"]</MudButton>
-                                @if (Model.State == FlowtimeState.NotStarted)
+                                @if (Model.State == FlowtimeStateEnum.NotStarted)
                             {
                                 <MudButton OnClick="Start" Class="me-2">@SharedResource["Start"]</MudButton>
                             }
-                            else if (Model.State == FlowtimeState.Flow)
+                            else if (Model.State == FlowtimeStateEnum.Flow)
                             {
                                 <MudButton OnClick="Stop" Class="me-2">@SharedResource["Stop"]</MudButton>
                             }
@@ -157,7 +157,6 @@
         var request = new StartFlowtimeRequest
             {
                 Id = Model.Id,
-                StartDateTime = DateTime.Now,
                 Version = Model.Version
             };
 
@@ -171,7 +170,6 @@
         var request = new StopFlowtimeRequest
             {
                 Id = Model.Id,
-                StopDateTime = DateTime.Now,
                 Version = Model.Version
             };
 
@@ -184,8 +182,6 @@
     {
         if (Id == null || Id == "new")
         {
-            var now = DateTime.Now;
-
             var request = new CreateFlowtimeRequest
                 {
                     TaskDescription = Model.TaskDescription
@@ -195,8 +191,6 @@
         }
         else if (Id == "continuation")
         {
-            var now = DateTime.Now;
-
             var request = new CreateFlowtimeRequest
                 {
                     TaskId = Model.TaskId,
@@ -208,8 +202,6 @@
         }
         else
         {
-            var now = DateTime.Now;
-
             var request = new ChangeTaskDescriptionRequest
                 {
                     TaskId = Model.TaskId,

@@ -1,8 +1,7 @@
 ﻿using MediatR;
 using MongoDB.Driver;
-using Pomodorium.FlowtimeTechnique.Model;
-using Pomodorium.TaskManagement.Model.Tasks;
-using System.DomainModel;
+using Pomodorium.Models.FlowtimeTechnique;
+using Pomodorium.Models.TaskManagement.Tasks;
 
 namespace Pomodorium.Features.FlowTimer;
 

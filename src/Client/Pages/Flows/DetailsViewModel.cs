@@ -1,4 +1,4 @@
-﻿using Pomodorium.FlowtimeTechnique.Model;
+﻿using Pomodorium.Enums;
 using System.Reactive.Linq;
 
 namespace Pomodorium.Pages.Flows;
@@ -34,7 +34,7 @@ public class DetailsViewModel
     //[DisplayFormat(DataFormatString = "{0:hh\\:mm\\:ss}")]
     public TimeSpan? BreakCountdown { get; set; }
 
-    public FlowtimeState? State { get; set; }
+    public FlowtimeStateEnum? State { get; set; }
 
     public long Version { get; set; }
 
@@ -51,7 +51,7 @@ public class DetailsViewModel
         bool? interrupted,
         TimeSpan? worktime,
         TimeSpan? breaktime,
-        FlowtimeState? state,
+        FlowtimeStateEnum? state,
         long version)
     {
         var now = DateTime.Now;

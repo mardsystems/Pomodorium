@@ -1,6 +1,6 @@
 ﻿@page "/pomos/{Id}"
 @using MediatR;
-@using Pomodorium.PomodoroTechnique.Model
+@using Pomodorium.Enums
 @using Pomodorium.Shared
 @using System.DomainModel;
 @using System.DomainModel.Storage;
@@ -41,7 +41,7 @@
                         </MudCardContent>
                         <MudCardActions>
                             <MudButton Color="Color.Error" OnClick="Archive" Class="ms-auto me-2">@SharedResource["Archive"]</MudButton>
-                            @if (Model.State == PomodoroState.Stopped)
+                            @if (Model.State == PomodoroStateEnum.Stopped)
                             {
                                 <MudButton Color="Color.Success" OnClick="Check" Class="me-2">@SharedResource["Check"]</MudButton>
                             }
@@ -138,8 +138,6 @@
     {
         if (Id == null || Id == "new")
         {
-            var now = DateTime.Now;
-
             var request = new CreatePomodoroRequest
                 {
                     Task = Model.Task,

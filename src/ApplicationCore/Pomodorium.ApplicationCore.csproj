@@ -8,8 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Features\TimeTracker\" />
-    <Folder Include="Features\Timer\" />
+    <Compile Remove="Features\Timer\**" />
+    <Compile Remove="Features\TimeTracker\**" />
+    <EmbeddedResource Remove="Features\Timer\**" />
+    <EmbeddedResource Remove="Features\TimeTracker\**" />
+    <None Remove="Features\Timer\**" />
+    <None Remove="Features\TimeTracker\**" />
   </ItemGroup>
 
   <ItemGroup>

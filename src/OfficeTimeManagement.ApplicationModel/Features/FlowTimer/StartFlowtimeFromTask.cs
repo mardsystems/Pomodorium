@@ -3,8 +3,6 @@
 public class StartFlowtimeFromTaskRequest : Request<StartFlowtimeFromTaskResponse>
 {
     public Guid TaskId { get; set; }
-
-    public DateTime StartDateTime { get; set; }
 }
 
 public class StartFlowtimeFromTaskResponse : Response

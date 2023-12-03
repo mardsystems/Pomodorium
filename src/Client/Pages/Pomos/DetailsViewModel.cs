@@ -1,4 +1,4 @@
-﻿using Pomodorium.PomodoroTechnique.Model;
+﻿using Pomodorium.Enums;
 using System.Reactive.Linq;
 
 namespace Pomodorium.Pages.Pomos;
@@ -21,7 +21,7 @@ public class DetailsViewModel
 
     public TimeSpan? StopTime { get; set; }
 
-    public PomodoroState State { get; set; }
+    public PomodoroStateEnum State { get; set; }
 
     public long Version { get; set; }
 
@@ -34,7 +34,7 @@ public class DetailsViewModel
         string? task,
         TimeSpan timer,
         DateTime? startDateTime,
-        PomodoroState state,
+        PomodoroStateEnum state,
         long version)
     {
         var now = DateTime.Now;
@@ -59,7 +59,7 @@ public class DetailsViewModel
 
         State = state;
 
-        if (State == PomodoroState.Checked)
+        if (State == PomodoroStateEnum.Checked)
         {
             Countdown = TimeSpan.Zero;
 
@@ -84,13 +84,13 @@ public class DetailsViewModel
 
         if (Countdown > TimeSpan.Zero)
         {
-            State = PomodoroState.Running;
+            State = PomodoroStateEnum.Running;
         }
         else
         {
             Countdown = TimeSpan.Zero;
 
-            State = PomodoroState.Stopped;
+            State = PomodoroStateEnum.Stopped;
         }
     }
 

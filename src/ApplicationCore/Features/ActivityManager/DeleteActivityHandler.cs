@@ -1,4 +1,4 @@
-﻿using Pomodorium.TaskManagement.Model.Activities;
+﻿using Pomodorium.Models.TaskManagement.Activities;
 
 namespace Pomodorium.Features.ActivityManager;
 

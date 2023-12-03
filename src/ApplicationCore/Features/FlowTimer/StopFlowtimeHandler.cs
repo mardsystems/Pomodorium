@@ -1,4 +1,4 @@
-﻿using Pomodorium.FlowtimeTechnique.Model;
+﻿using Pomodorium.Models.FlowtimeTechnique;
 
 namespace Pomodorium.Features.FlowTimer;
 
@@ -20,7 +20,9 @@ public class StopFlowtimeHandler : IRequestHandler<StopFlowtimeRequest, StopFlow
             throw new EntityNotFoundException();
         }
 
-        flowtime.Stop(request.StopDateTime);
+        var now = DateTime.Now;
+
+        flowtime.Stop(now);
 
         await _repository.Save(flowtime, request.Version);
 
