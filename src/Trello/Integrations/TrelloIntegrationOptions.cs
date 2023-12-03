@@ -1,4 +1,4 @@
-﻿namespace Pomodorium.Integrations.Trello;
+﻿namespace Pomodorium.Integrations;
 
 public class TrelloIntegrationOptions
 {

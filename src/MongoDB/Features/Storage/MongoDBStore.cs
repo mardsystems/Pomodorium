@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using Pomodorium.Data;
 using System.DomainModel.Storage;
 
-namespace Pomodorium.Data;
+namespace Pomodorium.Features.Storage;
 
 public class MongoDBStore : IAppendOnlyStore
 {
@@ -12,11 +14,16 @@ public class MongoDBStore : IAppendOnlyStore
 
     private readonly ILogger<MongoDBStore> _logger;
 
-    public MongoDBStore(MongoClient mongoClient, ILogger<MongoDBStore> logger)
+    public MongoDBStore(
+        MongoClient mongoClient,
+        IOptions<MongoDBOptions> optionsInterface,
+        ILogger<MongoDBStore> logger)
     {
         _mongoClient = mongoClient;
 
-        _mongoCollection = _mongoClient.GetDatabase("Pomodorium").GetCollection<EventRecord>("EventStore");
+        var options = optionsInterface.Value;
+
+        _mongoCollection = _mongoClient.GetDatabase(options.Database).GetCollection<EventRecord>("EventStore");
 
         _logger = logger;
     }

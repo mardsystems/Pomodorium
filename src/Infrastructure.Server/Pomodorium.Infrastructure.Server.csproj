@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ApplicationCore\Pomodorium.ApplicationCore.csproj" />
+    <ProjectReference Include="..\Azure.Cosmos\Pomodorium.Azure.Cosmos.csproj" />
     <ProjectReference Include="..\Infrastructure\Pomodorium.Infrastructure.csproj" />
     <ProjectReference Include="..\MongoDB\Pomodorium.MongoDB.csproj" />
     <ProjectReference Include="..\RabbitMQ\Pomodorium.RabbitMQ.csproj" />

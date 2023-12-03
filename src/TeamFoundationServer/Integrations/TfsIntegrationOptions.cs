@@ -1,4 +1,4 @@
-﻿namespace Pomodorium.Integrations.TFS;
+﻿namespace Pomodorium.Integrations;
 
 public class TfsIntegrationOptions
 {

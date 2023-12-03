@@ -1,6 +1,7 @@
 ﻿using System.DomainModel.Storage;
+using Pomodorium.Data;
 
-namespace Pomodorium.Data;
+namespace Pomodorium.Features.Storage;
 
 public class IndexedDBStore : IAppendOnlyStore
 {

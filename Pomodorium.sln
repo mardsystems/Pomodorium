@@ -76,7 +76,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.Infrastructure.S
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messaging", "Messaging", "{3617B850-BEC2-4CD7-A676-43F1BAF093DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodorium.RabbitMQ", "src\RabbitMQ\Pomodorium.RabbitMQ.csproj", "{05F4EFA8-B2CC-4F5A-9807-DA2ACF3CAFCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.RabbitMQ", "src\RabbitMQ\Pomodorium.RabbitMQ.csproj", "{05F4EFA8-B2CC-4F5A-9807-DA2ACF3CAFCA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodorium.Azure.Cosmos", "src\Azure.Cosmos\Pomodorium.Azure.Cosmos.csproj", "{F93C7217-94B9-4C85-9F65-F00425862A73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -424,6 +426,18 @@ Global
 		{05F4EFA8-B2CC-4F5A-9807-DA2ACF3CAFCA}.Release|x64.Build.0 = Release|Any CPU
 		{05F4EFA8-B2CC-4F5A-9807-DA2ACF3CAFCA}.Release|x86.ActiveCfg = Release|Any CPU
 		{05F4EFA8-B2CC-4F5A-9807-DA2ACF3CAFCA}.Release|x86.Build.0 = Release|Any CPU
+		{F93C7217-94B9-4C85-9F65-F00425862A73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F93C7217-94B9-4C85-9F65-F00425862A73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F93C7217-94B9-4C85-9F65-F00425862A73}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F93C7217-94B9-4C85-9F65-F00425862A73}.Debug|x64.Build.0 = Debug|Any CPU
+		{F93C7217-94B9-4C85-9F65-F00425862A73}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F93C7217-94B9-4C85-9F65-F00425862A73}.Debug|x86.Build.0 = Debug|Any CPU
+		{F93C7217-94B9-4C85-9F65-F00425862A73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F93C7217-94B9-4C85-9F65-F00425862A73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F93C7217-94B9-4C85-9F65-F00425862A73}.Release|x64.ActiveCfg = Release|Any CPU
+		{F93C7217-94B9-4C85-9F65-F00425862A73}.Release|x64.Build.0 = Release|Any CPU
+		{F93C7217-94B9-4C85-9F65-F00425862A73}.Release|x86.ActiveCfg = Release|Any CPU
+		{F93C7217-94B9-4C85-9F65-F00425862A73}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -459,6 +473,7 @@ Global
 		{20D8F874-E487-41A2-8F97-F30020D2D9BB} = {30C4743E-AB9E-49BD-8F48-D376813B8824}
 		{3617B850-BEC2-4CD7-A676-43F1BAF093DE} = {30C4743E-AB9E-49BD-8F48-D376813B8824}
 		{05F4EFA8-B2CC-4F5A-9807-DA2ACF3CAFCA} = {3617B850-BEC2-4CD7-A676-43F1BAF093DE}
+		{F93C7217-94B9-4C85-9F65-F00425862A73} = {F9A4E5D7-BD89-4EB0-A12E-C9BD9D887C66}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {882EBB42-21F4-4BC0-805A-088422CBB28C}

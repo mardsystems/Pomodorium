@@ -4,17 +4,29 @@ using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor.Services;
 using Pomodorium;
 using Pomodorium.Data;
-using Pomodorium.Features.ActivityManager;
-using Pomodorium.Features.FlowTimer;
-using Pomodorium.Features.PomodoroTimer;
-using Pomodorium.Features.TaskSynchronizer;
+using Pomodorium.Extensions.DependencyInjection;
 using Pomodorium.Hubs;
-using System.DomainModel;
-using System.DomainModel.Storage;
+using System.Extensions.DependencyInjection;
+using System.Reflection;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 var APP_REMOTE = false;
+
+builder.Services.AddSystem();
+
+if (APP_REMOTE)
+{
+    builder.Services.AddApplicationRemote();
+}
+else
+{
+    builder.Services.AddApplicationCore();
+
+    builder.Services.AddClientInfrastructure(builder.Configuration);
+
+    builder.Services.AddScoped<EventHubClient>();
+}
 
 builder.Services.AddLocalization();
 
@@ -29,37 +41,12 @@ var hubConnection = hubConnectionBuilder.WithUrl(new Uri($"{builder.HostEnvironm
 
 builder.Services.AddScoped(sp => hubConnection);
 
-if (APP_REMOTE)
-{
-    builder.Services.AddMediatR(config =>
-    {
-        config.RegisterServicesFromAssembly(typeof(GetPomosHandler).Assembly);
-    });
-}
-else
-{
-    builder.Services.AddScoped<EventHubClient>();
-
-    builder.Services.AddScoped<IndexedDBAccessor>();
-
-    builder.Services.AddScoped<IAppendOnlyStore, IndexedDBStore>();
-
-    builder.Services.AddScoped<Repository>();
-
-    builder.Services.AddScoped<EventStore>();
-
-    builder.Services.AddMediatR(config =>
-    {
-        config.RegisterServicesFromAssemblies(
-            typeof(Program).Assembly,
-            typeof(SyncTasksFromTfsHandler).Assembly,
-            typeof(CreateFlowtimeHandler).Assembly,
-            typeof(IndexedDBFlowtimeQueryItemsProjection).Assembly,
-            typeof(PostActivityHandler).Assembly);
-    });
-}
-
 builder.Services.AddMudServices();
+
+builder.Services.AddMediatR(config =>
+{
+    config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+});
 
 var host = builder.Build();
 

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -21,7 +21,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
     <ProjectReference Include="..\Client\Pomodorium.Client.csproj" />
-    <ProjectReference Include="..\ApplicationCore\Pomodorium.ApplicationCore.csproj" />
     <ProjectReference Include="..\Infrastructure.Server\Pomodorium.Infrastructure.Server.csproj" />
     <ProjectReference Include="..\MongoDB\Pomodorium.MongoDB.csproj" />
     <ProjectReference Include="..\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
