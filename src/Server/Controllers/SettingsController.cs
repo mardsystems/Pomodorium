@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Pomodorium.Features.Settings;
 using Pomodorium.Models;
+using Pomodorium.Repositories;
 
 namespace Pomodorium.Controllers;
 
@@ -8,15 +8,15 @@ namespace Pomodorium.Controllers;
 [Route("api/[controller]")]
 public class SettingsController : ControllerBase
 {
-    private readonly MongoDBTfsIntegrationCollection _tfsIntegrationRepository;
+    private readonly ITfsIntegrationRepository _tfsIntegrationRepository;
 
-    private readonly MongoDBTrelloIntegrationCollection _trelloIntegrationRepository;
+    private readonly ITrelloIntegrationRepository _trelloIntegrationRepository;
 
     private readonly ILogger<SettingsController> _logger;
 
     public SettingsController(
-        MongoDBTfsIntegrationCollection tfsIntegrationRepository,
-        MongoDBTrelloIntegrationCollection trelloIntegrationRepository,
+        ITfsIntegrationRepository tfsIntegrationRepository,
+        ITrelloIntegrationRepository trelloIntegrationRepository,
         ILogger<SettingsController> logger)
     {
         _tfsIntegrationRepository = tfsIntegrationRepository;

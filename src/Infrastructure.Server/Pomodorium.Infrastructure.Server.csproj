@@ -10,7 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ApplicationCore\Pomodorium.ApplicationCore.csproj" />
     <ProjectReference Include="..\Azure.Cosmos\Pomodorium.Azure.Cosmos.csproj" />
-    <ProjectReference Include="..\Infrastructure\Pomodorium.Infrastructure.csproj" />
+    <ProjectReference Include="..\Infrastructure.Shared\Pomodorium.Infrastructure.Shared.csproj" />
     <ProjectReference Include="..\MongoDB\Pomodorium.MongoDB.csproj" />
     <ProjectReference Include="..\RabbitMQ\Pomodorium.RabbitMQ.csproj" />
     <ProjectReference Include="..\TeamFoundationServer\Pomodorium.TeamFoundationServer.csproj" />

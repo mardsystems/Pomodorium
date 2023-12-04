@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using Pomodorium.Features.Settings;
 using Pomodorium.Features.TaskManager;
 using Pomodorium.Integrations.TFS;
 using Pomodorium.Models.TaskManagement.Integrations;
+using Pomodorium.Repositories;
 using System.DomainModel;
 
 namespace Pomodorium.Features.TaskSynchronizer;
@@ -11,7 +11,7 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
 {
     private readonly IMediator _mediator;
 
-    private readonly MongoDBTfsIntegrationCollection _tfsIntegrationRepository;
+    private readonly ITfsIntegrationRepository _tfsIntegrationRepository;
 
     private readonly WorkItemAdapter _workItemAdapter;
 
@@ -19,7 +19,7 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
 
     public SyncTasksFromTfsHandler(
         IMediator mediator,
-        MongoDBTfsIntegrationCollection tfsIntegrationRepository,
+        ITfsIntegrationRepository tfsIntegrationRepository,
         Repository repository,
         WorkItemAdapter workItemAdapter)
     {

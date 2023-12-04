@@ -1,10 +1,12 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 namespace System.DomainModel.Storage;
 
 public class EventRecord
 {
     [BsonId]
+    [JsonProperty(PropertyName = "id")]
     public Guid Id { get; }
 
     public string Name { get; }

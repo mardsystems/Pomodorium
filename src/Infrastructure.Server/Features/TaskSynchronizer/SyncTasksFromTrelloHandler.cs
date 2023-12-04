@@ -1,8 +1,8 @@
 ﻿using MediatR;
-using Pomodorium.Features.Settings;
 using Pomodorium.Features.TaskManager;
 using Pomodorium.Integrations.Trello;
 using Pomodorium.Models.TaskManagement.Integrations;
+using Pomodorium.Repositories;
 using System.DomainModel;
 
 namespace Pomodorium.Features.TaskSynchronizer;
@@ -11,7 +11,7 @@ public class SyncTasksFromTrelloHandler : IRequestHandler<SyncTasksFromTrelloReq
 {
     private readonly IMediator _mediator;
 
-    private readonly MongoDBTrelloIntegrationCollection _trelloIntegrationRepository;
+    private readonly ITrelloIntegrationRepository _trelloIntegrationRepository;
 
     private readonly CardAdapter _listsAdapter;
 
@@ -19,7 +19,7 @@ public class SyncTasksFromTrelloHandler : IRequestHandler<SyncTasksFromTrelloReq
 
     public SyncTasksFromTrelloHandler(
         IMediator mediator,
-        MongoDBTrelloIntegrationCollection trelloIntegrationRepository,
+        ITrelloIntegrationRepository trelloIntegrationRepository,
         Repository repository,
         CardAdapter listsAdapter)
     {

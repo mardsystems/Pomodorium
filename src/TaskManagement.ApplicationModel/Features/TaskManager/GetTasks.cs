@@ -1,4 +1,5 @@
-﻿using Pomodorium.Enums;
+﻿using Newtonsoft.Json;
+using Pomodorium.Enums;
 
 namespace Pomodorium.Features.TaskManager;
 
@@ -28,6 +29,7 @@ public class GetTasksResponse : Response
 
 public class TaskQueryItem
 {
+    [JsonProperty(PropertyName = "id")]
     public Guid Id { get; set; }
 
     public DateTime? CreationDate { get; set; }

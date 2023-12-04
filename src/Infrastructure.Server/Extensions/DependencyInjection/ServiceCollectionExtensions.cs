@@ -8,6 +8,10 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddServerInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddSharedInfrastructure(configuration);
+
+        //services.AddCosmos(configuration);
+
         services.AddMongoDB(configuration);
 
         services.AddRabbitMQ(configuration);
