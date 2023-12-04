@@ -43,7 +43,11 @@ public class CosmosTaskQueryItemsProjection :
         var taskQueryItems = new List<TaskQueryItem>();
 
         var query = new QueryDefinition(
-            query: "SELECT * FROM TaskQueryItems p");
+            query: @"SELECT * FROM TaskQueryItems p WHERE 1 = 1
+AND (IS_NULL(@description) = true OR p.Description = @description)
+AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalReference)")
+            .WithParameter("@description", request.Description)
+            .WithParameter("@externalReference", request.ExternalReference);
 
         using var feed = _container.GetItemQueryIterator<TaskQueryItem>(queryDefinition: query);
 

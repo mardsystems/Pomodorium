@@ -18,7 +18,7 @@ public class ChangeTaskDescriptionHandler : IRequestHandler<ChangeTaskDescriptio
             throw new EntityNotFoundException();
         }
 
-        task.ChangeDescription(request.TaskDescription);
+        task.ChangeDescription(request.Description);
 
         await _repository.Save(task, request.TaskVersion);
 

@@ -10,9 +10,9 @@ public static class ServiceCollectionExtensions
     {
         services.AddSharedInfrastructure(configuration);
 
-        //services.AddCosmos(configuration);
+        services.AddCosmos(configuration);
 
-        services.AddMongoDB(configuration);
+        //services.AddMongoDB(configuration);
 
         services.AddRabbitMQ(configuration);
 

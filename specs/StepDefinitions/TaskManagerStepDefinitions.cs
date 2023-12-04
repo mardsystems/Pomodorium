@@ -1,4 +1,5 @@
 using Pomodorium.Drivers;
+using Pomodorium.Features.TaskManager;
 using Pomodorium.Support;
 using TechTalk.SpecFlow.Assist;
 
@@ -10,6 +11,8 @@ namespace Pomodorium.StepDefinitions
         private readonly TaskManagerApiDriver _taskManagerApiDriver;
 
         private Table _specification;
+
+        private Guid _taskId;
 
         public TaskManagerStepDefinitions(TaskManagerApiDriver taskManagerApiDriver)
         {
@@ -23,7 +26,7 @@ namespace Pomodorium.StepDefinitions
 
             var response = _taskManagerApiDriver.CreateTask(request);
 
-            var task = _taskManagerApiDriver.GetTask(response.TaskId).TaskDetails;
+            _taskId = _taskManagerApiDriver.GetTask(response.TaskId).TaskDetails.Id;
         }
 
         [When(@"Programmer registers a task as")]
@@ -36,10 +39,22 @@ namespace Pomodorium.StepDefinitions
             var response = _taskManagerApiDriver.CreateTaskAction.Perform(request);
         }
 
+        [When(@"Programmer change a task as")]
+        public void WhenProgrammerChangeATaskAs(Table table)
+        {
+            _specification = table;
+
+            var request = table.CreateInstance(TaskManagerStubs.ChangeTaskDescription);
+
+            request.TaskId = _taskId;
+            
+            var response = _taskManagerApiDriver.ChangeTaskDescriptionAction.Perform(request);
+        }
+
         [Then(@"the task should be registered as expected")]
         public void ThenTheTaskShouldBeRegisteredAsExpected()
         {
-            var tasks = _taskManagerApiDriver.GetTasks().TaskQueryItems;
+            var tasks = _taskManagerApiDriver.GetTasks(new GetTasksRequest()).TaskQueryItems;
 
             _specification.CompareToSet(tasks);
         }

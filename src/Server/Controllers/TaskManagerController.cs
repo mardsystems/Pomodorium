@@ -32,7 +32,7 @@ public class TaskManagerController : ControllerBase
     }
 
     [HttpPost("Tasks/Create", Name = "CreateTask")]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreateTaskResponse))]
+    [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(CreateTaskResponse))]
     public async Task<CreateTaskResponse> CreateTask(CreateTaskRequest request)
     {
         var response = await _mediator.Send<CreateTaskResponse>(request);

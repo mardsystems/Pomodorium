@@ -92,13 +92,13 @@ namespace Pomodorium.Features
         }
         
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Task registration with name longer than 1 character")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Task registration with description longer than 1 character")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Task Manager")]
-        public virtual void TaskRegistrationWithNameLongerThan1Character()
+        public virtual void TaskRegistrationWithDescriptionLongerThan1Character()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Task registration with name longer than 1 character", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Task registration with description longer than 1 character", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
 #line 5
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -134,13 +134,13 @@ this.ScenarioInitialize(scenarioInfo);
         }
         
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Task edit with name longer than 1 character")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Change task description with longer than 1 character")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Task Manager")]
-        public virtual void TaskEditWithNameLongerThan1Character()
+        public virtual void ChangeTaskDescriptionWithLongerThan1Character()
         {
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Task edit with name longer than 1 character", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Change task description with longer than 1 character", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
 #line 11
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -169,7 +169,7 @@ this.ScenarioInitialize(scenarioInfo);
                 table2.AddRow(new string[] {
                             "Todo it"});
 #line 13
- testRunner.When("Programmer registers a task as", ((string)(null)), table2, "When ");
+ testRunner.When("Programmer change a task as", ((string)(null)), table2, "When ");
 #line hidden
 #line 16
  testRunner.Then("the task should be registered as expected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");

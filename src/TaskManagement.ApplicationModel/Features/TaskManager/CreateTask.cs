@@ -11,7 +11,7 @@ public class CreateTaskRequest : Request<CreateTaskResponse>
 
 public class CreateTaskResponse : Response
 {
-    public Guid TaskId { get; }
+    public Guid TaskId { get; set; }
 
     public CreateTaskResponse(Guid correlationId, Guid taskId)
         : base(correlationId)
