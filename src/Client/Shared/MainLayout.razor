@@ -1,4 +1,4 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 @using MediatR
 @using Microsoft.AspNetCore.SignalR.Client;
 @using Pomodorium.Features.TaskManager
@@ -19,6 +19,7 @@
             <MudText Typo="Typo.h6">Pomodorium</MudText>
         }
         <MudSpacer />
+        <LoginDisplay />
         <MudIconButton Icon="@Icons.Material.Filled.CloudDownload" Color="Color.Inherit" OnClick="DispatchEvents" Title="Dispatch Events" />
         @* <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Href="https://mudblazor.com/" Target="_blank" /> *@
         @* <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Href="https://github.com/MudBlazor/MudBlazor/" Target="_blank" /> *@
@@ -28,7 +29,7 @@
                                      Icon="@Icons.Material.Filled.CloudOff" Color="@Color.Inherit" Title="Connect Hub"
                                      ToggledIcon="@Icons.Material.Filled.CloudQueue" ToggledColor="@Color.Inherit" ToggledTitle="Disconnect Hub" />
             </MudBadge>
-        </div>
+        </div>        
         @* <MudSwitch @bind-Checked="@_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode" /> *@
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
@@ -124,7 +125,8 @@
     </div>
 
     <main>
-        <div class="top-row px-4">
+        <div class="top-row px-4 auth">
+            <LoginDisplay />
             <div class="input-group">
                 <span role="status">@SharedResource["Notifications"]: @NotificationTotal</span>
             </div>

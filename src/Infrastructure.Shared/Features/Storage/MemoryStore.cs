@@ -1,6 +1,6 @@
 ﻿using System.DomainModel.Storage;
 
-namespace Pomodorium.Data;
+namespace Pomodorium.Features.Storage;
 
 public class MemoryStore : IAppendOnlyStore
 {

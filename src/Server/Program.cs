@@ -1,7 +1,16 @@
 using Pomodorium.Extensions.DependencyInjection;
+using Pomodorium.Extensions.Infrastructure;
 using Pomodorium.Hubs;
 using System.Extensions.DependencyInjection;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.Identity.Web;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.Identity.Web.UI;
 
 namespace Pomodorium;
 
@@ -11,6 +20,9 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+            .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
+
         builder.Services.AddSystem();
 
         builder.Services.AddApplicationCore();
@@ -19,11 +31,20 @@ public class Program
 
         builder.Services.AddControllersWithViews();
 
+        //builder.Services.AddControllersWithViews(options =>
+        //{
+        //    var policy = new AuthorizationPolicyBuilder()
+        //        .RequireAuthenticatedUser()
+        //        .Build();
+        //    options.Filters.Add(new AuthorizeFilter(policy));
+        //});
+
         builder.Services.AddEndpointsApiExplorer();
 
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddRazorPages();
+        builder.Services.AddRazorPages()
+            .AddMicrosoftIdentityUI();
 
         builder.Services.AddSignalR();
 
@@ -33,6 +54,8 @@ public class Program
         });
 
         var app = builder.Build();
+
+        app.UseServerInfrastructure();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -58,6 +81,8 @@ public class Program
 
         app.UseRouting();
 
+        //app.UseAuthentication();
+        app.UseAuthorization();
 
         app.MapRazorPages();
         app.MapControllers();
