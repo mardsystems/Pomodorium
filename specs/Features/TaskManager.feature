@@ -2,15 +2,15 @@
 
 Rule: Task name should be at least 2 characters
 
-Scenario: Task registration with name longer than 1 character
+Scenario: Task registration with description longer than 1 character
 	When Programmer registers a task as
 		| description |
 		| Todo it     |
 	Then the task should be registered as expected
 
-Scenario: Task edit with name longer than 1 character
+Scenario: Change task description with longer than 1 character
 	Given that there is any customer
-	When Programmer registers a task as
+	When Programmer change a task as
 		| description |
 		| Todo it     |
 	Then the task should be registered as expected

@@ -32,9 +32,9 @@ public class WebApiHooks
     {
         AppHostingContext.StartApp();
 
-        //var db = AppHostingContext.GetDbContext();
+        var database = AppHostingContext.GetDatabase();
 
-        //objectContainer.RegisterInstanceAs(db);
+        objectContainer.RegisterInstanceAs(database);
 
         Service.Instance.ValueRetrievers.Register(new NullValueRetriever("<null>"));
         Service.Instance.ValueComparers.Register(new NullValueComparer("<null>"));

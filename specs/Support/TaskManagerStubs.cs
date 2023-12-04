@@ -12,4 +12,11 @@ public static class TaskManagerStubs
         };
     }
 
+    public static ChangeTaskDescriptionRequest ChangeTaskDescription()
+    {
+        return new ChangeTaskDescriptionRequest()
+        {
+            Description = "Default Task"
+        };
+    }
 }

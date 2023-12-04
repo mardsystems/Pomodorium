@@ -2,10 +2,14 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Pomodorium.Data;
 using System.Diagnostics;
 using System.Net.Http.Headers;
 
@@ -17,9 +21,9 @@ public class AppHostingContext : IDisposable
     {
         private IServiceScope _serviceScope;
 
-        //private PomodoriumContext _db;
+        private DatabaseContext _database;
 
-        //public PomodoriumContext GetDbContext() => _db;
+        public DatabaseContext GetDatabase() => _database;
 
         protected override IHost CreateHost(IHostBuilder builder)
         {
@@ -31,17 +35,19 @@ public class AppHostingContext : IDisposable
 
             try
             {
-                //_db = services.GetRequiredService<PomodoriumContext>();
+                var cosmosClient = services.GetRequiredService<CosmosClient>();
 
-                //_db.Database.EnsureCreated();
+                var cosmosOptionsInterface = services.GetService<IOptions<CosmosOptions>>();
+
+                _database = new DatabaseContext(cosmosClient, cosmosOptionsInterface.Value);
+
+                _database.EnsureCreated();
             }
             catch (Exception _)
             {
                 var logger = _serviceScope.ServiceProvider.GetRequiredService<ILogger<AppHostingContext>>();
 
-                Console.WriteLine("An error occurred while migrating or seeding the database.");
-
-                throw;
+                Console.WriteLine($"An error occurred while migrating or seeding the database.\n{_.InnerException.Message}.");
             }
 
             host.Start();
@@ -56,7 +62,7 @@ public class AppHostingContext : IDisposable
             builder.ConfigureServices(services =>
             {
                 //var dbContextDescriptor = services.SingleOrDefault(d =>
-                //    d.ServiceType == typeof(DbContextOptions<PomodoriumContext>));
+                //    d.ServiceType == typeof(DbContextOptions<CosmosClient>));
 
                 //services.Remove(dbContextDescriptor);
 
@@ -75,7 +81,7 @@ public class AppHostingContext : IDisposable
                 //    return connection;
                 //});
 
-                //services.AddDbContext<PomodoriumContext>((container, options) =>
+                //services.AddDbContext<CosmosClient>((container, options) =>
                 //{
                 //    var connection = container.GetRequiredService<DbConnection>();
 
@@ -85,17 +91,16 @@ public class AppHostingContext : IDisposable
                 //});
             });
 
-            builder
-                .ConfigureTestServices(services =>
+            builder.ConfigureTestServices(services =>
+            {
+                services.AddAuthentication(authentication =>
                 {
-                    services.AddAuthentication(authentication =>
-                    {
-                        authentication.DefaultAuthenticateScheme = "TestScheme";
-                        authentication.DefaultChallengeScheme = "TestScheme";
-                    })
-                    .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
-                            "TestScheme", options => { });
-                });
+                    authentication.DefaultAuthenticateScheme = "TestScheme";
+                    authentication.DefaultChallengeScheme = "TestScheme";
+                })
+                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                        "TestScheme", options => { });
+            });
 
             builder.ConfigureLogging((context, loggingBuilder) =>
             {
@@ -219,17 +224,17 @@ public class AppHostingContext : IDisposable
         }
     }
 
-    //public static PomodoriumContext GetDbContext()
-    //{
-    //    var db = _webApplicationFactory?.GetDbContext();
+    public static DatabaseContext GetDatabase()
+    {
+        var database = _webApplicationFactory?.GetDatabase();
 
-    //    if (db == null)
-    //    {
-    //        throw new InvalidOperationException();
-    //    }
+        if (database == null)
+        {
+            throw new InvalidOperationException();
+        }
 
-    //    return db;
-    //}
+        return database;
+    }
 
     public static void StopApp()
     {

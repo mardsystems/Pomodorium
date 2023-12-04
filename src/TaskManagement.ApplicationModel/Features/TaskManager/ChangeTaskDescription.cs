@@ -4,7 +4,7 @@ public class ChangeTaskDescriptionRequest : Request<ChangeTaskDescriptionRespons
 {
     public Guid TaskId { get; set; }
 
-    public string TaskDescription { get; set; }
+    public string Description { get; set; }
 
     public long TaskVersion { get; set; }
 }
