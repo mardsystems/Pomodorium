@@ -1,9 +1,11 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using System.DomainModel.Storage;
 
 namespace Pomodorium.Hubs;
 
+//[Authorize]
 public class EventHub : Hub<IHubEvent>
 {
     private readonly IAppendOnlyStore _appendOnlyStore;
