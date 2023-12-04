@@ -6,12 +6,8 @@ namespace Pomodorium.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddClientInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddSharedInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSharedInfrastructure(configuration);
-
-        services.AddIndexedDB(configuration);
-
         services.AddMediatR(config =>
         {
             config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());

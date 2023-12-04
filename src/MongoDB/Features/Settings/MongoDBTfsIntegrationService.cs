@@ -1,15 +1,16 @@
 ﻿using MongoDB.Driver;
 using Pomodorium.Models;
+using Pomodorium.Repositories;
 
 namespace Pomodorium.Features.Settings;
 
-public class MongoDBTfsIntegrationCollection
+public class MongoDBTfsIntegrationService : ITfsIntegrationRepository
 {
     private readonly MongoClient _mongoClient;
 
     private readonly IMongoCollection<TfsIntegration> _mongoCollection;
 
-    public MongoDBTfsIntegrationCollection(MongoClient mongoClient)
+    public MongoDBTfsIntegrationService(MongoClient mongoClient)
     {
         _mongoClient = mongoClient;
 

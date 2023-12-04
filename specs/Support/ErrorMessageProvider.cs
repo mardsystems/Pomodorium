@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Pomodorium.Support;
+﻿namespace Pomodorium.Support;
 
 public class ErrorMessageProvider
 {

@@ -6,6 +6,7 @@ using MongoDB.Driver;
 using Pomodorium.Data;
 using Pomodorium.Features.Settings;
 using Pomodorium.Features.Storage;
+using Pomodorium.Repositories;
 using System.DomainModel.Storage;
 using System.Reflection;
 
@@ -30,9 +31,9 @@ public static class ServiceCollectionExtensions
                 factory.GetRequiredService<IOptions<MongoDBOptions>>(),
                 factory.GetRequiredService<ILogger<MongoDBStore>>()));
 
-        services.AddScoped<MongoDBTfsIntegrationCollection>();
+        services.AddScoped<ITfsIntegrationRepository, MongoDBTfsIntegrationService>();
 
-        services.AddScoped<MongoDBTrelloIntegrationCollection>();
+        services.AddScoped<ITrelloIntegrationRepository, MongoDBTrelloIntegrationService>();
 
         services.AddMediatR(config =>
         {

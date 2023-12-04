@@ -1,4 +1,5 @@
-﻿using Pomodorium.Enums;
+﻿using Newtonsoft.Json;
+using Pomodorium.Enums;
 
 namespace Pomodorium.Features.PomodoroTimer;
 
@@ -25,6 +26,7 @@ public class GetPomodoroResponse : Response
 
 public class PomodoroDetails
 {
+    [JsonProperty(PropertyName = "id")]
     public Guid Id { get; set; }
 
     public string? Task { get; set; }

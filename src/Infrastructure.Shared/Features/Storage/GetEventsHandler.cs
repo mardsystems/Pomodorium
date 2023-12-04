@@ -1,13 +1,13 @@
 ﻿using MediatR;
 using System.DomainModel.Storage;
 
-namespace Pomodorium.Handlers;
+namespace Pomodorium.Features.Storage;
 
-public class MongoDBEventHandler : IRequestHandler<GetEventsRequest, GetEventsResponse>
+public class GetEventsHandler : IRequestHandler<GetEventsRequest, GetEventsResponse>
 {
     private readonly IAppendOnlyStore _storage;
 
-    public MongoDBEventHandler(IAppendOnlyStore storage)
+    public GetEventsHandler(IAppendOnlyStore storage)
     {
         _storage = storage;
     }

@@ -1,4 +1,5 @@
-﻿using Pomodorium.Enums;
+﻿using Newtonsoft.Json;
+using Pomodorium.Enums;
 
 namespace Pomodorium.Features.ActivityManager;
 
@@ -25,6 +26,7 @@ public class GetActivityResponse : Response
 
 public class ActivityDetails
 {
+    [JsonProperty(PropertyName = "id")]
     public Guid Id { get; set; }
 
     public string Name { get; set; }

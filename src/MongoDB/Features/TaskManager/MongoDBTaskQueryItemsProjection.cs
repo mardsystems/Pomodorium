@@ -3,7 +3,6 @@ using MongoDB.Driver;
 using Pomodorium.Models.FlowtimeTechnique;
 using Pomodorium.Models.TaskManagement.Integrations;
 using Pomodorium.Models.TaskManagement.Tasks;
-using System.DomainModel;
 
 namespace Pomodorium.Features.TaskManager;
 

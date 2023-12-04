@@ -22,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5 - Cross-Cutting", "5 - Cr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6 - External Dependencies", "6 - External Dependencies", "{E3C57D58-4D80-4579-AC9A-F0CD6F3F9983}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.Infrastructure", "src\Infrastructure\Pomodorium.Infrastructure.csproj", "{05A25C09-FF05-4B60-9CE5-386E446A741E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.Infrastructure.Shared", "src\Infrastructure.Shared\Pomodorium.Infrastructure.Shared.csproj", "{05A25C09-FF05-4B60-9CE5-386E446A741E}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{183B7F33-38BE-41D9-B69A-438019FFE06D}"
 EndProject
@@ -78,7 +78,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messaging", "Messaging", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.RabbitMQ", "src\RabbitMQ\Pomodorium.RabbitMQ.csproj", "{05F4EFA8-B2CC-4F5A-9807-DA2ACF3CAFCA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pomodorium.Azure.Cosmos", "src\Azure.Cosmos\Pomodorium.Azure.Cosmos.csproj", "{F93C7217-94B9-4C85-9F65-F00425862A73}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.Azure.Cosmos", "src\Azure.Cosmos\Pomodorium.Azure.Cosmos.csproj", "{F93C7217-94B9-4C85-9F65-F00425862A73}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

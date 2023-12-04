@@ -1,4 +1,5 @@
-﻿using Pomodorium.Enums;
+﻿using Newtonsoft.Json;
+using Pomodorium.Enums;
 
 namespace Pomodorium.Features.FlowTimer;
 
@@ -24,6 +25,7 @@ public class GetFlowsResponse : Response
 
 public class FlowtimeQueryItem
 {
+    [JsonProperty(PropertyName = "id")]
     public Guid Id { get; set; }
 
     public DateTime? CreationDate { get; set; }

@@ -1,15 +1,16 @@
 ﻿using MongoDB.Driver;
 using Pomodorium.Models;
+using Pomodorium.Repositories;
 
 namespace Pomodorium.Features.Settings;
 
-public class MongoDBTrelloIntegrationCollection
+public class MongoDBTrelloIntegrationService : ITrelloIntegrationRepository
 {
     private readonly MongoClient _mongoClient;
 
     private readonly IMongoCollection<TrelloIntegration> _mongoCollection;
 
-    public MongoDBTrelloIntegrationCollection(MongoClient mongoClient)
+    public MongoDBTrelloIntegrationService(MongoClient mongoClient)
     {
         _mongoClient = mongoClient;
 
