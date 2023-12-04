@@ -13,9 +13,23 @@ public static class CosmosExtensions
 
             database.DeleteAsync().Wait();
         }
-        catch (Exception _)
+        catch (AggregateException aggEx)
         {
-
+            if (aggEx.InnerException is CosmosException cosmosException)
+            {
+                if (cosmosException.Message.Contains("Resource Not Found"))
+                {
+                    // OK.
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            else
+            {
+                throw;
+            }
         }
     }
 
@@ -23,78 +37,46 @@ public static class CosmosExtensions
     {
         Microsoft.Azure.Cosmos.Database database;
 
-        try
-        {
-            ThroughputProperties autoscaleThroughputProperties = ThroughputProperties.CreateAutoscaleThroughput(1000);
+        ThroughputProperties autoscaleThroughputProperties = ThroughputProperties.CreateAutoscaleThroughput(1000);
 
-            var databaseResponse = cosmosClient.CreateDatabaseAsync(
-                id: options.Database,
-                throughputProperties: autoscaleThroughputProperties
-            ).Result;
+        var databaseResponse = cosmosClient.CreateDatabaseIfNotExistsAsync(
+            id: options.Database,
+            throughputProperties: autoscaleThroughputProperties
+        ).Result;
 
-            database = databaseResponse.Database;
-        }
-        catch (AggregateException aggEx)
-        {
-            if (aggEx.InnerException is CosmosException cosmosException)
-            {
-                if (cosmosException.Message.Contains("Entity with the specified id already exists in the system"))
-                {
-                    database = cosmosClient.GetDatabase(
-                        id: options.Database);
-                }
-                else
-                {
-                    database = null;
-                }
-            }
-            else
-            {
-                database = null;
-            }
-        }
+        database = databaseResponse.Database;
 
-        database.CreateContainer("ActivityDetails");
+        database.CreateContainerIfNotExists("ActivityDetails");
 
-        database.CreateContainer("ActivityQueryItems");
+        database.CreateContainerIfNotExists("ActivityQueryItems");
 
-        database.CreateContainer("FlowtimeDetails");
+        database.CreateContainerIfNotExists("FlowtimeDetails");
 
-        database.CreateContainer("FlowtimeQueryItems");
+        database.CreateContainerIfNotExists("FlowtimeQueryItems");
 
-        database.CreateContainer("PomodoroDetails");
+        database.CreateContainerIfNotExists("PomodoroDetails");
 
-        database.CreateContainer("PomodoroQueryItems");
+        database.CreateContainerIfNotExists("PomodoroQueryItems");
 
-        database.CreateContainer("TfsIntegrationContainer");
+        database.CreateContainerIfNotExists("TfsIntegrationContainer");
 
-        database.CreateContainer("TrelloIntegrationContainer");
+        database.CreateContainerIfNotExists("TrelloIntegrationContainer");
 
-        database.CreateContainer("EventStore");
+        database.CreateContainerIfNotExists("EventStore");
 
-        database.CreateContainer("TaskDetails");
+        database.CreateContainerIfNotExists("TaskDetails");
 
-        database.CreateContainer("TaskQueryItems");
+        database.CreateContainerIfNotExists("TaskQueryItems");
     }
 
-    private static void CreateContainer(
+    private static void CreateContainerIfNotExists(
         this Microsoft.Azure.Cosmos.Database database,
         string name,
         string partitionKey = "/id")
     {
-        try
-        {
-            database.CreateContainerAsync(
-                id: name,
-                partitionKeyPath: partitionKey
-            ).Wait();
-        }
-        catch (AggregateException aggEx)
-        {
-            if (aggEx.InnerException is CosmosException cosmosException)
-            {
-
-            }
-        }
+        database.CreateContainerIfNotExistsAsync(
+            id: name,
+            partitionKeyPath: partitionKey
+        ).Wait();
     }
 }

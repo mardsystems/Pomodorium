@@ -90,8 +90,8 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
     public async System.Threading.Tasks.Task Handle(TaskIntegrated notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<TaskQueryItem>(
-                id: notification.Id.ToString(),
-                partitionKey: new PartitionKey(notification.Id.ToString())
+                id: notification.TaskId.ToString(),
+                partitionKey: new PartitionKey(notification.TaskId.ToString())
             );
 
         var taskQueryItem = itemResponse.Resource;
@@ -108,7 +108,7 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
 
         _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
 
-        var response = await _container.UpsertItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.UpsertItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.TaskId.ToString()));
 
         _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
     }
@@ -139,8 +139,8 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
     public async System.Threading.Tasks.Task Handle(FlowtimeStarted notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<TaskQueryItem>(
-                id: notification.Id.ToString(),
-                partitionKey: new PartitionKey(notification.Id.ToString())
+                id: notification.TaskId.ToString(),
+                partitionKey: new PartitionKey(notification.TaskId.ToString())
             );
 
         var taskQueryItem = itemResponse.Resource;
@@ -154,7 +154,7 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
 
         _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
 
-        var response = await _container.UpsertItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.UpsertItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.TaskId.ToString()));
 
         _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
     }
@@ -162,8 +162,8 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
     public async System.Threading.Tasks.Task Handle(FlowtimeInterrupted notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<TaskQueryItem>(
-                id: notification.Id.ToString(),
-                partitionKey: new PartitionKey(notification.Id.ToString())
+                id: notification.TaskId.ToString(),
+                partitionKey: new PartitionKey(notification.TaskId.ToString())
             );
 
         var taskQueryItem = itemResponse.Resource;
@@ -179,7 +179,7 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
 
         _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
 
-        var response = await _container.UpsertItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.UpsertItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.TaskId.ToString()));
 
         _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
     }
@@ -187,8 +187,8 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
     public async System.Threading.Tasks.Task Handle(FlowtimeStopped notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<TaskQueryItem>(
-                id: notification.Id.ToString(),
-                partitionKey: new PartitionKey(notification.Id.ToString())
+                id: notification.TaskId.ToString(),
+                partitionKey: new PartitionKey(notification.TaskId.ToString())
             );
 
         var taskQueryItem = itemResponse.Resource;
@@ -204,7 +204,7 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
 
         _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
 
-        var response = await _container.UpsertItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.UpsertItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.TaskId.ToString()));
 
         _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
     }

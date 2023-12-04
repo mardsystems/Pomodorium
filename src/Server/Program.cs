@@ -1,4 +1,5 @@
 using Pomodorium.Extensions.DependencyInjection;
+using Pomodorium.Extensions.Infrastructure;
 using Pomodorium.Hubs;
 using System.Extensions.DependencyInjection;
 using System.Reflection;
@@ -33,6 +34,8 @@ public class Program
         });
 
         var app = builder.Build();
+
+        app.UseServerInfrastructure();
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())

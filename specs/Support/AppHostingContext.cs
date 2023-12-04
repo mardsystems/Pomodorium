@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Azure.Cosmos;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
@@ -28,7 +27,7 @@ public class AppHostingContext : IDisposable
         protected override IHost CreateHost(IHostBuilder builder)
         {
             var host = builder.Build();
-
+            
             _serviceScope = host.Services.CreateScope();
 
             var services = _serviceScope.ServiceProvider;
@@ -43,11 +42,13 @@ public class AppHostingContext : IDisposable
 
                 _database.EnsureCreated();
             }
-            catch (Exception _)
+            catch (Exception ex)
             {
-                var logger = _serviceScope.ServiceProvider.GetRequiredService<ILogger<AppHostingContext>>();
+                var logger = _serviceScope.ServiceProvider.GetRequiredService<ILogger<TestAppFactory>>();
 
-                Console.WriteLine($"An error occurred while migrating or seeding the database.\n{_.InnerException.Message}.");
+                logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+
+                throw;
             }
 
             host.Start();
