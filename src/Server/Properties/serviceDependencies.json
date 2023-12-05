@@ -2,6 +2,11 @@
   "dependencies": {
     "identityapp1": {
       "type": "identityapp"
+    },
+    "cosmosdb1": {
+      "type": "cosmosdb",
+      "connectionId": "ConnectionStrings:AZURE_COSMOS_CONNECTIONSTRING",
+      "dynamicId": null
     }
   }
 }
