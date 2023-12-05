@@ -1,12 +1,16 @@
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 using Pomodorium.Features.FlowTimer;
 using Pomodorium.Features.TaskManager;
 
 namespace Pomodorium.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
+[RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
 public class TaskManagerController : ControllerBase
 {
     private readonly IMediator _mediator;

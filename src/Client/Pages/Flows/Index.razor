@@ -1,5 +1,6 @@
 ﻿@page "/flows"
 @using MediatR;
+@using Microsoft.AspNetCore.Authorization
 @using Pomodorium.Enums
 @using Pomodorium.Hubs;
 @using Pomodorium.Shared
@@ -11,6 +12,7 @@
 @using System.Reactive.Threading.Tasks;
 @using System.Reactive.Subjects;
 @using Pomodorium.Features.FlowTimer
+@attribute [Authorize]
 @inject IMediator Mediator
 @inject NavigationManager NavigationManager
 @inject EventHubClient EventHubClient

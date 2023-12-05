@@ -1,5 +1,6 @@
 ﻿@page "/tasks"
 @using MediatR;
+@using Microsoft.AspNetCore.Authorization
 @using Pomodorium.Features.FlowTimer
 @using Pomodorium.Hubs;
 @using Pomodorium.Shared
@@ -12,6 +13,7 @@
 @using System.Reactive.Subjects;
 @using Pomodorium.Features.TaskManager
 @using Pomodorium.Features.TaskSynchronizer
+@attribute [Authorize]
 @inject IMediator Mediator
 @inject NavigationManager NavigationManager
 @inject EventHubClient EventHubClient
