@@ -1,5 +1,6 @@
 ﻿@page "/activities/{Id}"
 @using MediatR;
+@using Microsoft.AspNetCore.Authorization
 @using Pomodorium.Shared
 @using System.DomainModel;
 @using System.DomainModel.Storage;
@@ -8,6 +9,7 @@
 @using System.Reactive.Linq;
 @using System.Reactive.Threading.Tasks;
 @using Pomodorium.Features.ActivityManager
+@attribute [Authorize]
 @inject IMediator Mediator
 @inject IStringLocalizer<SharedResource> SharedResource;
 @inject NavigationManager Navigation;
