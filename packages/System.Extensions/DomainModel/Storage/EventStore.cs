@@ -90,13 +90,13 @@ public class EventStore
 
         var name = id.ToString();
 
-        var version = originalVersion;
+        //var version = originalVersion;
 
         foreach (var @event in events)
         {
-            version++;
+            //version++;
 
-            @event.Version = version;
+            //@event.Version = version;
 
             var data = SerializeEvent(@event);
 
@@ -105,6 +105,8 @@ public class EventStore
                 var eventRecord = await _appendOnlyStore.Append(name, @event.GetType().AssemblyQualifiedName, @event.Date, data, originalVersion);
 
                 var eventStored = new EventAppended { Record = eventRecord };
+
+                @event.Version = eventRecord.Version;
 
                 await _mediator.Publish(eventStored);
             }
