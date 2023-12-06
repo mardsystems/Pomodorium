@@ -194,7 +194,7 @@ public class CosmosFlowtimeQueryItemsProjection :
         {
             flowtimeQueryItem.TaskDescription = notification.Description;
 
-            var response = await _container.UpsertItemAsync(item: flowtimeQueryItem, partitionKey: new PartitionKey(notification.Id.ToString()));
+            var response = await _container.UpsertItemAsync(item: flowtimeQueryItem, partitionKey: new PartitionKey(flowtimeQueryItem.Id.ToString()));
 
             _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
         }

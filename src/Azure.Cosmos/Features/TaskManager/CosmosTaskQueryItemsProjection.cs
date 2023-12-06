@@ -82,9 +82,18 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
             Version = notification.Version
         };
 
-        var response = await _container.CreateItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.Id.ToString()));
+        try
+        {
+            var response = await _container.CreateItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.Id.ToString()));
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+            _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error on create task query item. (TaskId: {TaskId})", notification.Id);
+
+            throw;
+        }
     }
 
     public async System.Threading.Tasks.Task Handle(TaskIntegrated notification, CancellationToken cancellationToken)

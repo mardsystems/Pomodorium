@@ -187,7 +187,7 @@ public class CosmosFlowtimeDetailsProjection :
             flowtimeDetails.TaskDescription = notification.Description;
             flowtimeDetails.TaskVersion = notification.Version;
 
-            var response = await _container.UpsertItemAsync(item: flowtimeDetails, partitionKey: new PartitionKey(notification.Id.ToString()));
+            var response = await _container.UpsertItemAsync(item: flowtimeDetails, partitionKey: new PartitionKey(flowtimeDetails.Id.ToString()));
 
             _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
         }

@@ -63,9 +63,18 @@ public class CosmosTaskDetailsProjection :
             Version = notification.Version
         };
 
-        var response = await _container.CreateItemAsync(item: taskDetails, partitionKey: new PartitionKey(notification.Id.ToString()));
+        try
+        {
+            var response = await _container.CreateItemAsync(item: taskDetails, partitionKey: new PartitionKey(notification.Id.ToString()));
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+            _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error on create task details. (TaskId: {TaskId})", notification.Id);
+
+            throw;
+        }
     }
 
     public async System.Threading.Tasks.Task Handle(TaskDescriptionChanged notification, CancellationToken cancellationToken)
