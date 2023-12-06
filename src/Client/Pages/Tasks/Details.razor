@@ -132,7 +132,7 @@
             var response = await Mediator.Send<ChangeTaskDescriptionResponse>(request);
         }
 
-        Navigation.NavigateTo("flows");
+        Navigation.NavigateTo("tasks");
     }
 
     private async System.Threading.Tasks.Task Archive()
@@ -150,6 +150,6 @@
 
         var response = await Mediator.Send<ArchiveTaskResponse>(request);
 
-        Navigation.NavigateTo("flows");
+        Navigation.NavigateTo("tasks");
     }
 }

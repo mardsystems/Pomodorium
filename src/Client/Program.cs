@@ -12,13 +12,15 @@ using System.Reflection;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
-var APP_REMOTE = false;
+var APP_REMOTE = true;
 
 builder.Services.AddSystem();
 
 if (APP_REMOTE)
 {
     builder.Services.AddApplicationRemote();
+
+    builder.Services.AddSharedInfrastructure(builder.Configuration);
 }
 else
 {

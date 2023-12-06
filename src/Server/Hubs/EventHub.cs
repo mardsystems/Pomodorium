@@ -5,7 +5,7 @@ using System.DomainModel.Storage;
 
 namespace Pomodorium.Hubs;
 
-//[Authorize]
+[Authorize]
 public class EventHub : Hub<IHubEvent>
 {
     private readonly IAppendOnlyStore _appendOnlyStore;

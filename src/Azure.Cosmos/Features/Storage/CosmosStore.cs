@@ -128,7 +128,7 @@ namespace Pomodorium.Features.Storage
 
             var @event = new EventRecord(name, version + 1, date, typeName, data);
 
-            await _container.UpsertItemAsync(@event);
+            await _container.CreateItemAsync(@event);
 
             return @event;
         }
@@ -139,13 +139,13 @@ namespace Pomodorium.Features.Storage
 
             var @event = new EventRecord(tapeRecord.Name, version + 1, tapeRecord.Date, tapeRecord.TypeName, tapeRecord.Data);
 
-            await _container.UpsertItemAsync(@event);
+            await _container.CreateItemAsync(@event);
         }
 
         private async Task<long> GetMaxVersion(string name, long expectedVersion)
         {
             var query = new QueryDefinition(
-                query: "SELECT MAX(e.Version) FROM EventStore e WHERE e.Name = @name AND e.Version > @afterVersion GROUP BY e.Name")
+                query: "SELECT MAX(e.Version) AS MaxVersion FROM EventStore e WHERE e.Name = @name GROUP BY e.Name")
                 .WithParameter("@name", name);
 
             long version;
@@ -153,27 +153,27 @@ namespace Pomodorium.Features.Storage
             try
             {
 
-                using FeedIterator<long> feed = _container.GetItemQueryIterator<long>(
+                using FeedIterator<MaxVersionTuple> feed = _container.GetItemQueryIterator<MaxVersionTuple>(
                     queryDefinition: query
                 );
 
-                List<long> versions = new();
+                List<MaxVersionTuple> versions = new();
 
                 double requestCharge = 0d;
 
                 while (feed.HasMoreResults)
                 {
-                    FeedResponse<long> response = await feed.ReadNextAsync();
+                    FeedResponse<MaxVersionTuple> response = await feed.ReadNextAsync();
 
-                    foreach (long @event in response)
+                    foreach (MaxVersionTuple item in response)
                     {
-                        versions.Add(@event);
+                        versions.Add(item);
                     }
 
                     requestCharge += response.RequestCharge;
                 }
 
-                version = versions.FirstOrDefault();
+                version = versions.Select(x => x.MaxVersion).FirstOrDefault();
             }
             catch (Exception)
             {
@@ -206,5 +206,10 @@ namespace Pomodorium.Features.Storage
         {
 
         }
+    }
+
+    public class MaxVersionTuple
+    {
+        public long MaxVersion { get; set; }
     }
 }

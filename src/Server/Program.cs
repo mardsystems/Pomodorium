@@ -44,7 +44,7 @@ public class Program
 
         builder.Services.AddEndpointsApiExplorer();
 
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddOpenApiDocument();
 
         builder.Services.AddRazorPages();
             //.AddMicrosoftIdentityUI();
@@ -65,9 +65,9 @@ public class Program
         {
             app.UseWebAssemblyDebugging();
 
-            app.UseSwagger();
+            app.UseOpenApi();
 
-            app.UseSwaggerUI();
+            app.UseSwaggerUi3();
         }
         else
         {

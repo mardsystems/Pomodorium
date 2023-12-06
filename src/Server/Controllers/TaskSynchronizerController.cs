@@ -16,17 +16,14 @@ public class TaskSynchronizerController : ControllerBase
 
     private readonly ILogger<TaskSynchronizerController> _logger;
 
-    public TaskSynchronizerController(
-        IMediator mediator,
-        ILogger<TaskSynchronizerController> logger)
+    public TaskSynchronizerController(IMediator mediator, ILogger<TaskSynchronizerController> logger)
     {
         _mediator = mediator;
 
         _logger = logger;
     }
 
-    [HttpPost("SyncTasksFromTfs", Name = "PostSyncTasksFromTfs")]
-    [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(SyncTasksFromTfsResponse))]
+    [HttpPost("SyncTasksFromTfs")]
     public async Task<SyncTasksFromTfsResponse> SyncTasksFromTfs(SyncTasksFromTfsRequest request)
     {
         var response = await _mediator.Send<SyncTasksFromTfsResponse>(request);
@@ -34,8 +31,7 @@ public class TaskSynchronizerController : ControllerBase
         return response;
     }
 
-    [HttpPost("SyncTasksFromTrello", Name = "PostSyncTasksFromTrello")]
-    [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(SyncTasksFromTrelloResponse))]
+    [HttpPost("SyncTasksFromTrello")]
     public async Task<SyncTasksFromTrelloResponse> SyncTasksFromTrello(SyncTasksFromTrelloRequest request)
     {
         var response = await _mediator.Send<SyncTasksFromTrelloResponse>(request);
