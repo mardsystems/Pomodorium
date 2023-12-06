@@ -16,61 +16,56 @@ public class PomodoroTimerController : ControllerBase
 
     private readonly ILogger<PomodoroTimerController> _logger;
 
-    public PomodoroTimerController(
-        IMediator mediator,
-        ILogger<PomodoroTimerController> logger)
+    public PomodoroTimerController(IMediator mediator, ILogger<PomodoroTimerController> logger)
     {
         _mediator = mediator;
 
         _logger = logger;
     }
 
-    [HttpGet("Pomos", Name = "GetPomos")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetPomosResponse))]
-    public async Task<GetPomosResponse> GetPomos([FromQuery] GetPomosRequest request)
+    [HttpPost("GetPomos")]
+    public async Task<GetPomosResponse> GetPomos(GetPomosRequest request)
     {
         var response = await _mediator.Send<GetPomosResponse>(request);
 
         return response;
     }
 
-    [HttpPost("Pomos", Name = "PostPomodoro")]
-    [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CreatePomodoroResponse))]
-    public async Task<CreatePomodoroResponse> PostPomodoro(CreatePomodoroRequest request)
+    [HttpPost("GetPomodoro")]
+    public async Task<GetPomodoroResponse> GetPomodoro(GetPomodoroRequest request)
+    {
+        var response = await _mediator.Send<GetPomodoroResponse>(request);
+
+        return response;
+    }
+
+    [HttpPost("CreatePomodoro")]
+    public async Task<CreatePomodoroResponse> CreatePomodoro(CreatePomodoroRequest request)
     {
         var response = await _mediator.Send<CreatePomodoroResponse>(request);
 
         return response;
     }
 
-    [HttpGet("Pomos/{id}", Name = "GetPomodoro")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetPomodoroResponse))]
-    public async Task<GetPomodoroResponse> GetPomodoro(Guid id)
+    [HttpPost("CheckPomodoro")]
+    public async Task<CheckPomodoroResponse> CheckPomodoro(CheckPomodoroRequest request)
     {
-        var request = new GetPomodoroRequest { Id = id };
-
-        var response = await _mediator.Send<GetPomodoroResponse>(request);
+        var response = await _mediator.Send<CheckPomodoroResponse>(request);
 
         return response;
     }
 
-    [HttpPut("Pomos/{id}", Name = "PutPomodoro")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(RefinePomodoroTaskResponse))]
-    public async Task<RefinePomodoroTaskResponse> PutPomodoro(Guid id, RefinePomodoroTaskRequest request)
+    [HttpPost("RefinePomodoroTask")]
+    public async Task<RefinePomodoroTaskResponse> RefinePomodoroTask(RefinePomodoroTaskRequest request)
     {
-        request.Id = id;
-
         var response = await _mediator.Send<RefinePomodoroTaskResponse>(request);
 
         return response;
     }
 
-    [HttpDelete("Pomos/{id}", Name = "DeletePomodoro")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ArchivePomodoroResponse))]
-    public async Task<ArchivePomodoroResponse> DeletePomodoro(Guid id, long version)
+    [HttpPost("ArchivePomodoro")]
+    public async Task<ArchivePomodoroResponse> ArchivePomodoro(ArchivePomodoroRequest request)
     {
-        var request = new ArchivePomodoroRequest { Id = id, Version = version };
-
         var response = await _mediator.Send<ArchivePomodoroResponse>(request);
 
         return response;

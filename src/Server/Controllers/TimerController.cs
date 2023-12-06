@@ -16,20 +16,17 @@ public class TimerController : ControllerBase
 
     private readonly ILogger<TimerController> _logger;
 
-    public TimerController(
-        IMediator mediator,
-        ILogger<TimerController> logger)
+    public TimerController(IMediator mediator, ILogger<TimerController> logger)
     {
         _mediator = mediator;
 
         _logger = logger;
     }
 
-    [HttpPost("Check", Name = "PostTimerCheck")]
-    [ProducesResponseType(StatusCodes.Status202Accepted, Type = typeof(PostTimerCheckResponse))]
-    public async Task<PostTimerCheckResponse> PostTimerCheck(PostTimerCheckRequest request)
+    [HttpPost("CheckTimer")]
+    public async Task<CheckTimerResponse> CheckTimer(CheckTimerRequest request)
     {
-        var response = await _mediator.Send<PostTimerCheckResponse>(request);
+        var response = await _mediator.Send<CheckTimerResponse>(request);
 
         return response;
     }

@@ -16,7 +16,7 @@
 @attribute [Authorize]
 @inject IMediator Mediator
 @inject NavigationManager NavigationManager
-@inject EventHubClient EventHubClient
+@* @inject EventHubClient EventHubClient *@
 @inject IStringLocalizer<SharedResource> SharedResource
 
 <PageTitle>Tasks</PageTitle>
@@ -93,12 +93,12 @@
                 StateHasChanged();
             });
 
-        EventHubClient.Notification
-            .Throttle(TimeSpan.FromSeconds(1))
-            .Subscribe(async (x) =>
-            {
-                await Refresh();
-            });
+        // EventHubClient.Notification
+        //     .Throttle(TimeSpan.FromSeconds(1))
+        //     .Subscribe(async (x) =>
+        //     {
+        //         await Refresh();
+        //     });
 
         await Refresh();
     }

@@ -7,6 +7,11 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplicationRemote(this IServiceCollection services)
     {
+        services.AddScoped<FlowTimerClient>();
+        services.AddScoped<PomodoroTimerClient>();
+        services.AddScoped<TaskManagerClient>();
+        services.AddScoped<TaskSynchronizerClient>();
+
         services.AddMediatR(config =>
         {
             config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());

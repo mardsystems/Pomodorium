@@ -5,7 +5,7 @@ using Pomodorium.Models.PomodoroTechnique;
 
 namespace Pomodorium.Features.Timer;
 
-public class ServerTimerCheckHandler : IRequestHandler<PostTimerCheckRequest, PostTimerCheckResponse>
+public class ServerTimerCheckHandler : IRequestHandler<CheckTimerRequest, CheckTimerResponse>
 {
     private readonly IHubContext<EventHub, IHubEvent> _eventHub;
 
@@ -14,7 +14,7 @@ public class ServerTimerCheckHandler : IRequestHandler<PostTimerCheckRequest, Po
         _eventHub = eventHub;
     }
 
-    public Task<PostTimerCheckResponse> Handle(PostTimerCheckRequest request, CancellationToken cancellationToken)
+    public Task<CheckTimerResponse> Handle(CheckTimerRequest request, CancellationToken cancellationToken)
     {
         var pomosRunning = new List<Pomodoro>();
 
@@ -23,7 +23,7 @@ public class ServerTimerCheckHandler : IRequestHandler<PostTimerCheckRequest, Po
 
         }
 
-        var response = new PostTimerCheckResponse();
+        var response = new CheckTimerResponse();
 
         return Task.FromResult(response);
     }

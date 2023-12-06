@@ -14,7 +14,7 @@
 @attribute [Authorize]
 @inject IMediator Mediator
 @inject NavigationManager NavigationManager
-@inject EventHubClient EventHubClient
+@* @inject EventHubClient EventHubClient *@
 @inject IStringLocalizer<SharedResource> SharedResource
 
 <style>
@@ -88,12 +88,12 @@
                 StateHasChanged();
             });
 
-        var y = EventHubClient.Notification
-            .Throttle(TimeSpan.FromSeconds(1))
-            .Subscribe(async (x) =>
-            {
-                await Refresh();
-            });
+        // var y = EventHubClient.Notification
+        //     .Throttle(TimeSpan.FromSeconds(1))
+        //     .Subscribe(async (x) =>
+        //     {
+        //         await Refresh();
+        //     });
 
         await Refresh();
     }

@@ -3,8 +3,8 @@
 @using Microsoft.AspNetCore.SignalR.Client;
 @using Pomodorium.Features.TaskManager
 @using Pomodorium.Hubs;
-@inject HubConnection HubConnection
-@inject EventHubClient EventHubClient
+@* @inject HubConnection HubConnection *@
+@* @inject EventHubClient EventHubClient *@
 @inject IStringLocalizer<SharedResource> SharedResource
 
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
@@ -20,16 +20,16 @@
         }
         <MudSpacer />
         <LoginDisplay />
-        <MudIconButton Icon="@Icons.Material.Filled.CloudDownload" Color="Color.Inherit" OnClick="DispatchEvents" Title="Dispatch Events" />
+        @* <MudIconButton Icon="@Icons.Material.Filled.CloudDownload" Color="Color.Inherit" OnClick="DispatchEvents" Title="Dispatch Events" /> *@
         @* <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Href="https://mudblazor.com/" Target="_blank" /> *@
         @* <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Href="https://github.com/MudBlazor/MudBlazor/" Target="_blank" /> *@
-        <div Class="d-flex align-center justify-center my-auto">
+        @* <div Class="d-flex align-center justify-center my-auto">
             <MudBadge Overlap="true" Color="Color.Success" Origin="Origin.TopRight" Dot="true" Visible="_isHubConnected">
                 <MudToggleIconButton Toggled="@_isHubConnected" ToggledChanged="OnToogleHubConnection"
                                      Icon="@Icons.Material.Filled.CloudOff" Color="@Color.Inherit" Title="Connect Hub"
                                      ToggledIcon="@Icons.Material.Filled.CloudQueue" ToggledColor="@Color.Inherit" ToggledTitle="Disconnect Hub" />
             </MudBadge>
-        </div>        
+        </div> *@
         @* <MudSwitch @bind-Checked="@_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode" /> *@
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" Elevation="1">
@@ -66,52 +66,52 @@
 
     protected override async Task OnInitializedAsync()
     {
-        EventHubClient.Notification.Subscribe((e) =>
-        {
-            NotificationTotal += 1;
+        // EventHubClient.Notification.Subscribe((e) =>
+        // {
+        //     NotificationTotal += 1;
 
-            InvokeAsync(StateHasChanged);
-        });
+        //     InvokeAsync(StateHasChanged);
+        // });
 
-        if (HubConnection.State == HubConnectionState.Connected)
-        {
-            _isHubConnected = true;
-        }
-        else
-        {
-            _isHubConnected = false;
-        }
+        // if (HubConnection.State == HubConnectionState.Connected)
+        // {
+        //     _isHubConnected = true;
+        // }
+        // else
+        // {
+        //     _isHubConnected = false;
+        // }
 
         await Task.CompletedTask;
     }
 
-    private async Task OnToogleHubConnection(bool toogled)
-    {
-        try
-        {
-            if (HubConnection.State == HubConnectionState.Disconnected)
-            {
-                await HubConnection.StartAsync();
+    // private async Task OnToogleHubConnection(bool toogled)
+    // {
+    //     try
+    //     {
+    //         if (HubConnection.State == HubConnectionState.Disconnected)
+    //         {
+    //             await HubConnection.StartAsync();
 
-                _isHubConnected = true;
-            }
-            else if (HubConnection.State == HubConnectionState.Connected)
-            {
-                await HubConnection.StopAsync();
+    //             _isHubConnected = true;
+    //         }
+    //         else if (HubConnection.State == HubConnectionState.Connected)
+    //         {
+    //             await HubConnection.StopAsync();
 
-                _isHubConnected = false;
-            }
-        }
-        catch (Exception)
-        {
-            _isHubConnected = false;
-        }
-    }
+    //             _isHubConnected = false;
+    //         }
+    //     }
+    //     catch (Exception)
+    //     {
+    //         _isHubConnected = false;
+    //     }
+    // }
 
-    private async Task DispatchEvents()
-    {
-        await EventHubClient.DispatchEvents();
-    }
+    // private async Task DispatchEvents()
+    // {
+    //     await EventHubClient.DispatchEvents();
+    // }
 
     void DrawerToggle()
     {
