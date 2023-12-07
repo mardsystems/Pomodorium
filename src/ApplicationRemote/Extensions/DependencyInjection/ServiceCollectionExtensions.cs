@@ -11,6 +11,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<PomodoroTimerClient>();
         services.AddScoped<TaskManagerClient>();
         services.AddScoped<TaskSynchronizerClient>();
+        services.AddScoped<WeatherForecastClient>();
 
         services.AddMediatR(config =>
         {

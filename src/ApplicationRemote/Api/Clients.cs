@@ -1413,14 +1413,14 @@ namespace Pomodorium.Api
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TfsIntegration>> GetTfsIntegrationListAsync(string organizationName, string personalAccessToken, string projectName, System.Guid? id, string name)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<TfsIntegration>> GetTfsIntegrationListAsync(string organizationName, string personalAccessToken, string projectName, System.Guid? id, string name)
         {
             return GetTfsIntegrationListAsync(organizationName, personalAccessToken, projectName, id, name, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TfsIntegration>> GetTfsIntegrationListAsync(string organizationName, string personalAccessToken, string projectName, System.Guid? id, string name, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<TfsIntegration>> GetTfsIntegrationListAsync(string organizationName, string personalAccessToken, string projectName, System.Guid? id, string name, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/Settings/TfsIntegration?");
@@ -1478,7 +1478,7 @@ namespace Pomodorium.Api
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<TfsIntegration>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.IEnumerable<TfsIntegration>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1585,14 +1585,14 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TfsIntegration>> GetTfsIntegrationAsync(System.Guid id)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<TfsIntegration>> GetTfsIntegrationAsync(System.Guid id)
         {
             return GetTfsIntegrationAsync(id, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TfsIntegration>> GetTfsIntegrationAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<TfsIntegration>> GetTfsIntegrationAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -1633,7 +1633,7 @@ namespace Pomodorium.Api
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<TfsIntegration>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.IEnumerable<TfsIntegration>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -1800,7 +1800,7 @@ namespace Pomodorium.Api
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
+                        if (status_ == 204)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<TfsIntegration>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
@@ -1830,14 +1830,14 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrelloIntegration>> GetTrelloIntegrationListAsync(string key, string token, string boardId, System.Guid? id, string name)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<TrelloIntegration>> GetTrelloIntegrationListAsync(string key, string token, string boardId, System.Guid? id, string name)
         {
             return GetTrelloIntegrationListAsync(key, token, boardId, id, name, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrelloIntegration>> GetTrelloIntegrationListAsync(string key, string token, string boardId, System.Guid? id, string name, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<TrelloIntegration>> GetTrelloIntegrationListAsync(string key, string token, string boardId, System.Guid? id, string name, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/Settings/TrelloIntegration?");
@@ -1895,7 +1895,7 @@ namespace Pomodorium.Api
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<TrelloIntegration>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.IEnumerable<TrelloIntegration>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -2002,14 +2002,14 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrelloIntegration>> GetTrelloIntegrationAsync(System.Guid id)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<TrelloIntegration>> GetTrelloIntegrationAsync(System.Guid id)
         {
             return GetTrelloIntegrationAsync(id, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<TrelloIntegration>> GetTrelloIntegrationAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<TrelloIntegration>> GetTrelloIntegrationAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -2050,7 +2050,7 @@ namespace Pomodorium.Api
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<TrelloIntegration>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.IEnumerable<TrelloIntegration>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -2217,7 +2217,7 @@ namespace Pomodorium.Api
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
+                        if (status_ == 204)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<TrelloIntegration>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
@@ -3689,14 +3689,14 @@ namespace Pomodorium.Api
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<WeatherForecast>> GetWeatherForecastAsync()
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<WeatherForecast>> GetWeatherForecastAsync()
         {
             return GetWeatherForecastAsync(System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<WeatherForecast>> GetWeatherForecastAsync(System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<WeatherForecast>> GetWeatherForecastAsync(System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/WeatherForecast");
@@ -3733,7 +3733,7 @@ namespace Pomodorium.Api
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<WeatherForecast>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.IEnumerable<WeatherForecast>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
