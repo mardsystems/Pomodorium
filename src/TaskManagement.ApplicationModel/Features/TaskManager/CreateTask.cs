@@ -1,23 +1,13 @@
 ﻿namespace Pomodorium.Features.TaskManager;
 
-public class CreateTaskRequest : Request<CreateTaskResponse>
+public record CreateTaskRequest : Request<CreateTaskResponse>
 {
-    public Guid? Id { get; set; }
-
-    public string? Description { get; set; }
-
-    public long? Version { get; set; }
+    public required string Description { get; init; }
 }
 
-public class CreateTaskResponse : Response
+public record CreateTaskResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public Guid TaskId { get; set; }
+    public required Guid TaskId { get; init; }
 
-    public CreateTaskResponse(Guid correlationId, Guid taskId)
-        : base(correlationId)
-    {
-        TaskId = taskId;
-    }
-
-    public CreateTaskResponse() { }
+    public required long TaskVersion { get; init; }
 }

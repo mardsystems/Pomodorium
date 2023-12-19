@@ -4,7 +4,7 @@ namespace Pomodorium.Repositories;
 
 public interface ITfsIntegrationRepository
 {
-    Task<IEnumerable<TfsIntegration>> GetTfsIntegrationList(TfsIntegration criteria = null, CancellationToken cancellationToken = default);
+    Task<IEnumerable<TfsIntegration>> GetTfsIntegrationList(TfsIntegration? criteria = null, CancellationToken cancellationToken = default);
 
     Task<TfsIntegration> GetTfsIntegration(Guid id, CancellationToken cancellationToken = default);
 

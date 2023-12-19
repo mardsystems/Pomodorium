@@ -24,14 +24,12 @@ public class IndexedDBFlowtimeDetailsProjection :
 
     public async Task<GetFlowtimeResponse> Handle(GetFlowtimeRequest request, CancellationToken cancellationToken)
     {
-        var flowtimeDetails = await _db.GetAsync<FlowtimeDetails>("FlowtimeDetails", request.Id);
+        var flowtimeDetails = await _db.GetAsync<FlowtimeDetails>("FlowtimeDetails", request.FlowtimeId) ?? throw new EntityNotFoundException();
 
-        if (flowtimeDetails == null)
+        var response = new GetFlowtimeResponse(request.GetCorrelationId())
         {
-            throw new EntityNotFoundException();
-        }
-
-        var response = new GetFlowtimeResponse(request.GetCorrelationId()) { FlowtimeDetails = flowtimeDetails };
+            FlowtimeDetails = flowtimeDetails
+        };
 
         return response;
     }
@@ -54,12 +52,7 @@ public class IndexedDBFlowtimeDetailsProjection :
 
     public async System.Threading.Tasks.Task Handle(FlowtimeStarted notification, CancellationToken cancellationToken)
     {
-        var flowtimeDetails = await _db.GetAsync<FlowtimeDetails>("FlowtimeDetails", notification.Id);
-
-        if (flowtimeDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var flowtimeDetails = await _db.GetAsync<FlowtimeDetails>("FlowtimeDetails", notification.Id) ?? throw new EntityNotFoundException();
 
         flowtimeDetails.StartDateTime = notification.StartDateTime;
         flowtimeDetails.State = notification.State;
@@ -70,12 +63,7 @@ public class IndexedDBFlowtimeDetailsProjection :
 
     public async System.Threading.Tasks.Task Handle(FlowtimeInterrupted notification, CancellationToken cancellationToken)
     {
-        var flowtimeDetails = await _db.GetAsync<FlowtimeDetails>("FlowtimeDetails", notification.Id);
-
-        if (flowtimeDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var flowtimeDetails = await _db.GetAsync<FlowtimeDetails>("FlowtimeDetails", notification.Id) ?? throw new EntityNotFoundException();
 
         flowtimeDetails.StopDateTime = notification.StopDateTime;
         flowtimeDetails.Interrupted = notification.Interrupted;
@@ -89,12 +77,7 @@ public class IndexedDBFlowtimeDetailsProjection :
 
     public async System.Threading.Tasks.Task Handle(FlowtimeStopped notification, CancellationToken cancellationToken)
     {
-        var flowtimeDetails = await _db.GetAsync<FlowtimeDetails>("FlowtimeDetails", notification.Id);
-
-        if (flowtimeDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var flowtimeDetails = await _db.GetAsync<FlowtimeDetails>("FlowtimeDetails", notification.Id) ?? throw new EntityNotFoundException();
 
         flowtimeDetails.StopDateTime = notification.StopDateTime;
         flowtimeDetails.Interrupted = notification.Interrupted;
@@ -110,11 +93,11 @@ public class IndexedDBFlowtimeDetailsProjection :
     {
         var flowtimeDetailsList = await _db.GetAllAsync<FlowtimeDetails>("FlowtimeDetails");
 
-        var flowtimeDetailsByTaskId = flowtimeDetailsList.Where(x => x.TaskId == notification.Id);
+        var flowtimeDetailsByTaskId = flowtimeDetailsList.Where(x => x.TaskId == notification.TaskId);
 
         foreach (var flowtimeDetails in flowtimeDetailsByTaskId)
         {
-            flowtimeDetails.TaskDescription = notification.Description;
+            flowtimeDetails.TaskDescription = notification.TaskDescription;
             flowtimeDetails.TaskVersion = notification.Version;
 
             await _db.PutAsync("FlowtimeDetails", flowtimeDetails);
@@ -123,12 +106,7 @@ public class IndexedDBFlowtimeDetailsProjection :
 
     public async System.Threading.Tasks.Task Handle(FlowtimeArchived notification, CancellationToken cancellationToken)
     {
-        var flowtimeDetails = await _db.GetAsync<FlowtimeDetails>("FlowtimeDetails", notification.Id);
-
-        if (flowtimeDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var _ = await _db.GetAsync<FlowtimeDetails>("FlowtimeDetails", notification.Id) ?? throw new EntityNotFoundException();
 
         await _db.RemoveAsync("FlowtimeDetails", notification.Id);
     }

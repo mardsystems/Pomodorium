@@ -37,19 +37,18 @@ public class CosmosPomodoroDetailsProjection :
     {
         var itemResponse = await _container.ReadItemAsync<PomodoroDetails>(
                 id: request.Id.ToString(),
-                partitionKey: new PartitionKey(request.Id.ToString())
+                partitionKey: new PartitionKey(request.Id.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var pomodoroDetails = itemResponse.Resource;
+        var pomodoroDetails = itemResponse.Resource ?? throw new EntityNotFoundException();
 
-        if (pomodoroDetails == null)
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
+
+        var response = new GetPomodoroResponse(request.GetCorrelationId())
         {
-            throw new EntityNotFoundException();
-        }
-
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
-
-        var response = new GetPomodoroResponse(request.GetCorrelationId()) { PomodoroDetails = pomodoroDetails };
+            PomodoroDetails = pomodoroDetails
+        };
 
         return response;
     }
@@ -66,63 +65,67 @@ public class CosmosPomodoroDetailsProjection :
             Version = notification.Version
         };
 
-        var response = await _container.CreateItemAsync(item: pomodoroDetails, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.CreateItemAsync(
+            item: pomodoroDetails,
+            partitionKey: new PartitionKey(notification.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async Task Handle(PomodoroChecked notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<PomodoroDetails>(
                 id: notification.Id.ToString(),
-                partitionKey: new PartitionKey(notification.Id.ToString())
+                partitionKey: new PartitionKey(notification.Id.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var pomodoroDetails = itemResponse.Resource;
-
-        if (pomodoroDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var pomodoroDetails = itemResponse.Resource ?? throw new EntityNotFoundException();
 
         pomodoroDetails.State = notification.State;
         pomodoroDetails.Version = notification.Version;
 
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
-        var response = await _container.UpsertItemAsync(item: pomodoroDetails, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.UpsertItemAsync(
+            item: pomodoroDetails,
+            partitionKey: new PartitionKey(notification.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async Task Handle(PomodoroTaskRefined notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<PomodoroDetails>(
                 id: notification.Id.ToString(),
-                partitionKey: new PartitionKey(notification.Id.ToString())
+                partitionKey: new PartitionKey(notification.Id.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var pomodoroDetails = itemResponse.Resource;
-
-        if (pomodoroDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var pomodoroDetails = itemResponse.Resource ?? throw new EntityNotFoundException();
 
         pomodoroDetails.Task = notification.Task;
         pomodoroDetails.Version = notification.Version;
 
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
-        var response = await _container.UpsertItemAsync(item: pomodoroDetails, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.UpsertItemAsync(
+            item: pomodoroDetails,
+            partitionKey: new PartitionKey(notification.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async Task Handle(PomodoroArchived notification, CancellationToken cancellationToken)
     {
-        var response = await _container.DeleteItemAsync<PomodoroDetails>(notification.Id.ToString(), new PartitionKey(notification.Id.ToString()));
+        var response = await _container.DeleteItemAsync<PomodoroDetails>(
+            notification.Id.ToString(),
+            new PartitionKey(notification.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 }

@@ -7,7 +7,7 @@ public class DetailsViewModel
 {
     public Guid Id { get; set; }
 
-    public string? Task { get; set; }
+    public string Task { get; set; }
 
     public TimeSpan? Timer { get; set; }
 
@@ -27,11 +27,11 @@ public class DetailsViewModel
 
     public IObservable<long> CountdownChanges { get; set; }
 
-    private DateTime _stopDateTime;
+    private readonly DateTime? _stopDateTime;
 
     public DetailsViewModel(
         Guid id,
-        string? task,
+        string task,
         TimeSpan timer,
         DateTime? startDateTime,
         PomodoroStateEnum state,
@@ -45,13 +45,34 @@ public class DetailsViewModel
 
         Timer = timer;
 
-        StartDate = startDateTime.Value.Date;
+        if (startDateTime == null)
+        {
+            StartDate = null;
+        }
+        else
+        {
+            StartDate = startDateTime.Value.Date;
+        }
 
         StartTime = startDateTime - StartDate;
 
-        _stopDateTime = startDateTime.Value.Add(Timer.Value);
+        if (startDateTime == null)
+        {
+            _stopDateTime = null;
+        }
+        else
+        {
+            _stopDateTime = startDateTime.Value.Add(Timer.Value);
+        }
 
-        StopDate = _stopDateTime.Date;
+        if (_stopDateTime == null)
+        {
+            StopDate = null;
+        }
+        else
+        {
+            StopDate = _stopDateTime.Value.Date;
+        }
 
         StopTime = _stopDateTime - StopDate;
 
@@ -96,6 +117,6 @@ public class DetailsViewModel
 
     public DetailsViewModel()
     {
-
+        CountdownChanges = Observable.Empty<long>();
     }
 }

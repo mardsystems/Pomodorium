@@ -35,9 +35,9 @@ else
 }
 
 @code {
-    [Inject] private WeatherForecastClient WeatherForecastClient { get; set; }
+    [Inject] private WeatherForecastClient WeatherForecastClient { get; set; } = default!;
 
-    private IEnumerable<WeatherForecast>? _forecasts;
+    private IEnumerable<WeatherForecast> _forecasts;
 
     protected override async Task OnInitializedAsync()
     {

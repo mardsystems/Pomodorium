@@ -1,22 +1,13 @@
 ﻿namespace Pomodorium.Features.ActivityManager;
 
-public class DeleteActivityRequest : Request<DeleteActivityResponse>
+public record DeleteActivityRequest : Request<DeleteActivityResponse>
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 
-    public long Version { get; set; }
+    public long Version { get; init; }
 }
 
-public class DeleteActivityResponse : Response
+public record DeleteActivityResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public DeleteActivityResponse(Guid correlationId)
-        : base(correlationId)
-    {
 
-    }
-
-    public DeleteActivityResponse()
-    {
-
-    }
 }

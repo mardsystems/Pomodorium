@@ -18,6 +18,7 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
     {
         var claims = new[] {
             new Claim(ClaimTypes.NameIdentifier, "d2fc8313-9bdc-455c-bf29-ccf709a2a692"),
+            new Claim("http://schemas.microsoft.com/identity/claims/scope", "access_as_user"),
             new Claim(ClaimTypes.Name, "Test user"),
         };
         var identity = new ClaimsIdentity(claims, "TestScheme", ClaimTypes.Name, ClaimTypes.Role);

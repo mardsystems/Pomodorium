@@ -45,13 +45,13 @@ public class RabbitMQConsumer: IDisposable
         );
     }
 
-    private async void Consumer_Received(object sender, BasicDeliverEventArgs args)
+    private async void Consumer_Received(object? sender, BasicDeliverEventArgs args)
     {
         var body = args.Body.ToArray();
 
         var content = Encoding.UTF8.GetString(body);
 
-        var notification = JsonSerializer.Deserialize<EventAppended>(content);
+        var notification = JsonSerializer.Deserialize<EventAppended>(content) ?? throw new InvalidOperationException();
 
         await _mediator.Publish(notification);
 
@@ -60,6 +60,8 @@ public class RabbitMQConsumer: IDisposable
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
+
         _channel.Dispose();
     }
 }

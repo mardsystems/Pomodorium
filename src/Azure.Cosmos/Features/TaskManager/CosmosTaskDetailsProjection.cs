@@ -36,19 +36,18 @@ public class CosmosTaskDetailsProjection :
     {
         var itemResponse = await _container.ReadItemAsync<TaskDetails>(
                 id: request.TaskId.ToString(),
-                partitionKey: new PartitionKey(request.TaskId.ToString())
+                partitionKey: new PartitionKey(request.TaskId.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var taskDetails = itemResponse.Resource;
+        var taskDetails = itemResponse.Resource ?? throw new EntityNotFoundException();
 
-        if (taskDetails == null)
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
+
+        var response = new GetTaskResponse(request.GetCorrelationId())
         {
-            throw new EntityNotFoundException();
-        }
-
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
-
-        var response = new GetTaskResponse(request.GetCorrelationId()) { TaskDetails = taskDetails };
+            TaskDetails = taskDetails
+        };
 
         return response;
     }
@@ -57,21 +56,24 @@ public class CosmosTaskDetailsProjection :
     {
         var taskDetails = new TaskDetails
         {
-            Id = notification.Id,
-            CreationDate = notification.CreationDate,
-            Description = notification.Description,
+            Id = notification.TaskId,
+            CreationDate = notification.TaskCreatedAt,
+            Description = notification.TaskDescription,
             Version = notification.Version
         };
 
         try
         {
-            var response = await _container.CreateItemAsync(item: taskDetails, partitionKey: new PartitionKey(notification.Id.ToString()));
+            var response = await _container.CreateItemAsync(
+                item: taskDetails,
+                partitionKey: new PartitionKey(notification.TaskId.ToString()),
+                cancellationToken: cancellationToken);
 
-            _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+            _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error on create task details. (TaskId: {TaskId})", notification.Id);
+            _logger.LogError(ex, "Error on create task details. (TaskId: {TaskId})", notification.TaskId);
 
             throw;
         }
@@ -80,31 +82,33 @@ public class CosmosTaskDetailsProjection :
     public async System.Threading.Tasks.Task Handle(TaskDescriptionChanged notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<TaskDetails>(
-                id: notification.Id.ToString(),
-                partitionKey: new PartitionKey(notification.Id.ToString())
+                id: notification.TaskId.ToString(),
+                partitionKey: new PartitionKey(notification.TaskId.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var taskDetails = itemResponse.Resource;
+        var taskDetails = itemResponse.Resource ?? throw new EntityNotFoundException();
 
-        if (taskDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
-        taskDetails.Description = notification.Description;
+        taskDetails.Description = notification.TaskDescription;
         taskDetails.Version = notification.Version;
 
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
-        var response = await _container.UpsertItemAsync(item: taskDetails, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.UpsertItemAsync(
+            item: taskDetails,
+            partitionKey: new PartitionKey(notification.TaskId.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async System.Threading.Tasks.Task Handle(TaskArchived notification, CancellationToken cancellationToken)
     {
-        var response = await _container.DeleteItemAsync<TaskDetails>(notification.Id.ToString(), new PartitionKey(notification.Id.ToString()));
+        var response = await _container.DeleteItemAsync<TaskDetails>(
+            notification.TaskId.ToString(),
+            new PartitionKey(notification.TaskId.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 }

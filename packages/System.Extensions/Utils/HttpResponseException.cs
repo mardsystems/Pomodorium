@@ -4,20 +4,18 @@ namespace Pomodorium.Utils;
 
 public class HttpResponseException : Exception
 {
-    private readonly string _message = null;
-    public int Status { get; set; } = 500;
-    public object Value { get; set; }
+    public int Status { get; }
+
+    private readonly string? _message;
+
+    public object? Value { get; }
 
     public override string Message =>
         _message ?? $"{Status}: {Value}";
 
-    public HttpStatusCode StatusCode => (HttpStatusCode) Status;
+    public HttpStatusCode StatusCode => (HttpStatusCode)Status;
 
-    public HttpResponseException()
-    {
-    }
-
-    public HttpResponseException(HttpStatusCode statusCode, object value = null, string message = null)
+    public HttpResponseException(HttpStatusCode statusCode = HttpStatusCode.InternalServerError, object? value = null, string? message = null)
     {
         Value = value;
         Status = (int)statusCode;

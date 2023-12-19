@@ -1,4 +1,6 @@
-﻿namespace Pomodorium.Api;
+﻿#pragma warning disable 8618
+
+namespace Pomodorium.Api;
 
 [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))")]
 public partial class ProblemDetails

@@ -78,9 +78,9 @@
 
 @code {
     [Parameter]
-    public string? Id { get; set; }
+    public string Id { get; set; }
 
-    public DetailsViewModel? Model { get; set; }
+    public DetailsViewModel Model { get; set; } = default!;
 
     [Inject]
     private IDialogService DialogService { get; set; }

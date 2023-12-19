@@ -6,7 +6,7 @@ public class DetailsViewModel
 {
     public Guid Id { get; set; }
 
-    public string Name { get; set; }
+    public string Name { get; set; } = default!;
 
     public DateTime? StartDate { get; set; }
 

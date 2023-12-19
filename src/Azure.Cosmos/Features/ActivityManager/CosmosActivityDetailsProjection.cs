@@ -36,19 +36,18 @@ public class CosmosActivityDetailsProjection :
     {
         var itemResponse = await _container.ReadItemAsync<ActivityDetails>(
                 id: request.Id.ToString(),
-                partitionKey: new PartitionKey(request.Id.ToString())
+                partitionKey: new PartitionKey(request.Id.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var activityDetails = itemResponse.Resource;
+        var activityDetails = itemResponse.Resource ?? throw new EntityNotFoundException();
 
-        if (activityDetails == null)
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
+
+        var response = new GetActivityResponse(request.GetCorrelationId())
         {
-            throw new EntityNotFoundException();
-        }
-
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
-
-        var response = new GetActivityResponse(request.GetCorrelationId()) { ActivityDetails = activityDetails };
+            ActivityDetails = activityDetails
+        };
 
         return response;
     }
@@ -57,54 +56,59 @@ public class CosmosActivityDetailsProjection :
     {
         var activityDetails = new ActivityDetails
         {
-            Id = notification.Id,
-            Name = notification.Name,
-            State = notification.State,
+            Id = notification.ActivityId,
+            Name = notification.ActivityName,
+            State = notification.ActivityState,
             StartDateTime = notification.StartDateTime,
             StopDateTime = notification.StopDateTime,
-            Duration = notification.Duration,
-            Description = notification.Description,
+            Duration = notification.ActivityDuration,
+            Description = notification.ActivityDescription,
             Version = notification.Version
         };
 
-        var response = await _container.CreateItemAsync(item: activityDetails, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.CreateItemAsync(
+            item: activityDetails, 
+            partitionKey: new PartitionKey(notification.ActivityId.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async Task Handle(ActivityUpdated notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<ActivityDetails>(
-                id: notification.Id.ToString(),
-                partitionKey: new PartitionKey(notification.Id.ToString())
+                id: notification.ActivityId.ToString(),
+                partitionKey: new PartitionKey(notification.ActivityId.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var activityDetails = itemResponse.Resource;
+        var activityDetails = itemResponse.Resource ?? throw new EntityNotFoundException();
 
-        if (activityDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
-        activityDetails.Name = notification.Name;
-        activityDetails.State = notification.State;
+        activityDetails.Name = notification.ActivityName;
+        activityDetails.State = notification.ActivityState;
         activityDetails.StartDateTime = notification.StartDateTime;
         activityDetails.StopDateTime = notification.StopDateTime;
-        activityDetails.Duration = notification.Duration;
-        activityDetails.Description = notification.Description;
+        activityDetails.Duration = notification.ActivityDuration;
+        activityDetails.Description = notification.ActivityDescription;
         activityDetails.Version = notification.Version;
 
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
-        var response = await _container.UpsertItemAsync(item: activityDetails, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.UpsertItemAsync(
+            item: activityDetails,
+            partitionKey: new PartitionKey(notification.ActivityId.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async Task Handle(ActivityDeleted notification, CancellationToken cancellationToken)
     {
-        var response = await _container.DeleteItemAsync<ActivityDetails>(notification.Id.ToString(), new PartitionKey(notification.Id.ToString()));
+        var response = await _container.DeleteItemAsync<ActivityDetails>(
+            notification.ActivityId.ToString(), 
+            new PartitionKey(notification.ActivityId.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 }

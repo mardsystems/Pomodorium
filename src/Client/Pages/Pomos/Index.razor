@@ -60,9 +60,9 @@
 </MudContainer>
 
 @code {
-    private IndexViewModel? Model = new();
+    private IndexViewModel Model = new();
 
-    private MudTable<IndexViewModel.Item> mudTable;
+    private MudTable<IndexViewModel.Item> mudTable = default!;
 
     private int selectedRowNumber = -1;
 
@@ -91,6 +91,8 @@
     private async Task Add()
     {
         NavigationManager.NavigateTo($"/pomos/new");
+
+        await Task.CompletedTask;
     }
 
     private async Task Refresh()

@@ -2,9 +2,9 @@
 
 public class TaskIntegration : AggregateRoot
 {
-    public Guid TaskId { get; set; }
+    public Guid TaskId { get; private set; }
 
-    public string ExternalReference { get; set; }
+    public string ExternalReference { get; private set; } = default!;
 
     public TaskIntegration(Tasks.Task task, TaskInfo taskInfo)
     {
@@ -23,12 +23,12 @@ public class TaskIntegration : AggregateRoot
 
     public void When(TaskIntegrated e)
     {
-        Id = e.Id;
+        Id = e.TaskIntegrationId;
 
         TaskId = e.TaskId;
 
         ExternalReference = e.ExternalReference;
     }
 
-    public TaskIntegration() { }
+    private TaskIntegration() { }
 }

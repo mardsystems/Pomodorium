@@ -31,7 +31,10 @@ public class MongoDBFlowtimeQueryItemsProjection :
 
         var flowtimeQueryItems = await _mongoCollection.Find(filter).ToListAsync(cancellationToken);
 
-        var response = new GetFlowsResponse(request.GetCorrelationId()) { FlowtimeQueryItems = flowtimeQueryItems };
+        var response = new GetFlowsResponse(request.GetCorrelationId())
+        {
+            FlowtimeQueryItems = flowtimeQueryItems
+        };
 
         return response;
     }
@@ -95,10 +98,10 @@ public class MongoDBFlowtimeQueryItemsProjection :
 
     public async System.Threading.Tasks.Task Handle(TaskDescriptionChanged notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<FlowtimeQueryItem>.Filter.Eq(x => x.TaskId, notification.Id);
+        var filter = Builders<FlowtimeQueryItem>.Filter.Eq(x => x.TaskId, notification.TaskId);
 
         var update = Builders<FlowtimeQueryItem>.Update
-            .Set(x => x.TaskDescription, notification.Description);
+            .Set(x => x.TaskDescription, notification.TaskDescription);
 
         await _mongoCollection.UpdateManyAsync(filter, update, null, cancellationToken);
     }

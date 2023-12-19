@@ -28,7 +28,7 @@ public class CosmosTfsIntegrationService : ITfsIntegrationRepository
         _logger = logger;
     }
 
-    public async Task<IEnumerable<TfsIntegration>> GetTfsIntegrationList(TfsIntegration criteria = default, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<TfsIntegration>> GetTfsIntegrationList(TfsIntegration? criteria = default, CancellationToken cancellationToken = default)
     {
         var tfsIntegrationList = new List<TfsIntegration>();
 
@@ -41,7 +41,7 @@ public class CosmosTfsIntegrationService : ITfsIntegrationRepository
 
         while (feed.HasMoreResults)
         {
-            FeedResponse<TfsIntegration> response = await feed.ReadNextAsync();
+            FeedResponse<TfsIntegration> response = await feed.ReadNextAsync(cancellationToken: cancellationToken);
 
             foreach (TfsIntegration @event in response)
             {
@@ -51,16 +51,19 @@ public class CosmosTfsIntegrationService : ITfsIntegrationRepository
             requestCharge += response.RequestCharge;
         }
 
-        _logger.LogInformation($"Request charge:\t{requestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", requestCharge);
 
         return tfsIntegrationList;
     }
 
     public async Task<TfsIntegration> CreateTfsIntegration(TfsIntegration tfsIntegration, CancellationToken cancellationToken = default)
     {
-        var response = await _container.CreateItemAsync(item: tfsIntegration, partitionKey: new PartitionKey(tfsIntegration.Id.ToString()));
+        var response = await _container.CreateItemAsync(
+            item: tfsIntegration,
+            partitionKey: new PartitionKey(tfsIntegration.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
 
         var tfsIntegrationCreated = response.Resource;
 
@@ -71,21 +74,25 @@ public class CosmosTfsIntegrationService : ITfsIntegrationRepository
     {
         ItemResponse<TfsIntegration> response = await _container.ReadItemAsync<TfsIntegration>(
                 id: id.ToString(),
-                partitionKey: new PartitionKey(id.ToString())
+                partitionKey: new PartitionKey(id.ToString()),
+                cancellationToken: cancellationToken
             );
 
         var tfsIntegration = response.Resource;
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
 
         return tfsIntegration;
     }
 
     public async Task<TfsIntegration> UpdateTfsIntegration(TfsIntegration tfsIntegration, CancellationToken cancellationToken = default)
     {
-        var response = await _container.UpsertItemAsync(item: tfsIntegration, partitionKey: new PartitionKey(tfsIntegration.Id.ToString()));
+        var response = await _container.UpsertItemAsync(
+            item: tfsIntegration,
+            partitionKey: new PartitionKey(tfsIntegration.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
 
         var tfsIntegrationUpdated = response.Resource;
 
@@ -94,8 +101,11 @@ public class CosmosTfsIntegrationService : ITfsIntegrationRepository
 
     public async Task DeleteTfsIntegration(Guid id, CancellationToken cancellationToken = default)
     {
-        var response = await _container.DeleteItemAsync<TfsIntegration>(id.ToString(), new PartitionKey(id.ToString()));
+        var response = await _container.DeleteItemAsync<TfsIntegration>(
+            id.ToString(),
+            new PartitionKey(id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 }

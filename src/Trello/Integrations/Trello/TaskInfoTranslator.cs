@@ -8,6 +8,21 @@ public static class TaskInfoTranslator
 {
     public static TaskInfo ToTaskInfo(this Card card, IntegrationBase integrationBase)
     {
+        if (integrationBase.Id == null)
+        {
+            throw new InvalidOperationException();
+        }
+
+        if (integrationBase.Name == null)
+        {
+            throw new InvalidOperationException();
+        }
+
+        if (card.id == null)
+        {
+            throw new InvalidOperationException();
+        }
+
         var cardId = card.id;
 
         return new TaskInfo(

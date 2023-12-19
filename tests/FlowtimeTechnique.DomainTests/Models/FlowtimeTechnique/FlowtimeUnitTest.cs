@@ -23,7 +23,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
         public class WithSuccess : OnCreateNewFlowtime
         {
-            public override void Arrange()
+            protected override void Arrange()
             {
                 Id = Guid.NewGuid();
 
@@ -47,7 +47,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
         public class WithNullTask : OnCreateNewFlowtime
         {
-            public override void Arrange()
+            protected override void Arrange()
             {
                 Id = Guid.NewGuid();
 
@@ -82,7 +82,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
         public class AtNow : OnStartFlowtime
         {
-            public override void Arrange()
+            protected override void Arrange()
             {
                 Task = new TaskManagement.Tasks.Task("Test");
 
@@ -127,7 +127,7 @@ public abstract class FlowtimeUnitTest : UnitTest
             public TimeSpan About5Minutes { get; set; }
 
 
-            public override void Arrange()
+            protected override void Arrange()
             {
                 Task = new TaskManagement.Tasks.Task("Test");
 
@@ -175,7 +175,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             public TimeSpan About8Minutes { get; set; }
 
-            public override void Arrange()
+            protected override void Arrange()
             {
                 Task = new TaskManagement.Tasks.Task("Test");
 
@@ -223,7 +223,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             public TimeSpan About10Minutes { get; set; }
 
-            public override void Arrange()
+            protected override void Arrange()
             {
                 Task = new TaskManagement.Tasks.Task("Test");
 
@@ -271,7 +271,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             public TimeSpan About15Minutes { get; set; }
 
-            public override void Arrange()
+            protected override void Arrange()
             {
                 Task = new TaskManagement.Tasks.Task("Test");
 
@@ -327,7 +327,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             public TimeSpan About5Minutes { get; set; }
 
-            public override void Arrange()
+            protected override void Arrange()
             {
                 Task = new TaskManagement.Tasks.Task("Test");
 
@@ -375,7 +375,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             public TimeSpan About8Minutes { get; set; }
 
-            public override void Arrange()
+            protected override void Arrange()
             {
                 Task = new TaskManagement.Tasks.Task("Test");
 
@@ -423,7 +423,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             public TimeSpan About10Minutes { get; set; }
 
-            public override void Arrange()
+            protected override void Arrange()
             {
                 Task = new TaskManagement.Tasks.Task("Test");
 
@@ -471,7 +471,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             public TimeSpan About15Minutes { get; set; }
 
-            public override void Arrange()
+            protected override void Arrange()
             {
                 Task = new TaskManagement.Tasks.Task("Test");
 

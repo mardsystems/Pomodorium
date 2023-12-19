@@ -16,7 +16,10 @@ public class GetEventsHandler : IRequestHandler<GetEventsRequest, GetEventsRespo
     {
         var records = await _storage.ReadRecords(long.MaxValue);
 
-        var response = new GetEventsResponse { EventRecords = records };
+        var response = new GetEventsResponse(request.GetCorrelationId())
+        {
+            EventRecords = records
+        };
 
         return response;
     }

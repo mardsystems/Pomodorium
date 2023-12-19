@@ -17,7 +17,7 @@ public class MongoDBTfsIntegrationService : ITfsIntegrationRepository
         _mongoCollection = _mongoClient.GetDatabase("Pomodorium").GetCollection<TfsIntegration>("TfsIntegrationCollection");
     }
 
-    public async Task<IEnumerable<TfsIntegration>> GetTfsIntegrationList(TfsIntegration criteria = default, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<TfsIntegration>> GetTfsIntegrationList(TfsIntegration? criteria = default, CancellationToken cancellationToken = default)
     {
         var filter = Builders<TfsIntegration>.Filter.Empty;
 

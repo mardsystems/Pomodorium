@@ -4,7 +4,7 @@ namespace Pomodorium.Models.TaskManagement.Activities;
 
 public class Activity : AggregateRoot
 {
-    public string Name { get; private set; }
+    public string Name { get; private set; } = default!;
 
     public DateTime? StartDateTime { get; private set; }
 
@@ -14,13 +14,13 @@ public class Activity : AggregateRoot
 
     public TimeSpan? Duration { get; private set; }
 
-    public string Description { get; private set; }
+    public string? Description { get; private set; }
 
     public Activity(
         string name,
         DateTime? startDateTime,
         DateTime? stopDateTime,
-        string description)
+        string? description)
     {
         ActivityStateEnum state;
 
@@ -47,26 +47,26 @@ public class Activity : AggregateRoot
 
     public void When(ActivityCreated e)
     {
-        Id = e.Id;
+        Id = e.ActivityId;
 
-        Name = e.Name;
+        Name = e.ActivityName;
 
         StartDateTime = e.StartDateTime;
 
         StopDateTime = e.StopDateTime;
 
-        State = e.State;
+        State = e.ActivityState;
 
-        Duration = e.Duration;
+        Duration = e.ActivityDuration;
 
-        Description = e.Description;
+        Description = e.ActivityDescription;
     }
 
     public void Update(
         string name,
         DateTime? startDateTime,
         DateTime? stopDateTime,
-        string description)
+        string? description)
     {
         ActivityStateEnum state;
 
@@ -93,19 +93,19 @@ public class Activity : AggregateRoot
 
     public void When(ActivityUpdated e)
     {
-        Id = e.Id;
+        Id = e.ActivityId;
 
-        Name = e.Name;
+        Name = e.ActivityName;
 
         StartDateTime = e.StartDateTime;
 
         StopDateTime = e.StopDateTime;
 
-        State = e.State;
+        State = e.ActivityState;
 
-        Duration = e.Duration;
+        Duration = e.ActivityDuration;
 
-        Description = e.Description;
+        Description = e.ActivityDescription;
     }
 
     public void Delete()
@@ -113,7 +113,7 @@ public class Activity : AggregateRoot
         Apply(new ActivityDeleted(Id));
     }
 
-    public void When(ActivityDeleted e)
+    public void When(ActivityDeleted _)
     {
         base.Archive();
     }

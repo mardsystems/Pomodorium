@@ -9,15 +9,15 @@ public class EventRecord
     [JsonProperty(PropertyName = "id")]
     public Guid Id { get; }
 
-    public string Name { get; }
+    public string Name { get; } = default!;
 
     public long Version { get; }
 
     public DateTime Date { get; }
 
-    public string TypeName { get; }
+    public string TypeName { get; } = default!;
 
-    public byte[] Data { get; }
+    public byte[] Data { get; } = default!;
 
     public EventRecord(string name, long version, DateTime date, string typeName, byte[] data)
     {
@@ -34,8 +34,5 @@ public class EventRecord
         Data = data;
     }
 
-    private EventRecord()
-    {
-
-    }
+    private EventRecord() { }
 }

@@ -1,20 +1,11 @@
 ﻿namespace Pomodorium.Features.Timer;
 
-public class CheckTimerRequest : Request<CheckTimerResponse>
+public record CheckTimerRequest : Request<CheckTimerResponse>
 {
 
 }
 
-public class CheckTimerResponse : Response
+public record CheckTimerResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public CheckTimerResponse(Guid correlationId)
-        : base(correlationId)
-    {
 
-    }
-
-    public CheckTimerResponse()
-    {
-
-    }
 }

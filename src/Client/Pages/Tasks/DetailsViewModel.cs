@@ -6,14 +6,14 @@ public class DetailsViewModel
 
     public DateTime? CreationDate { get; set; }
 
-    public string? Description { get; set; }
+    public string Description { get; set; }
 
     public long Version { get; set; }
 
     public DetailsViewModel(
         Guid id,
         DateTime? creationDate,
-        string? description,
+        string description,
         long version)
     {
         Id = id;
@@ -27,7 +27,7 @@ public class DetailsViewModel
 
     public DetailsViewModel(
         Guid id,
-        string? description,
+        string description,
         long version)
     {
         Id = id;

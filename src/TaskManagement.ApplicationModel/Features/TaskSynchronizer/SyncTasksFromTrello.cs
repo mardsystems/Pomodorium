@@ -1,17 +1,11 @@
 ﻿namespace Pomodorium.Features.TaskSynchronizer;
 
-public class SyncTasksFromTrelloRequest : Request<SyncTasksFromTrelloResponse>
+public record SyncTasksFromTrelloRequest : Request<SyncTasksFromTrelloResponse>
 {
     
 }
 
-public class SyncTasksFromTrelloResponse : Response
+public record SyncTasksFromTrelloResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public SyncTasksFromTrelloResponse(Guid correlationId)
-        : base(correlationId)
-    {
 
-    }
-
-    public SyncTasksFromTrelloResponse() { }
 }

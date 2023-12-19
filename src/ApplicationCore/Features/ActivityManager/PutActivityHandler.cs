@@ -13,12 +13,7 @@ public class PutActivityHandler : IRequestHandler<PutActivityRequest, PutActivit
 
     public async Task<PutActivityResponse> Handle(PutActivityRequest request, CancellationToken cancellationToken)
     {
-        var activity = await _repository.GetAggregateById<Activity>(request.Id);
-
-        if (activity == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var activity = await _repository.GetAggregateById<Activity>(request.Id) ?? throw new EntityNotFoundException();
 
         activity.Update(
             request.Name,
@@ -28,7 +23,7 @@ public class PutActivityHandler : IRequestHandler<PutActivityRequest, PutActivit
 
         await _repository.Save(activity, request.Version);
 
-        var response = new PutActivityResponse(request.GetCorrelationId()) { };
+        var response = new PutActivityResponse(request.GetCorrelationId());
 
         return response;
     }

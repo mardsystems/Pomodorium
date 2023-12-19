@@ -28,7 +28,12 @@ public class IndexedDBTaskQueryItemsProjection :
     {
         var taskQueryItems = await _db.GetAllAsync<TaskQueryItem>("TaskQueryItems");
 
-        var response = new GetTasksResponse(request.GetCorrelationId()) { TaskQueryItems = taskQueryItems.OrderByDescending(x => x.CreationDate) };
+        var orderedTaskQueryItems = taskQueryItems.OrderByDescending(x => x.CreationDate);
+
+        var response = new GetTasksResponse(request.GetCorrelationId())
+        {
+            TaskQueryItems = orderedTaskQueryItems
+        };
 
         return response;
     }
@@ -37,9 +42,9 @@ public class IndexedDBTaskQueryItemsProjection :
     {
         var taskQueryItem = new TaskQueryItem
         {
-            Id = notification.Id,
-            CreationDate = notification.CreationDate,
-            Description = notification.Description,
+            Id = notification.TaskId,
+            CreationDate = notification.TaskCreatedAt,
+            Description = notification.TaskDescription,
             Version = notification.Version
         };
 
@@ -60,9 +65,9 @@ public class IndexedDBTaskQueryItemsProjection :
 
     public async System.Threading.Tasks.Task Handle(TaskDescriptionChanged notification, CancellationToken cancellationToken)
     {
-        var taskQueryItem = await _db.GetAsync<TaskQueryItem>("TaskQueryItems", notification.Id);
+        var taskQueryItem = await _db.GetAsync<TaskQueryItem>("TaskQueryItems", notification.TaskId);
 
-        taskQueryItem.Description = notification.Description;
+        taskQueryItem.Description = notification.TaskDescription;
 
         await _db.PutAsync("TaskQueryItems", taskQueryItem);
     }
@@ -78,12 +83,7 @@ public class IndexedDBTaskQueryItemsProjection :
 
     public async System.Threading.Tasks.Task Handle(FlowtimeInterrupted notification, CancellationToken cancellationToken)
     {
-        var taskQueryItem = await _db.GetAsync<TaskQueryItem>("TaskQueryItems", notification.TaskId);
-
-        if (taskQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var taskQueryItem = await _db.GetAsync<TaskQueryItem>("TaskQueryItems", notification.TaskId) ?? throw new EntityNotFoundException();
 
         taskQueryItem.TotalHours += notification.Worktime.TotalHours;
 
@@ -94,12 +94,7 @@ public class IndexedDBTaskQueryItemsProjection :
 
     public async System.Threading.Tasks.Task Handle(FlowtimeStopped notification, CancellationToken cancellationToken)
     {
-        var taskQueryItem = await _db.GetAsync<TaskQueryItem>("TaskQueryItems", notification.TaskId);
-
-        if (taskQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var taskQueryItem = await _db.GetAsync<TaskQueryItem>("TaskQueryItems", notification.TaskId) ?? throw new EntityNotFoundException();
 
         taskQueryItem.TotalHours += notification.Worktime.TotalHours;
 
@@ -110,13 +105,8 @@ public class IndexedDBTaskQueryItemsProjection :
 
     public async System.Threading.Tasks.Task Handle(TaskArchived notification, CancellationToken cancellationToken)
     {
-        var taskQueryItem = await _db.GetAsync<TaskQueryItem>("TaskQueryItems", notification.Id);
+        var _ = await _db.GetAsync<TaskQueryItem>("TaskQueryItems", notification.TaskId) ?? throw new EntityNotFoundException();
 
-        if (taskQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
-        await _db.RemoveAsync("TaskQueryItems", notification.Id);
+        await _db.RemoveAsync("TaskQueryItems", notification.TaskId);
     }
 }

@@ -1,21 +1,15 @@
 ﻿namespace Pomodorium.Features.RoutineTracker;
 
-public class StartRoutineRequest : Request<StartRoutineResponse>
+public record StartRoutineRequest : Request<StartRoutineResponse>
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 
-    public DateTime StartDateTime { get; set; }
+    public DateTime StartDateTime { get; init; }
 
-    public long Version { get; set; }
+    public long Version { get; init; }
 }
 
-public class StartRoutineResponse : Response
+public record StartRoutineResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public StartRoutineResponse(Guid correlationId)
-        : base(correlationId)
-    {
 
-    }
-
-    public StartRoutineResponse() { }
 }

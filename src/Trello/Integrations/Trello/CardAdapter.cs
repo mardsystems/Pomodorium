@@ -21,7 +21,7 @@ public class CardAdapter
 
         var boardsUri = $"1/boards/{trelloIntegration.BoardId}/lists?key={trelloIntegration.Key}&token={trelloIntegration.Token}";
 
-        var lists = await httpClient.GetFromJsonAsync<List[]>(boardsUri, JsonSerializerOptions.Default).ConfigureAwait(false);
+        var lists = await httpClient.GetFromJsonAsync<List[]>(boardsUri, JsonSerializerOptions.Default).ConfigureAwait(false) ?? throw new InvalidOperationException();
 
         var taskInfoList = new List<TaskInfo>();
 
@@ -29,7 +29,7 @@ public class CardAdapter
         {
             var requestUri = $"1/lists/{list.id}/cards?key={trelloIntegration.Key}&token={trelloIntegration.Token}";
 
-            var cards = await httpClient.GetFromJsonAsync<Card[]>(requestUri, JsonSerializerOptions.Default).ConfigureAwait(false);
+            var cards = await httpClient.GetFromJsonAsync<Card[]>(requestUri, JsonSerializerOptions.Default).ConfigureAwait(false) ?? throw new InvalidOperationException();
 
             var taskInfoListBuffer = cards.Select(x => x.ToTaskInfo(trelloIntegration));
 

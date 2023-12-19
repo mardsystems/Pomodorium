@@ -13,12 +13,7 @@ public class ArchivePomodoroHandler : IRequestHandler<ArchivePomodoroRequest, Ar
 
     public async Task<ArchivePomodoroResponse> Handle(ArchivePomodoroRequest request, CancellationToken cancellationToken)
     {
-        var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id);
-
-        if (pomodoro == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id) ?? throw new EntityNotFoundException();
 
         pomodoro.Archive();
 

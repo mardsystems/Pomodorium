@@ -13,18 +13,16 @@ public class ArchiveFlowtimeHandler : IRequestHandler<ArchiveFlowtimeRequest, Ar
 
     public async Task<ArchiveFlowtimeResponse> Handle(ArchiveFlowtimeRequest request, CancellationToken cancellationToken)
     {
-        var flowtime = await _repository.GetAggregateById<Flowtime>(request.Id);
-
-        if (flowtime == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var flowtime = await _repository.GetAggregateById<Flowtime>(request.FlowtimeId) ?? throw new EntityNotFoundException();
 
         flowtime.Archive();
 
-        await _repository.Save(flowtime, request.Version);
+        await _repository.Save(flowtime, request.FlowtimeVersion);
 
-        var response = new ArchiveFlowtimeResponse(request.GetCorrelationId()) { };
+        var response = new ArchiveFlowtimeResponse(request.GetCorrelationId())
+        {
+            FlowtimeVersion = flowtime.Version
+        };
 
         return response;
     }

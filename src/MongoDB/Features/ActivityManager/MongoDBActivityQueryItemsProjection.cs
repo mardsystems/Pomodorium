@@ -27,7 +27,10 @@ public class MongoDBActivityQueryItemsProjection :
 
         var activityQueryItems = await _mongoCollection.Find(filter).ToListAsync(cancellationToken);
 
-        var response = new GetActivitiesResponse(request.GetCorrelationId()) { ActivityQueryItems = activityQueryItems };
+        var response = new GetActivitiesResponse(request.GetCorrelationId())
+        {
+            ActivityQueryItems = activityQueryItems
+        };
 
         return response;
     }
@@ -36,13 +39,13 @@ public class MongoDBActivityQueryItemsProjection :
     {
         var activityQueryItem = new ActivityQueryItem
         {
-            Id = notification.Id,
-            Name = notification.Name,
-            State = notification.State,
+            Id = notification.ActivityId,
+            Name = notification.ActivityName,
+            State = notification.ActivityState,
             StartDateTime = notification.StartDateTime,
             StopDateTime = notification.StopDateTime,
-            Duration = notification.Duration,
-            Description = notification.Description,
+            Duration = notification.ActivityDuration,
+            Description = notification.ActivityDescription,
             Version = notification.Version
         };
 
@@ -51,15 +54,15 @@ public class MongoDBActivityQueryItemsProjection :
 
     public async Task Handle(ActivityUpdated notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<ActivityQueryItem>.Filter.Eq(x => x.Id, notification.Id);
+        var filter = Builders<ActivityQueryItem>.Filter.Eq(x => x.Id, notification.ActivityId);
 
         var update = Builders<ActivityQueryItem>.Update
-            .Set(x => x.Name, notification.Name)
-            .Set(x => x.State, notification.State)
+            .Set(x => x.Name, notification.ActivityName)
+            .Set(x => x.State, notification.ActivityState)
             .Set(x => x.StartDateTime, notification.StartDateTime)
             .Set(x => x.StopDateTime, notification.StopDateTime)
-            .Set(x => x.Duration, notification.Duration)
-            .Set(x => x.Description, notification.Description)
+            .Set(x => x.Duration, notification.ActivityDuration)
+            .Set(x => x.Description, notification.ActivityDescription)
             .Set(x => x.Version, notification.Version);
 
         await _mongoCollection.UpdateOneAsync(filter, update, null, cancellationToken);
@@ -67,7 +70,7 @@ public class MongoDBActivityQueryItemsProjection :
 
     public async Task Handle(ActivityDeleted notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<ActivityQueryItem>.Filter.Eq(x => x.Id, notification.Id);
+        var filter = Builders<ActivityQueryItem>.Filter.Eq(x => x.Id, notification.ActivityId);
 
         await _mongoCollection.DeleteOneAsync(filter, cancellationToken);
     }

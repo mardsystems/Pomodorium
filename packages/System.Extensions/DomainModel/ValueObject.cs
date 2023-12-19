@@ -17,7 +17,8 @@ public abstract class ValueObject
         {
             return false;
         }
-        return ReferenceEquals(left, null) || left.Equals(right);
+
+        return left is null || left.Equals(right);
     }
 
     /// <summary>
@@ -43,7 +44,7 @@ public abstract class ValueObject
     /// </summary>
     /// <param name="obj">Object to compare to.</param>
     /// <returns>True if objects are considered equal.</returns>
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj == null || obj.GetType() != GetType())
         {

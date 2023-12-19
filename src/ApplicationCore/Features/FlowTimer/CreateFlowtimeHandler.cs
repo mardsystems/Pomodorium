@@ -1,4 +1,5 @@
-﻿using Pomodorium.Models.FlowtimeTechnique;
+﻿using Microsoft.Extensions.Logging;
+using Pomodorium.Models.FlowtimeTechnique;
 
 namespace Pomodorium.Features.FlowTimer;
 
@@ -6,40 +7,30 @@ public class CreateFlowtimeHandler : IRequestHandler<CreateFlowtimeRequest, Crea
 {
     private readonly Repository _repository;
 
-    public CreateFlowtimeHandler(Repository repository)
+    private readonly ILogger<CreateFlowtimeHandler> _logger;
+
+    public CreateFlowtimeHandler(Repository repository, ILogger<CreateFlowtimeHandler> logger)
     {
         _repository = repository;
+        _logger = logger;
     }
 
     public async Task<CreateFlowtimeResponse> Handle(CreateFlowtimeRequest request, CancellationToken cancellationToken)
     {
-        Models.TaskManagement.Tasks.Task task;
+        _logger.LogInformation("Handle Create Flowtime Request: {CorrelationId}", request.GetCorrelationId());
 
-        if (request.TaskId.HasValue)
-        {
-            task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId.Value);
+        var task = new Models.TaskManagement.Tasks.Task(request.TaskDescription);
 
-            if (task.Description != request.TaskDescription)
-            {
-                task.ChangeDescription(request.TaskDescription);
-
-                await _repository.Save(task, request.TaskVersion.Value);
-
-                task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId.Value);
-            }
-        }
-        else
-        {
-            task = new Models.TaskManagement.Tasks.Task(request.TaskDescription);
-
-            await _repository.Save(task, -1);
-        }
+        await _repository.Save(task, -1);
 
         var flowtime = new Flowtime(task);
 
         await _repository.Save(flowtime, -1);
 
-        var response = new CreateFlowtimeResponse(request.GetCorrelationId()) { };
+        var response = new CreateFlowtimeResponse(request.GetCorrelationId())
+        {
+            FlowtimeVersion = flowtime.Version
+        };
 
         return response;
     }

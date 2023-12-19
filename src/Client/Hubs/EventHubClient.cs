@@ -60,9 +60,9 @@ public class EventHubClient : IDisposable
 
     private async Task DispatchEvent(EventRecord eventRecord)
     {
-        var id = Guid.Parse(eventRecord.Name);
+        var _ = Guid.Parse(eventRecord.Name);
 
-        var type = Type.GetType(eventRecord.TypeName);
+        var type = Type.GetType(eventRecord.TypeName) ?? throw new InvalidOperationException();
 
         var @event = EventStore.DesserializeEvent(type, eventRecord.Data);
 
@@ -96,13 +96,15 @@ public class EventHubClient : IDisposable
         Notification.OnNext(@event);
     }
 
-    private bool ConflictsWith(Event event1, Event event2)
+    private static bool ConflictsWith(Event event1, Event event2)
     {
         return event1.GetType() == event2.GetType();
     }
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
+
         _server.Remove("Notify");
 
         Notification.OnCompleted();

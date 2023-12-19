@@ -26,29 +26,37 @@ ORDER BY Name, Version
 LIMIT 0, @take
 ";
 
-            using (var command = new SqliteCommand(sql, connection))
+            using var command = new SqliteCommand(sql, connection);
+
+            command.Parameters.AddWithValue("@take", maxCount);
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (reader.Read())
             {
-                command.Parameters.AddWithValue("@take", maxCount);
+                var name = reader["Name"].ToString();
 
-                using (var reader = await command.ExecuteReaderAsync())
+                var typeName = reader["TypeName"].ToString();
+
+                var version = (long)reader["Version"];
+
+                var dateString = reader["Date"].ToString();
+
+                var date = Convert.ToDateTime(dateString);
+
+                var data = (byte[])reader["Data"];
+
+                if (name == null)
                 {
-                    while (reader.Read())
-                    {
-                        var name = reader["Name"].ToString();
-
-                        var typeName = reader["TypeName"].ToString();
-
-                        var version = (long)reader["Version"];
-
-                        var dateString = reader["Date"].ToString();
-
-                        var date = Convert.ToDateTime(dateString);
-
-                        var data = (byte[])reader["Data"];
-
-                        records.Add(new EventRecord(name, version, date, typeName, data));
-                    }
+                    throw new InvalidOperationException();
                 }
+
+                if (typeName == null)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                records.Add(new EventRecord(name, version, date, typeName, data));
             }
         }
 
@@ -70,29 +78,32 @@ ORDER BY Version
 LIMIT 0, @take
 ";
 
-            using (var command = new SqliteCommand(sql, connection))
+            using var command = new SqliteCommand(sql, connection);
+
+            command.Parameters.AddWithValue("@name", name);
+
+            command.Parameters.AddWithValue("@version", afterVersion);
+
+            command.Parameters.AddWithValue("@take", maxCount);
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            while (reader.Read())
             {
-                command.Parameters.AddWithValue("@name", name);
+                var typeName = reader["TypeName"].ToString();
 
-                command.Parameters.AddWithValue("@version", afterVersion);
+                var version = (long)reader["Version"];
 
-                command.Parameters.AddWithValue("@take", maxCount);
+                var date = (DateTime)reader["Date"];
 
-                using (var reader = await command.ExecuteReaderAsync())
+                var data = (byte[])reader["Data"];
+
+                if (typeName == null)
                 {
-                    while (reader.Read())
-                    {
-                        var typeName = reader["TypeName"].ToString();
-
-                        var version = (long)reader["Version"];
-
-                        var date = (DateTime)reader["Date"];
-
-                        var data = (byte[])reader["Data"];
-
-                        records.Add(new EventRecord(name, version, date, typeName, data));
-                    }
+                    throw new InvalidOperationException();
                 }
+
+                records.Add(new EventRecord(name, version, date, typeName, data));
             }
         }
 
@@ -101,37 +112,35 @@ LIMIT 0, @take
 
     public async Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
     {
-        using (var connection = new SqliteConnection(_connectionString))
-        {
-            connection.Open();
+        using var connection = new SqliteConnection(_connectionString);
 
-            using (var transaction = connection.BeginTransaction())
-            {
-                var version = await GetMaxVersion(name, expectedVersion, connection, transaction);
+        connection.Open();
 
-                const string sql = @"
+        using var transaction = connection.BeginTransaction();
+
+        var version = await GetMaxVersion(name, expectedVersion, connection, transaction);
+
+        const string sql = @"
 INSERT INTO EventStore (Name, Version, Date, Data)
 VALUES(@name, @version, @date, @data)
 ";
 
-                using (var command = new SqliteCommand(sql, connection, transaction))
-                {
-                    command.Parameters.AddWithValue("@name", name);
+        using (var command = new SqliteCommand(sql, connection, transaction))
+        {
+            command.Parameters.AddWithValue("@name", name);
 
-                    command.Parameters.AddWithValue("@version", version + 1);
+            command.Parameters.AddWithValue("@version", version + 1);
 
-                    command.Parameters.AddWithValue("@date", date);
+            command.Parameters.AddWithValue("@date", date);
 
-                    command.Parameters.AddWithValue("@data", data);
+            command.Parameters.AddWithValue("@data", data);
 
-                    await command.ExecuteNonQueryAsync();
-                }
-
-                transaction.Commit();
-            }
+            await command.ExecuteNonQueryAsync();
         }
 
-        return null;
+        transaction.Commit();
+
+        return default!;
     }
 
     public Task Append(EventRecord tapeRecord)
@@ -147,22 +156,23 @@ FROM EventStore
 WHERE Name=@name
 ";
 
-        using (var command = new SqliteCommand(sql, connection, transaction))
+        using var command = new SqliteCommand(sql, connection, transaction);
+
+        command.Parameters.AddWithValue("@name", name);
+
+        var result = await command.ExecuteScalarAsync() ?? throw new InvalidOperationException();
+
+        var version = (long)result;
+
+        if (expectedVersion != -1)
         {
-            command.Parameters.AddWithValue("@name", name);
-
-            var version = (long)await command.ExecuteScalarAsync();
-
-            if (expectedVersion != -1)
+            if (version != expectedVersion)
             {
-                if (version != expectedVersion)
-                {
-                    throw new AppendOnlyStoreConcurrencyException(version, expectedVersion, name);
-                }
+                throw new AppendOnlyStoreConcurrencyException(version, expectedVersion, name);
             }
-
-            return version;
         }
+
+        return version;
     }
 
     public void Close()
@@ -172,6 +182,6 @@ WHERE Name=@name
 
     public void Dispose()
     {
-
+        GC.SuppressFinalize(this);
     }
 }

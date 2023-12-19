@@ -20,14 +20,12 @@ public class IndexedDBTaskDetailsProjection :
 
     public async Task<GetTaskResponse> Handle(GetTaskRequest request, CancellationToken cancellationToken)
     {
-        var taskDetails = await _db.GetAsync<TaskDetails>("TaskDetails", request.TaskId);
+        var taskDetails = await _db.GetAsync<TaskDetails>("TaskDetails", request.TaskId) ?? throw new EntityNotFoundException();
 
-        if (taskDetails == null)
+        var response = new GetTaskResponse(request.GetCorrelationId())
         {
-            throw new EntityNotFoundException();
-        }
-
-        var response = new GetTaskResponse(request.GetCorrelationId()) { TaskDetails = taskDetails };
+            TaskDetails = taskDetails
+        };
 
         return response;
     }
@@ -36,9 +34,9 @@ public class IndexedDBTaskDetailsProjection :
     {
         var taskDetails = new TaskDetails
         {
-            Id = notification.Id,
-            CreationDate = notification.CreationDate,
-            Description = notification.Description,
+            Id = notification.TaskId,
+            CreationDate = notification.TaskCreatedAt,
+            Description = notification.TaskDescription,
             Version = notification.Version
         };
 
@@ -47,14 +45,9 @@ public class IndexedDBTaskDetailsProjection :
 
     public async System.Threading.Tasks.Task Handle(TaskDescriptionChanged notification, CancellationToken cancellationToken)
     {
-        var taskDetails = await _db.GetAsync<TaskDetails>("TaskDetails", notification.Id);
+        var taskDetails = await _db.GetAsync<TaskDetails>("TaskDetails", notification.TaskId) ?? throw new EntityNotFoundException();
 
-        if (taskDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
-        taskDetails.Description = notification.Description;
+        taskDetails.Description = notification.TaskDescription;
         taskDetails.Version = notification.Version;
 
         await _db.PutAsync("TaskDetails", taskDetails);
@@ -62,13 +55,8 @@ public class IndexedDBTaskDetailsProjection :
 
     public async System.Threading.Tasks.Task Handle(TaskArchived notification, CancellationToken cancellationToken)
     {
-        var taskDetails = await _db.GetAsync<TaskDetails>("TaskDetails", notification.Id);
+        var _ = await _db.GetAsync<TaskDetails>("TaskDetails", notification.TaskId) ?? throw new EntityNotFoundException();
 
-        if (taskDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
-        await _db.RemoveAsync("TaskDetails", notification.Id);
+        await _db.RemoveAsync("TaskDetails", notification.TaskId);
     }
 }

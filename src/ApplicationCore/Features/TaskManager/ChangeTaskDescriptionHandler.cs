@@ -11,18 +11,16 @@ public class ChangeTaskDescriptionHandler : IRequestHandler<ChangeTaskDescriptio
 
     public async Task<ChangeTaskDescriptionResponse> Handle(ChangeTaskDescriptionRequest request, CancellationToken cancellationToken)
     {
-        var task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId);
-
-        if (task == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId) ?? throw new EntityNotFoundException();
 
         task.ChangeDescription(request.Description);
 
         await _repository.Save(task, request.TaskVersion);
 
-        var response = new ChangeTaskDescriptionResponse(request.GetCorrelationId()) { };
+        var response = new ChangeTaskDescriptionResponse(request.GetCorrelationId())
+        {
+            TaskVersion = task.Version
+        };
 
         return response;
     }

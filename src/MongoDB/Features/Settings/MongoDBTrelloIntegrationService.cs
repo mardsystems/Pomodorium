@@ -17,7 +17,7 @@ public class MongoDBTrelloIntegrationService : ITrelloIntegrationRepository
         _mongoCollection = _mongoClient.GetDatabase("Pomodorium").GetCollection<TrelloIntegration>("TrelloIntegrationCollection");
     }
 
-    public async Task<IEnumerable<TrelloIntegration>> GetTrelloIntegrationList(TrelloIntegration criteria = default, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<TrelloIntegration>> GetTrelloIntegrationList(TrelloIntegration? criteria = default, CancellationToken cancellationToken = default)
     {
         var filter = Builders<TrelloIntegration>.Filter.Empty;
 

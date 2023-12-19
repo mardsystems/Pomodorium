@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Pomodorium.Features.TaskSynchronizer;
 
-public class SyncTasksFromTrelloHandler : IRequestHandler<SyncTasksFromTrelloRequest, SyncTasksFromTrelloResponse>
+public class SyncTasksFromTrelloHandler : IRequestHandler<SyncTasksFromTrelloRequest, SyncTasksFromTrelloResponse?>
 {
     private readonly HttpClient _httpClient;
 
@@ -13,7 +13,7 @@ public class SyncTasksFromTrelloHandler : IRequestHandler<SyncTasksFromTrelloReq
         _httpClient = httpClient;
     }
 
-    public async Task<SyncTasksFromTrelloResponse> Handle(SyncTasksFromTrelloRequest request, CancellationToken cancellationToken)
+    public async Task<SyncTasksFromTrelloResponse?> Handle(SyncTasksFromTrelloRequest request, CancellationToken cancellationToken)
     {
         var httpResponse = await _httpClient.PostAsJsonAsync("api/TaskSynchronizer/SyncTasksFromTrello", request, cancellationToken);
 

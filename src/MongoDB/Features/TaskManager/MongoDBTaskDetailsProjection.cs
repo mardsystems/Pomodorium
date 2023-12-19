@@ -26,14 +26,12 @@ public class MongoDBTaskDetailsProjection :
     {
         var filter = Builders<TaskDetails>.Filter.Eq(x => x.Id, request.TaskId);
 
-        var pomodoroDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
+        var taskDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken) ?? throw new EntityNotFoundException();
 
-        if (pomodoroDetails == null)
+        var response = new GetTaskResponse(request.GetCorrelationId())
         {
-            throw new EntityNotFoundException();
-        }
-
-        var response = new GetTaskResponse(request.GetCorrelationId()) { TaskDetails = pomodoroDetails };
+            TaskDetails = taskDetails
+        };
 
         return response;
     }
@@ -42,9 +40,9 @@ public class MongoDBTaskDetailsProjection :
     {
         var flowtimeDetails = new TaskDetails
         {
-            Id = notification.Id,
-            CreationDate = notification.CreationDate,
-            Description = notification.Description,
+            Id = notification.TaskId,
+            CreationDate = notification.TaskCreatedAt,
+            Description = notification.TaskDescription,
             Version = notification.Version
         };
 
@@ -53,10 +51,10 @@ public class MongoDBTaskDetailsProjection :
 
     public async System.Threading.Tasks.Task Handle(TaskDescriptionChanged notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<TaskDetails>.Filter.Eq(x => x.Id, notification.Id);
+        var filter = Builders<TaskDetails>.Filter.Eq(x => x.Id, notification.TaskId);
 
         var update = Builders<TaskDetails>.Update
-            .Set(x => x.Description, notification.Description)
+            .Set(x => x.Description, notification.TaskDescription)
             .Set(x => x.Version, notification.Version);
 
         await _mongoCollection.UpdateOneAsync(filter, update, null, cancellationToken);
@@ -64,7 +62,7 @@ public class MongoDBTaskDetailsProjection :
 
     public async System.Threading.Tasks.Task Handle(TaskArchived notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<TaskDetails>.Filter.Eq(x => x.Id, notification.Id);
+        var filter = Builders<TaskDetails>.Filter.Eq(x => x.Id, notification.TaskId);
 
         await _mongoCollection.DeleteOneAsync(filter, cancellationToken);
     }

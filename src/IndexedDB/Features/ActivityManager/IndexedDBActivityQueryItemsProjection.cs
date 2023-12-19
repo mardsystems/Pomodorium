@@ -22,7 +22,10 @@ public class IndexedDBActivityQueryItemsProjection :
     {
         var activityQueryItems = await _db.GetAllAsync<ActivityQueryItem>("ActivityQueryItems");
 
-        var response = new GetActivitiesResponse(request.GetCorrelationId()) { ActivityQueryItems = activityQueryItems };
+        var response = new GetActivitiesResponse(request.GetCorrelationId())
+        {
+            ActivityQueryItems = activityQueryItems
+        };
 
         return response;
     }
@@ -31,13 +34,13 @@ public class IndexedDBActivityQueryItemsProjection :
     {
         var activityQueryItem = new ActivityQueryItem
         {
-            Id = notification.Id,
-            Name = notification.Name,
-            State = notification.State,
+            Id = notification.ActivityId,
+            Name = notification.ActivityName,
+            State = notification.ActivityState,
             StartDateTime = notification.StartDateTime,
             StopDateTime = notification.StopDateTime,
-            Duration = notification.Duration,
-            Description = notification.Description,
+            Duration = notification.ActivityDuration,
+            Description = notification.ActivityDescription,
             Version = notification.Version
         };
 
@@ -46,19 +49,14 @@ public class IndexedDBActivityQueryItemsProjection :
 
     public async Task Handle(ActivityUpdated notification, CancellationToken cancellationToken)
     {
-        var activityQueryItem = await _db.GetAsync<ActivityQueryItem>("ActivityQueryItems", notification.Id);
+        var activityQueryItem = await _db.GetAsync<ActivityQueryItem>("ActivityQueryItems", notification.ActivityId) ?? throw new EntityNotFoundException();
 
-        if (activityQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
-        activityQueryItem.Name = notification.Name;
-        activityQueryItem.State = notification.State;
+        activityQueryItem.Name = notification.ActivityName;
+        activityQueryItem.State = notification.ActivityState;
         activityQueryItem.StartDateTime = notification.StartDateTime;
         activityQueryItem.StopDateTime = notification.StopDateTime;
-        activityQueryItem.Duration = notification.Duration;
-        activityQueryItem.Description = notification.Description;
+        activityQueryItem.Duration = notification.ActivityDuration;
+        activityQueryItem.Description = notification.ActivityDescription;
         activityQueryItem.Version = notification.Version;
 
         await _db.PutAsync("ActivityQueryItems", activityQueryItem);
@@ -66,13 +64,8 @@ public class IndexedDBActivityQueryItemsProjection :
 
     public async Task Handle(ActivityDeleted notification, CancellationToken cancellationToken)
     {
-        var activityQueryItem = await _db.GetAsync<ActivityQueryItem>("ActivityQueryItems", notification.Id);
+        var _ = await _db.GetAsync<ActivityQueryItem>("ActivityQueryItems", notification.ActivityId) ?? throw new EntityNotFoundException();
 
-        if (activityQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
-        await _db.RemoveAsync("ActivityQueryItems", notification.Id);
+        await _db.RemoveAsync("ActivityQueryItems", notification.ActivityId);
     }
 }

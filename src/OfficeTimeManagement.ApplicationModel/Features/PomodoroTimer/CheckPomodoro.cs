@@ -1,22 +1,13 @@
 ﻿namespace Pomodorium.Features.PomodoroTimer;
 
-public class CheckPomodoroRequest : Request<CheckPomodoroResponse>
+public record CheckPomodoroRequest : Request<CheckPomodoroResponse>
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 
-    public long Version { get; set; }
+    public long Version { get; init; }
 }
 
-public class CheckPomodoroResponse : Response
+public record CheckPomodoroResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public CheckPomodoroResponse(Guid correlationId)
-        : base(correlationId)
-    {
 
-    }
-
-    public CheckPomodoroResponse()
-    {
-
-    }
 }

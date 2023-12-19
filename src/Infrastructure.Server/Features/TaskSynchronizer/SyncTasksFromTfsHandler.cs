@@ -34,7 +34,7 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
 
     public async Task<SyncTasksFromTfsResponse> Handle(SyncTasksFromTfsRequest request, CancellationToken cancellationToken)
     {
-        var tfsIntegrationList = await _tfsIntegrationRepository.GetTfsIntegrationList();
+        var tfsIntegrationList = await _tfsIntegrationRepository.GetTfsIntegrationList(cancellationToken: cancellationToken);
 
         foreach (var tfsIntegration in tfsIntegrationList)
         {
@@ -47,7 +47,7 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
                     ExternalReference = taskInfo.Reference
                 };
 
-                var getTasksResponse = await _mediator.Send<GetTasksResponse>(getTasksRequest);
+                var getTasksResponse = await _mediator.Send<GetTasksResponse>(getTasksRequest, cancellationToken);
 
                 var taskQueryItem = getTasksResponse.TaskQueryItems.FirstOrDefault();
 
@@ -55,7 +55,7 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
 
                 if (taskQueryItem == default)
                 {
-                    task = new Models.TaskManagement.Tasks.Task(taskInfo.Name);                    
+                    task = new Models.TaskManagement.Tasks.Task(taskInfo.Name);
                 }
                 else
                 {
@@ -84,7 +84,7 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
             }
         }
 
-        var response = new SyncTasksFromTfsResponse(request.GetCorrelationId()) { };
+        var response = new SyncTasksFromTfsResponse(request.GetCorrelationId());
 
         return response;
     }
