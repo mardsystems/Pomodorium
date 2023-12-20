@@ -7,7 +7,7 @@ namespace Pomodorium.Models.TaskManagement.Integrations;
 public class TaskIntegrated : Event
 {
     [DataMember(Order = 1)]
-    public Guid Id { get; private set; }
+    public Guid TaskIntegrationId { get; private set; }
 
     [DataMember(Order = 2)]
     public Guid TaskId { get; private set; }
@@ -19,20 +19,20 @@ public class TaskIntegrated : Event
     public Guid IntegrationId { get; private set; }
 
     [DataMember(Order = 5)]
-    public string IntegrationName { get; private set; }
+    public string IntegrationName { get; private set; } = default!;
 
     [DataMember(Order = 6)]
-    public string ExternalReference { get; private set; }
+    public string ExternalReference { get; private set; } = default!;
 
     public TaskIntegrated(
-        Guid id,
+        Guid taskIntegrationId,
         Guid taskId,
         IntegrationTypeEnum integrationType,
         Guid integrationId,
         string integrationName,
         string externalReference)
     {
-        Id = id;
+        TaskIntegrationId = taskIntegrationId;
 
         TaskId = taskId;
 

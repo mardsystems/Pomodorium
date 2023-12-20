@@ -1,22 +1,13 @@
 ﻿namespace Pomodorium.Features.PomodoroTimer;
 
-public class ArchivePomodoroRequest : Request<ArchivePomodoroResponse>
+public record ArchivePomodoroRequest : Request<ArchivePomodoroResponse>
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 
-    public long Version { get; set; }
+    public long Version { get; init; }
 }
 
-public class ArchivePomodoroResponse : Response
+public record ArchivePomodoroResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public ArchivePomodoroResponse(Guid correlationId)
-        : base(correlationId)
-    {
 
-    }
-
-    public ArchivePomodoroResponse()
-    {
-
-    }
 }

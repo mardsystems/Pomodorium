@@ -2,23 +2,14 @@
 
 namespace System.DomainModel.Storage;
 
-public class GetEventsRequest : Request<GetEventsResponse>
+public record GetEventsRequest : Request<GetEventsResponse>
 {
-    public int PageSize { get; set; }
-    public int PageIndex { get; set; }
+    public int? PageSize { get; init; }
+
+    public int? PageIndex { get; init; }
 }
-public class GetEventsResponse : Response
+
+public record GetEventsResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public GetEventsResponse(Guid correlationId)
-        : base(correlationId)
-    {
-
-    }
-
-    public IEnumerable<EventRecord> EventRecords { get; set; }
-
-    public GetEventsResponse()
-    {
-
-    }
+    public required IEnumerable<EventRecord> EventRecords { get; init; }
 }

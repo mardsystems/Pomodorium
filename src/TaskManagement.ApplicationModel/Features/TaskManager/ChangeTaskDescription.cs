@@ -1,21 +1,15 @@
 ﻿namespace Pomodorium.Features.TaskManager;
 
-public class ChangeTaskDescriptionRequest : Request<ChangeTaskDescriptionResponse>
+public record ChangeTaskDescriptionRequest : Request<ChangeTaskDescriptionResponse>
 {
-    public Guid TaskId { get; set; }
+    public Guid TaskId { get; init; }
 
-    public string Description { get; set; }
+    public required string Description { get; init; }
 
-    public long TaskVersion { get; set; }
+    public long TaskVersion { get; init; }
 }
 
-public class ChangeTaskDescriptionResponse : Response
+public record ChangeTaskDescriptionResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public ChangeTaskDescriptionResponse(Guid correlationId)
-        : base(correlationId)
-    {
-
-    }
-
-    public ChangeTaskDescriptionResponse() { }
+    public required long TaskVersion { get; init; }
 }

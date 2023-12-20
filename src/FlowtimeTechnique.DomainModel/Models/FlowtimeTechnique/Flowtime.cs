@@ -90,6 +90,11 @@ public class Flowtime : AggregateRoot
 
     public void Interrupt(DateTime now)
     {
+        if (StartDateTime == null)
+        {
+            return;
+        }
+
         var worktime = now - StartDateTime;
 
         var interrupted = true;
@@ -135,6 +140,11 @@ public class Flowtime : AggregateRoot
 
     public void Stop(DateTime now)
     {
+        if (StartDateTime == null)
+        {
+            return;
+        }
+
         var worktime = now - StartDateTime;
 
         var interrupted = false;

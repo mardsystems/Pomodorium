@@ -35,7 +35,7 @@ public class ActionAttempt<TInput, TResult> : IContainerDependentObject
 
     public string ActionName { get; }
 
-    public ActionAttempt(Func<TInput, TResult> action, string? actionName = null)
+    public ActionAttempt(Func<TInput, TResult> action, string actionName = null)
     {
         _action = action;
 

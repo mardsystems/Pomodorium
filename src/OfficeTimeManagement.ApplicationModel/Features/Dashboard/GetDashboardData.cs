@@ -1,17 +1,11 @@
 ﻿namespace Pomodorium.Features.Dashboard;
 
-public class GetDashboardRequest : Request<GetDashboardResponse>
+public record GetDashboardRequest : Request<GetDashboardResponse>
 {
 
 }
 
-public class GetDashboardResponse : Response
+public record GetDashboardResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public GetDashboardResponse(Guid correlationId)
-        : base(correlationId)
-    {
 
-    }
-
-    public GetDashboardResponse() { }
 }

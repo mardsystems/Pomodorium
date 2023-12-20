@@ -74,15 +74,15 @@
 </MudContainer>
 
 @code {
-    private IndexViewModel? Model = new();
+    private IndexViewModel Model = new();
 
-    private MudDataGrid<IndexViewModel.Item> _mudDataGrid;
+    private MudDataGrid<IndexViewModel.Item> _mudDataGrid = default!;
 
     private string _searchString;
 
     private bool _dataGridDense = false;
 
-    private int _selectedRowNumber = -1;
+    // private int _selectedRowNumber = -1;
 
     private HashSet<IndexViewModel.Item> _selectedItems = new();
 
@@ -125,6 +125,8 @@
     private async System.Threading.Tasks.Task Add()
     {
         NavigationManager.NavigateTo($"/tasks/new");
+
+        await Task.CompletedTask;
     }
 
     private async Task SyncTasksFromTFS()
@@ -150,6 +152,8 @@
     private async System.Threading.Tasks.Task Details(Guid id)
     {
         NavigationManager.NavigateTo($"/tasks/{id}");
+
+        await Task.CompletedTask;
     }
 
     private async System.Threading.Tasks.Task FocusWithFlowtime(Guid taskId)

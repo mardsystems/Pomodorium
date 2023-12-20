@@ -6,21 +6,21 @@ namespace Pomodorium.Models.TaskManagement.Tasks;
 public class TaskCreated : Event
 {
     [DataMember(Order = 1)]
-    public Guid Id { get; private set; }
+    public Guid TaskId { get; private set; }
 
     [DataMember(Order = 2)]
-    public DateTime CreationDate { get; private set; }
+    public DateTime TaskCreatedAt { get; private set; }
 
     [DataMember(Order = 3)]
-    public string Description { get; private set; }
+    public string TaskDescription { get; private set; } = default!;
 
-    public TaskCreated(Guid id, DateTime creationDate, string description)
+    public TaskCreated(Guid taskId, DateTime taskCreatedAt, string taskDescription)
     {
-        Id = id;
+        TaskId = taskId;
 
-        CreationDate = creationDate;
+        TaskCreatedAt = taskCreatedAt;
 
-        Description = description;
+        TaskDescription = taskDescription;
     }
 
     private TaskCreated() { }
@@ -30,16 +30,16 @@ public class TaskCreated : Event
 public class TaskDescriptionChanged : Event
 {
     [DataMember(Order = 1)]
-    public Guid Id { get; private set; }
+    public Guid TaskId { get; private set; }
 
     [DataMember(Order = 2)]
-    public string? Description { get; private set; }
+    public string TaskDescription { get; private set; } = default!;
 
-    public TaskDescriptionChanged(Guid id, string description)
+    public TaskDescriptionChanged(Guid taskId, string taskDescription)
     {
-        Id = id;
+        TaskId = taskId;
 
-        Description = description;
+        TaskDescription = taskDescription;
     }
 
     private TaskDescriptionChanged() { }
@@ -49,11 +49,11 @@ public class TaskDescriptionChanged : Event
 public class TaskArchived : Event
 {
     [DataMember(Order = 1)]
-    public Guid Id { get; private set; }
+    public Guid TaskId { get; private set; }
 
-    public TaskArchived(Guid id)
+    public TaskArchived(Guid taskId)
     {
-        Id = id;
+        TaskId = taskId;
     }
 
     private TaskArchived() { }

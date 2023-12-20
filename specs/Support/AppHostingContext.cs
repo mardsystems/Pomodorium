@@ -115,10 +115,7 @@ public class AppHostingContext : IDisposable
 
         protected override void Dispose(bool disposing)
         {
-            if (_serviceScope != null)
-            {
-                _serviceScope.Dispose();
-            }
+            _serviceScope?.Dispose();
 
             base.Dispose(disposing);
         }
@@ -172,7 +169,7 @@ public class AppHostingContext : IDisposable
 
             private class NoopDisposable : IDisposable
             {
-                public static readonly NoopDisposable Instance = new NoopDisposable();
+                public static readonly NoopDisposable Instance = new();
 
                 public void Dispose()
                 {
@@ -182,24 +179,19 @@ public class AppHostingContext : IDisposable
         #endregion
     }
 
-    private static TestAppFactory? _webApplicationFactory;
+    private static TestAppFactory _webApplicationFactory;
 
-    public HttpClient CreateHttpClient()
+    public static HttpClient CreateHttpClient()
     {
         _webApplicationFactory.Should().NotBeNull("the app should be running");
 
-        var options = new WebApplicationFactoryClientOptions
+        var _ = new WebApplicationFactoryClientOptions
         {
             BaseAddress = new Uri("https://localhost"),
             AllowAutoRedirect = false
         };
 
-        var httpClient = _webApplicationFactory?.CreateClient();
-
-        if (httpClient == null)
-        {
-            throw new InvalidOperationException();
-        }
+        var httpClient = (_webApplicationFactory?.CreateClient()) ?? throw new InvalidOperationException();
 
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme: "TestScheme");
 
@@ -210,6 +202,8 @@ public class AppHostingContext : IDisposable
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
+
         //nop
     }
 
@@ -227,12 +221,7 @@ public class AppHostingContext : IDisposable
 
     public static DatabaseContext GetDatabase()
     {
-        var database = _webApplicationFactory?.GetDatabase();
-
-        if (database == null)
-        {
-            throw new InvalidOperationException();
-        }
+        var database = (_webApplicationFactory?.GetDatabase()) ?? throw new InvalidOperationException();
 
         return database;
     }

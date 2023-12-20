@@ -23,7 +23,7 @@ public class Repository
 
         var events = await _eventStore.LoadAllEvents();
 
-        foreach (var @event in events)
+        foreach (var _ in events)
         {
             try
             {
@@ -86,7 +86,7 @@ public class Repository
         }
     }
 
-    private bool ConflictsWith(Event event1, Event event2)
+    private static bool ConflictsWith(Event event1, Event event2)
     {
         return event1.GetType() == event2.GetType();
     }

@@ -46,7 +46,7 @@ public class CosmosPomodoroQueryItemsProjection :
 
         while (feed.HasMoreResults)
         {
-            var feedResponse = await feed.ReadNextAsync();
+            var feedResponse = await feed.ReadNextAsync(cancellationToken: cancellationToken);
 
             foreach (PomodoroQueryItem item in feedResponse)
             {
@@ -56,7 +56,7 @@ public class CosmosPomodoroQueryItemsProjection :
             requestCharge += feedResponse.RequestCharge;
         }
 
-        _logger.LogInformation($"Request charge:\t{requestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", requestCharge);
 
         var response = new GetPomosResponse(request.GetCorrelationId()) { PomodoroQueryItems = pomodoroQueryItems };
 
@@ -75,63 +75,67 @@ public class CosmosPomodoroQueryItemsProjection :
             Version = notification.Version
         };
 
-        var response = await _container.CreateItemAsync(item: pomodoroQueryItem, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.CreateItemAsync(
+            item: pomodoroQueryItem,
+            partitionKey: new PartitionKey(notification.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async Task Handle(PomodoroChecked notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<PomodoroQueryItem>(
                 id: notification.Id.ToString(),
-                partitionKey: new PartitionKey(notification.Id.ToString())
+                partitionKey: new PartitionKey(notification.Id.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var pomodoroQueryItem = itemResponse.Resource;
-
-        if (pomodoroQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var pomodoroQueryItem = itemResponse.Resource ?? throw new EntityNotFoundException();
 
         pomodoroQueryItem.State = notification.State;
         pomodoroQueryItem.Version = notification.Version;
 
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
-        var response = await _container.UpsertItemAsync(item: pomodoroQueryItem, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.UpsertItemAsync(
+            item: pomodoroQueryItem,
+            partitionKey: new PartitionKey(notification.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async Task Handle(PomodoroTaskRefined notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<PomodoroQueryItem>(
                 id: notification.Id.ToString(),
-                partitionKey: new PartitionKey(notification.Id.ToString())
+                partitionKey: new PartitionKey(notification.Id.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var pomodoroQueryItem = itemResponse.Resource;
-
-        if (pomodoroQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var pomodoroQueryItem = itemResponse.Resource ?? throw new EntityNotFoundException();
 
         pomodoroQueryItem.Task = notification.Task;
         pomodoroQueryItem.Version = notification.Version;
 
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
-        var response = await _container.UpsertItemAsync(item: pomodoroQueryItem, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.UpsertItemAsync(
+            item: pomodoroQueryItem,
+            partitionKey: new PartitionKey(notification.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async Task Handle(PomodoroArchived notification, CancellationToken cancellationToken)
     {
-        var response = await _container.DeleteItemAsync<PomodoroQueryItem>(notification.Id.ToString(), new PartitionKey(notification.Id.ToString()));
+        var response = await _container.DeleteItemAsync<PomodoroQueryItem>(
+            notification.Id.ToString(),
+            new PartitionKey(notification.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 }

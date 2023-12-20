@@ -26,6 +26,11 @@ public class EventStore
         {
             var type = Type.GetType(tapeRecord.TypeName);
 
+            if (type == null)
+            {
+                throw new InvalidOperationException();
+            }
+
             var @event = DesserializeEvent(type, tapeRecord.Data);
 
             @event.Version = tapeRecord.Version;
@@ -49,6 +54,11 @@ public class EventStore
         foreach (var tapeRecord in records)
         {
             var type = Type.GetType(tapeRecord.TypeName);
+
+            if (type == null)
+            {
+                throw new InvalidOperationException();
+            }
 
             var @event = DesserializeEvent(type, tapeRecord.Data);
 
@@ -74,7 +84,7 @@ public class EventStore
 
                 return @event;
             }
-            catch (Exception _)
+            catch (Exception)
             {
                 throw;
             }
@@ -102,7 +112,19 @@ public class EventStore
 
             try
             {
-                var eventRecord = await _appendOnlyStore.Append(name, @event.GetType().AssemblyQualifiedName, @event.Date, data, originalVersion);
+                var type = @event.GetType();
+
+                if (type == null)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                if (type.AssemblyQualifiedName == null)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                var eventRecord = await _appendOnlyStore.Append(name, type.AssemblyQualifiedName, @event.Date, data, originalVersion);
 
                 var eventStored = new EventAppended { Record = eventRecord };
 
@@ -129,7 +151,7 @@ public class EventStore
             {
                 Serializer.Serialize(stream, @event);
             }
-            catch (Exception _)
+            catch (Exception)
             {
                 throw;
             }

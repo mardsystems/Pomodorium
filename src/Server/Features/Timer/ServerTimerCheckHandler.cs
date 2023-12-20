@@ -7,7 +7,9 @@ namespace Pomodorium.Features.Timer;
 
 public class ServerTimerCheckHandler : IRequestHandler<CheckTimerRequest, CheckTimerResponse>
 {
+#pragma warning disable IDE0052 // Remove unread private members
     private readonly IHubContext<EventHub, IHubEvent> _eventHub;
+#pragma warning restore IDE0052 // Remove unread private members
 
     public ServerTimerCheckHandler(IHubContext<EventHub, IHubEvent> eventHub)
     {
@@ -18,12 +20,12 @@ public class ServerTimerCheckHandler : IRequestHandler<CheckTimerRequest, CheckT
     {
         var pomosRunning = new List<Pomodoro>();
 
-        foreach (var item in pomosRunning)
+        foreach (var _ in pomosRunning)
         {
 
         }
 
-        var response = new CheckTimerResponse();
+        var response = new CheckTimerResponse(request.GetCorrelationId());
 
         return Task.FromResult(response);
     }

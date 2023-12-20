@@ -1,17 +1,11 @@
 ﻿namespace Pomodorium.Features.TaskSynchronizer;
 
-public class SyncTasksFromTfsRequest : Request<SyncTasksFromTfsResponse>
+public record SyncTasksFromTfsRequest : Request<SyncTasksFromTfsResponse>
 {
     
 }
 
-public class SyncTasksFromTfsResponse : Response
+public record SyncTasksFromTfsResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public SyncTasksFromTfsResponse(Guid correlationId)
-        : base(correlationId)
-    {
 
-    }
-
-    public SyncTasksFromTfsResponse() { }
 }

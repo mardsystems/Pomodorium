@@ -3,27 +3,16 @@ using Pomodorium.Enums;
 
 namespace Pomodorium.Features.PomodoroTimer;
 
-public class GetPomosRequest : Request<GetPomosResponse>
+public record GetPomosRequest : Request<GetPomosResponse>
 {
-    public int PageSize { get; set; }
+    public int? PageSize { get; init; }
 
-    public int PageIndex { get; set; }
+    public int? PageIndex { get; init; }
 }
 
-public class GetPomosResponse : Response
+public record GetPomosResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public GetPomosResponse(Guid correlationId)
-        : base(correlationId)
-    {
-
-    }
-
-    public IEnumerable<PomodoroQueryItem> PomodoroQueryItems { get; set; }
-
-    public GetPomosResponse()
-    {
-
-    }
+    public required IEnumerable<PomodoroQueryItem> PomodoroQueryItems { get; init; }
 }
 
 public class PomodoroQueryItem

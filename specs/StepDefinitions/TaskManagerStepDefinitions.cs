@@ -1,7 +1,6 @@
 using Pomodorium.Drivers;
 using Pomodorium.Features.TaskManager;
 using Pomodorium.Support;
-using TechTalk.SpecFlow.Assist;
 
 namespace Pomodorium.StepDefinitions
 {
@@ -10,9 +9,11 @@ namespace Pomodorium.StepDefinitions
     {
         private readonly TaskManagerApiDriver _taskManagerApiDriver;
 
-        private Table _specification;
-
         private Guid _taskId;
+
+        private string _taskDescription;
+
+        private long _taskVersion;
 
         public TaskManagerStepDefinitions(TaskManagerApiDriver taskManagerApiDriver)
         {
@@ -20,43 +21,57 @@ namespace Pomodorium.StepDefinitions
         }
 
         [Given(@"that there is any customer")]
-        public async void GivenThatThereIsAnyCustomer()
+        public void GivenThatThereIsAnyCustomer()
         {
             var request = TaskManagerStubs.CreateTask();
 
-            var response = _taskManagerApiDriver.CreateTask(request);
+            var response = _taskManagerApiDriver.CreateTaskAction.Perform(request, true);
 
-            _taskId = _taskManagerApiDriver.GetTask(response.TaskId).TaskDetails.Id;
+            _taskId = response.TaskId;
+
+            _taskVersion = response.TaskVersion;
         }
 
-        [When(@"Programmer registers a task as")]
-        public void WhenProgrammerRegistersATaskAs(Table table)
+        [When(@"Programmer registers a task '([^']*)'")]
+        public void WhenProgrammerRegistersATask(string description)
         {
-            _specification = table;
+            _taskDescription = description;
 
-            var request = table.CreateInstance(TaskManagerStubs.CreateTask);
+            var request = new CreateTaskRequest
+            {
+                Description = _taskDescription
+            };
 
             var response = _taskManagerApiDriver.CreateTaskAction.Perform(request);
+
+            _taskId = response.TaskId;
+
+            _taskVersion = response.TaskVersion;
         }
 
-        [When(@"Programmer change a task as")]
-        public void WhenProgrammerChangeATaskAs(Table table)
+        [When(@"Programmer change a task to '([^']*)'")]
+        public void WhenProgrammerChangeATaskTo(string description)
         {
-            _specification = table;
+            _taskDescription = description;
 
-            var request = table.CreateInstance(TaskManagerStubs.ChangeTaskDescription);
+            var request = new ChangeTaskDescriptionRequest
+            {
+                TaskId = _taskId,
+                Description = _taskDescription,
+                TaskVersion = _taskVersion
+            };
 
-            request.TaskId = _taskId;
-            
             var response = _taskManagerApiDriver.ChangeTaskDescriptionAction.Perform(request);
+
+            _taskVersion = response.TaskVersion;
         }
 
         [Then(@"the task should be registered as expected")]
         public void ThenTheTaskShouldBeRegisteredAsExpected()
         {
-            var tasks = _taskManagerApiDriver.GetTasks(new GetTasksRequest()).TaskQueryItems;
+            var task = _taskManagerApiDriver.GetTaskAction.Perform(new GetTaskRequest(_taskId)).TaskDetails;
 
-            _specification.CompareToSet(tasks);
+            task.Description.Should().Be(_taskDescription);
         }
     }
 }

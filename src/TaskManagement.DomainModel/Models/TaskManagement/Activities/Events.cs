@@ -7,10 +7,10 @@ namespace Pomodorium.Models.TaskManagement.Activities;
 public class ActivityCreated : Event
 {
     [DataMember(Order = 1)]
-    public Guid Id { get; private set; }
+    public Guid ActivityId { get; private set; }
 
     [DataMember(Order = 2)]
-    public string Name { get; private set; }
+    public string ActivityName { get; private set; } = default!;
 
     [DataMember(Order = 3)]
     public DateTime? StartDateTime { get; private set; }
@@ -19,36 +19,36 @@ public class ActivityCreated : Event
     public DateTime? StopDateTime { get; private set; }
 
     [DataMember(Order = 5)]
-    public ActivityStateEnum State { get; set; }
+    public ActivityStateEnum ActivityState { get; set; }
 
     [DataMember(Order = 6)]
-    public TimeSpan? Duration { get; private set; }
+    public TimeSpan? ActivityDuration { get; private set; }
 
     [DataMember(Order = 7)]
-    public string Description { get; private set; }
+    public string? ActivityDescription { get; private set; }
 
     public ActivityCreated(
-        Guid id,
-        string name,
+        Guid activityId,
+        string activityName,
         DateTime? startDateTime,
         DateTime? stopDateTime,
         ActivityStateEnum state,
         TimeSpan? duration,
-        string description)
+        string? description)
     {
-        Id = id;
+        ActivityId = activityId;
 
-        Name = name;
+        ActivityName = activityName;
 
         StartDateTime = startDateTime;
 
         StopDateTime = stopDateTime;
 
-        State = state;
+        ActivityState = state;
 
-        Duration = duration;
+        ActivityDuration = duration;
 
-        Description = description;
+        ActivityDescription = description;
     }
 
     private ActivityCreated() { }
@@ -58,10 +58,10 @@ public class ActivityCreated : Event
 public class ActivityUpdated : Event
 {
     [DataMember(Order = 1)]
-    public Guid Id { get; private set; }
+    public Guid ActivityId { get; private set; }
 
     [DataMember(Order = 2)]
-    public string Name { get; private set; }
+    public string ActivityName { get; private set; } = default!;
 
     [DataMember(Order = 3)]
     public DateTime? StartDateTime { get; private set; }
@@ -70,36 +70,36 @@ public class ActivityUpdated : Event
     public DateTime? StopDateTime { get; private set; }
 
     [DataMember(Order = 5)]
-    public ActivityStateEnum State { get; set; }
+    public ActivityStateEnum ActivityState { get; set; }
 
     [DataMember(Order = 6)]
-    public TimeSpan? Duration { get; private set; }
+    public TimeSpan? ActivityDuration { get; private set; }
 
     [DataMember(Order = 7)]
-    public string Description { get; private set; }
+    public string? ActivityDescription { get; private set; }
 
     public ActivityUpdated(
-        Guid id,
-        string name,
+        Guid activityId,
+        string activityName,
         DateTime? startDateTime,
         DateTime? stopDateTime,
         ActivityStateEnum state,
         TimeSpan? duration,
-        string description)
+        string? description)
     {
-        Id = id;
+        ActivityId = activityId;
 
-        Name = name;
+        ActivityName = activityName;
 
         StartDateTime = startDateTime;
 
         StopDateTime = stopDateTime;
 
-        State = state;
+        ActivityState = state;
 
-        Duration = duration;
+        ActivityDuration = duration;
 
-        Description = description;
+        ActivityDescription = description;
     }
 
     private ActivityUpdated() { }
@@ -109,11 +109,11 @@ public class ActivityUpdated : Event
 public class ActivityDeleted : Event
 {
     [DataMember(Order = 1)]
-    public Guid Id { get; private set; }
+    public Guid ActivityId { get; private set; }
 
-    public ActivityDeleted(Guid id)
+    public ActivityDeleted(Guid activityId)
     {
-        Id = id;
+        ActivityId = activityId;
     }
 
     private ActivityDeleted() { }

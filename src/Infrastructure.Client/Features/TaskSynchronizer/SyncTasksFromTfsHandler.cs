@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace Pomodorium.Features.TaskSynchronizer;
 
-public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, SyncTasksFromTfsResponse>
+public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, SyncTasksFromTfsResponse?>
 {
     private readonly HttpClient _httpClient;
 
@@ -13,7 +13,7 @@ public class SyncTasksFromTfsHandler : IRequestHandler<SyncTasksFromTfsRequest, 
         _httpClient = httpClient;
     }
 
-    public async Task<SyncTasksFromTfsResponse> Handle(SyncTasksFromTfsRequest request, CancellationToken cancellationToken)
+    public async Task<SyncTasksFromTfsResponse?> Handle(SyncTasksFromTfsRequest request, CancellationToken cancellationToken)
     {
         var httpResponse = await _httpClient.PostAsJsonAsync("api/TaskSynchronizer/SyncTasksFromTfs", request, cancellationToken);
 

@@ -2,7 +2,7 @@
 
 public class Task : AggregateRoot
 {
-    public string Description { get; private set; }
+    public string Description { get; private set; } = default!;
 
     public Task(string description)
     {
@@ -16,11 +16,11 @@ public class Task : AggregateRoot
 
     public void When(TaskCreated e)
     {
-        Id = e.Id;
+        Id = e.TaskId;
 
-        CreationDate = e.CreationDate;
+        CreationDate = e.TaskCreatedAt;
 
-        Description = e.Description;
+        Description = e.TaskDescription;
     }
 
     public void ChangeDescription(string description)
@@ -30,7 +30,7 @@ public class Task : AggregateRoot
 
     public void When(TaskDescriptionChanged e)
     {
-        Description = e.Description;
+        Description = e.TaskDescription;
     }
 
     public Task() { }

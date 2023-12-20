@@ -67,13 +67,13 @@
 
 @code {
     [Parameter]
-    public string? Id { get; set; }
+    public string Id { get; set; }
 
     [Parameter]
     [SupplyParameterFromQuery]
     public Guid? TaskId { get; set; }
 
-    public DetailsViewModel? Model { get; set; }
+    public DetailsViewModel Model { get; set; } = default!;
 
     [Inject]
     private IDialogService DialogService { get; set; }
@@ -88,7 +88,9 @@
         }
         else
         {
-            var request = new GetTaskRequest { TaskId = Guid.Parse(Id) };
+            var taskId = Guid.Parse(Id);
+
+            var request = new GetTaskRequest(taskId);
 
             var response = await Mediator.Send<GetTaskResponse>(request);
 
@@ -142,9 +144,11 @@
             return;
         }
 
+        var taskId = Guid.Parse(Id);
+
         var request = new ArchiveTaskRequest
             {
-                TaskId = Guid.Parse(Id),
+                TaskId = taskId,
                 TaskVersion = Model.Version
             };
 

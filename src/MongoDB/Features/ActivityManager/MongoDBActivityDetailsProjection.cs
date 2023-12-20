@@ -26,14 +26,12 @@ public class MongoDBActivityDetailsProjection :
     {
         var filter = Builders<ActivityDetails>.Filter.Eq(x => x.Id, request.Id);
 
-        var activityDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
+        var activityDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken) ?? throw new EntityNotFoundException();
 
-        if (activityDetails == null)
+        var response = new GetActivityResponse(request.GetCorrelationId())
         {
-            throw new EntityNotFoundException();
-        }
-
-        var response = new GetActivityResponse(request.GetCorrelationId()) { ActivityDetails = activityDetails };
+            ActivityDetails = activityDetails
+        };
 
         return response;
     }
@@ -42,13 +40,13 @@ public class MongoDBActivityDetailsProjection :
     {
         var activityDetails = new ActivityDetails
         {
-            Id = notification.Id,
-            Name = notification.Name,
-            State = notification.State,
+            Id = notification.ActivityId,
+            Name = notification.ActivityName,
+            State = notification.ActivityState,
             StartDateTime = notification.StartDateTime,
             StopDateTime = notification.StopDateTime,
-            Duration = notification.Duration,
-            Description = notification.Description,
+            Duration = notification.ActivityDuration,
+            Description = notification.ActivityDescription,
             Version = notification.Version
         };
 
@@ -57,15 +55,15 @@ public class MongoDBActivityDetailsProjection :
 
     public async Task Handle(ActivityUpdated notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<ActivityDetails>.Filter.Eq(x => x.Id, notification.Id);
+        var filter = Builders<ActivityDetails>.Filter.Eq(x => x.Id, notification.ActivityId);
 
         var update = Builders<ActivityDetails>.Update
-            .Set(x => x.Name, notification.Name)
-            .Set(x => x.State, notification.State)
+            .Set(x => x.Name, notification.ActivityName)
+            .Set(x => x.State, notification.ActivityState)
             .Set(x => x.StartDateTime, notification.StartDateTime)
             .Set(x => x.StopDateTime, notification.StopDateTime)
-            .Set(x => x.Duration, notification.Duration)
-            .Set(x => x.Description, notification.Description)
+            .Set(x => x.Duration, notification.ActivityDuration)
+            .Set(x => x.Description, notification.ActivityDescription)
             .Set(x => x.Version, notification.Version);
 
         await _mongoCollection.UpdateOneAsync(filter, update, null, cancellationToken);
@@ -73,7 +71,7 @@ public class MongoDBActivityDetailsProjection :
 
     public async Task Handle(ActivityDeleted notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<ActivityDetails>.Filter.Eq(x => x.Id, notification.Id);
+        var filter = Builders<ActivityDetails>.Filter.Eq(x => x.Id, notification.ActivityId);
 
         await _mongoCollection.DeleteOneAsync(filter, cancellationToken);
     }

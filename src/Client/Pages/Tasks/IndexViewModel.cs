@@ -9,7 +9,7 @@ namespace Pomodorium.Pages.Tasks;
 
 public class IndexViewModel
 {
-    public ObservableCollection<Item>? Items { get; } = new ObservableCollection<Item>();
+    public ObservableCollection<Item> Items { get; } = new ObservableCollection<Item>();
 
     public IObservable<EventPattern<NotifyCollectionChangedEventArgs>> ItemsChanged { get; }
 
@@ -46,7 +46,7 @@ public class IndexViewModel
 
         public DateTime? CreationDate { get; set; }
 
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         public double TotalHours { get; set; }
 
@@ -54,9 +54,9 @@ public class IndexViewModel
 
         public Guid? IntegrationId { get; set; }
 
-        public string? IntegrationName { get; set; }
+        public string IntegrationName { get; set; }
 
-        public string? ExternalReference { get; set; }
+        public string ExternalReference { get; set; }
 
         public bool? HasFocus { get; set; }
 
@@ -67,17 +67,15 @@ public class IndexViewModel
         public Item(
             Guid id,
             DateTime? creationDate,
-            string? description,
+            string description,
             double? totalHours,
             IntegrationTypeEnum? integrationType,
             Guid? integrationId,
-            string? integrationName,
-            string? externalReference,
+            string integrationName,
+            string externalReference,
             bool? hasFocus,
             long version)
         {
-            var now = DateTime.Now;
-
             Id = id;
 
             CreationDate = creationDate;
@@ -104,11 +102,13 @@ public class IndexViewModel
             HasFocus = hasFocus;
 
             Version = version;
+
+            BreakCountdownChanges = Observable.Empty<long>();
         }
 
         public Item()
         {
-
+            BreakCountdownChanges = Observable.Empty<long>();
         }
     }
 }

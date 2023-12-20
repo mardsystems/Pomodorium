@@ -39,20 +39,19 @@ public class CosmosFlowtimeDetailsProjection :
     public async Task<GetFlowtimeResponse> Handle(GetFlowtimeRequest request, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<FlowtimeDetails>(
-                id: request.Id.ToString(),
-                partitionKey: new PartitionKey(request.Id.ToString())
+                id: request.FlowtimeId.ToString(),
+                partitionKey: new PartitionKey(request.FlowtimeId.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var flowtimeDetails = itemResponse.Resource;
+        var flowtimeDetails = itemResponse.Resource ?? throw new EntityNotFoundException();
 
-        if (flowtimeDetails == null)
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
+
+        var response = new GetFlowtimeResponse(request.GetCorrelationId())
         {
-            throw new EntityNotFoundException();
-        }
-
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
-
-        var response = new GetFlowtimeResponse(request.GetCorrelationId()) { FlowtimeDetails = flowtimeDetails };
+            FlowtimeDetails = flowtimeDetails
+        };
 
         return response;
     }
@@ -70,49 +69,47 @@ public class CosmosFlowtimeDetailsProjection :
             Version = notification.Version
         };
 
-        var response = await _container.CreateItemAsync(item: flowtimeDetails, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.CreateItemAsync(
+            item: flowtimeDetails,
+            partitionKey: new PartitionKey(notification.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async System.Threading.Tasks.Task Handle(FlowtimeStarted notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<FlowtimeDetails>(
                 id: notification.Id.ToString(),
-                partitionKey: new PartitionKey(notification.Id.ToString())
+                partitionKey: new PartitionKey(notification.Id.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var flowtimeDetails = itemResponse.Resource;
-
-        if (flowtimeDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var flowtimeDetails = itemResponse.Resource ?? throw new EntityNotFoundException();
 
         flowtimeDetails.StartDateTime = notification.StartDateTime;
         flowtimeDetails.State = notification.State;
         flowtimeDetails.Version = notification.Version;
 
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
-        var response = await _container.UpsertItemAsync(item: flowtimeDetails, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.UpsertItemAsync(
+            item: flowtimeDetails,
+            partitionKey: new PartitionKey(notification.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async System.Threading.Tasks.Task Handle(FlowtimeInterrupted notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<FlowtimeDetails>(
                 id: notification.Id.ToString(),
-                partitionKey: new PartitionKey(notification.Id.ToString())
+                partitionKey: new PartitionKey(notification.Id.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var flowtimeDetails = itemResponse.Resource;
-
-        if (flowtimeDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var flowtimeDetails = itemResponse.Resource ?? throw new EntityNotFoundException();
 
         flowtimeDetails.StopDateTime = notification.StopDateTime;
         flowtimeDetails.Interrupted = notification.Interrupted;
@@ -121,26 +118,25 @@ public class CosmosFlowtimeDetailsProjection :
         flowtimeDetails.State = notification.State;
         flowtimeDetails.Version = notification.Version;
 
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
-        var response = await _container.UpsertItemAsync(item: flowtimeDetails, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.UpsertItemAsync(
+            item: flowtimeDetails,
+            partitionKey: new PartitionKey(notification.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async System.Threading.Tasks.Task Handle(FlowtimeStopped notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<FlowtimeDetails>(
                 id: notification.Id.ToString(),
-                partitionKey: new PartitionKey(notification.Id.ToString())
+                partitionKey: new PartitionKey(notification.Id.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var flowtimeDetails = itemResponse.Resource;
-
-        if (flowtimeDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var flowtimeDetails = itemResponse.Resource ?? throw new EntityNotFoundException();
 
         flowtimeDetails.StopDateTime = notification.StopDateTime;
         flowtimeDetails.Interrupted = notification.Interrupted;
@@ -149,11 +145,14 @@ public class CosmosFlowtimeDetailsProjection :
         flowtimeDetails.State = notification.State;
         flowtimeDetails.Version = notification.Version;
 
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
-        var response = await _container.UpsertItemAsync(item: flowtimeDetails, partitionKey: new PartitionKey(notification.Id.ToString()));
+        var response = await _container.UpsertItemAsync(
+            item: flowtimeDetails,
+            partitionKey: new PartitionKey(notification.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async System.Threading.Tasks.Task Handle(TaskDescriptionChanged notification, CancellationToken cancellationToken)
@@ -162,7 +161,7 @@ public class CosmosFlowtimeDetailsProjection :
 
         var query = new QueryDefinition(
             query: "SELECT * FROM FlowtimeDetails p WHERE p.TaskId = @taskId")
-            .WithParameter("@taskId", notification.Id);
+            .WithParameter("@taskId", notification.TaskId);
 
         using var feed = _container.GetItemQueryIterator<FlowtimeDetails>(queryDefinition: query);
 
@@ -170,7 +169,7 @@ public class CosmosFlowtimeDetailsProjection :
 
         while (feed.HasMoreResults)
         {
-            var feedResponse = await feed.ReadNextAsync();
+            var feedResponse = await feed.ReadNextAsync(cancellationToken: cancellationToken);
 
             foreach (FlowtimeDetails item in feedResponse)
             {
@@ -180,23 +179,29 @@ public class CosmosFlowtimeDetailsProjection :
             requestCharge += feedResponse.RequestCharge;
         }
 
-        _logger.LogInformation($"Request charge:\t{requestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", requestCharge);
 
         foreach (var flowtimeDetails in flowtimeDetailsByTaskId)
         {
-            flowtimeDetails.TaskDescription = notification.Description;
+            flowtimeDetails.TaskDescription = notification.TaskDescription;
             flowtimeDetails.TaskVersion = notification.Version;
 
-            var response = await _container.UpsertItemAsync(item: flowtimeDetails, partitionKey: new PartitionKey(flowtimeDetails.Id.ToString()));
+            var response = await _container.UpsertItemAsync(
+                item: flowtimeDetails,
+                partitionKey: new PartitionKey(flowtimeDetails.Id.ToString()),
+                cancellationToken: cancellationToken);
 
-            _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+            _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
         }
     }
 
     public async System.Threading.Tasks.Task Handle(FlowtimeArchived notification, CancellationToken cancellationToken)
     {
-        var response = await _container.DeleteItemAsync<FlowtimeDetails>(notification.Id.ToString(), new PartitionKey(notification.Id.ToString()));
+        var response = await _container.DeleteItemAsync<FlowtimeDetails>(
+            notification.Id.ToString(),
+            new PartitionKey(notification.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 }

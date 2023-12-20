@@ -21,7 +21,7 @@ public class PostActivityHandler : IRequestHandler<PostActivityRequest, PostActi
 
         await _repository.Save(activity, -1);
 
-        var response = new PostActivityResponse(request.GetCorrelationId()) { };
+        var response = new PostActivityResponse(request.GetCorrelationId());
 
         return response;
     }

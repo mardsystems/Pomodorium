@@ -28,7 +28,7 @@ public class CosmosTrelloIntegrationService : ITrelloIntegrationRepository
         _logger = logger;
     }
 
-    public async Task<IEnumerable<TrelloIntegration>> GetTrelloIntegrationList(TrelloIntegration criteria = default, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<TrelloIntegration>> GetTrelloIntegrationList(TrelloIntegration? criteria = default, CancellationToken cancellationToken = default)
     {
         var tfsIntegrationList = new List<TrelloIntegration>();
 
@@ -41,7 +41,7 @@ public class CosmosTrelloIntegrationService : ITrelloIntegrationRepository
 
         while (feed.HasMoreResults)
         {
-            FeedResponse<TrelloIntegration> response = await feed.ReadNextAsync();
+            FeedResponse<TrelloIntegration> response = await feed.ReadNextAsync(cancellationToken: cancellationToken);
 
             foreach (TrelloIntegration @event in response)
             {
@@ -51,16 +51,19 @@ public class CosmosTrelloIntegrationService : ITrelloIntegrationRepository
             requestCharge += response.RequestCharge;
         }
 
-        _logger.LogInformation($"Request charge:\t{requestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", requestCharge);
 
         return tfsIntegrationList;
     }
 
     public async Task<TrelloIntegration> CreateTrelloIntegration(TrelloIntegration tfsIntegration, CancellationToken cancellationToken = default)
     {
-        var response = await _container.CreateItemAsync(item: tfsIntegration, partitionKey: new PartitionKey(tfsIntegration.Id.ToString()));
+        var response = await _container.CreateItemAsync(
+            item: tfsIntegration,
+            partitionKey: new PartitionKey(tfsIntegration.Id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
 
         var tfsIntegrationCreated = response.Resource;
 
@@ -71,21 +74,22 @@ public class CosmosTrelloIntegrationService : ITrelloIntegrationRepository
     {
         ItemResponse<TrelloIntegration> response = await _container.ReadItemAsync<TrelloIntegration>(
                 id: id.ToString(),
-                partitionKey: new PartitionKey(id.ToString())
+                partitionKey: new PartitionKey(id.ToString()),
+                cancellationToken: cancellationToken
             );
 
         var tfsIntegration = response.Resource;
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
 
         return tfsIntegration;
     }
 
     public async Task<TrelloIntegration> UpdateTrelloIntegration(TrelloIntegration tfsIntegration, CancellationToken cancellationToken = default)
     {
-        var response = await _container.UpsertItemAsync(tfsIntegration);
+        var response = await _container.UpsertItemAsync(tfsIntegration, cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
 
         var tfsIntegrationUpdated = response.Resource;
 
@@ -94,8 +98,11 @@ public class CosmosTrelloIntegrationService : ITrelloIntegrationRepository
 
     public async Task DeleteTrelloIntegration(Guid id, CancellationToken cancellationToken = default)
     {
-        var response = await _container.DeleteItemAsync<TrelloIntegration>(id.ToString(), new PartitionKey(id.ToString()));
+        var response = await _container.DeleteItemAsync<TrelloIntegration>(
+            id.ToString(),
+            new PartitionKey(id.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 }

@@ -13,6 +13,11 @@ public class CreatePomodoroHandler : IRequestHandler<CreatePomodoroRequest, Crea
 
     public async Task<CreatePomodoroResponse> Handle(CreatePomodoroRequest request, CancellationToken cancellationToken)
     {
+        if (request.Task == null)
+        {
+            throw new InvalidOperationException();
+        }
+
         var pomodoro = new Pomodoro(request.Task, request.Timer, DateTime.Now);
 
         await _repository.Save(pomodoro, -1);

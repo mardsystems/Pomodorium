@@ -5,7 +5,7 @@ public class EventStoreConcurrencyException : Exception
     /// <summary>
     /// Actual Events.
     /// </summary>
-    public Event[] StoreEvents { get; set; }
+    public required Event[] StoreEvents { get; set; }
 
     /// <summary>
     /// Actual Version.

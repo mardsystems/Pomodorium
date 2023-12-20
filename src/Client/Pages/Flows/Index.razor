@@ -29,8 +29,8 @@
     }
     <MudSpacer />
     <MudText Typo="Typo.button" Class="mx-4" Style="text-wrap: nowrap">Total: @Model.Items?.Count</MudText>
-    <MudMenu Icon="@Icons.Material.Filled.MoreVert">
-        <MudMenuItem OnClick="@(() => _dataGridDense = !_dataGridDense)">Dense: @(_dataGridDense ? "On" : "Off")</MudMenuItem>
+        <MudMenu Icon="@Icons.Material.Filled.MoreVert">
+            <MudMenuItem OnClick="@(() => _dataGridDense = !_dataGridDense)">Dense: @(_dataGridDense ? "On" : "Off")</MudMenuItem>
         </MudMenu>
     </MudToolBar>
 
@@ -91,15 +91,15 @@
 </MudContainer>
 
 @code {
-    private IndexViewModel? Model = new();
+    private IndexViewModel Model = new();
 
-    private MudDataGrid<IndexViewModel.Item> _mudDataGrid;
+    private MudDataGrid<IndexViewModel.Item> _mudDataGrid = default!;
 
     private string _searchString;
 
     private bool _dataGridDense = false;
 
-    private int _selectedRowNumber = -1;
+    // private int _selectedRowNumber = -1;
 
     private HashSet<IndexViewModel.Item> _selectedItems = new();
 
@@ -137,7 +137,7 @@
 
     private async System.Threading.Tasks.Task Refresh()
     {
-        var request = new GetFlowsRequest { };
+        var request = new GetFlowsRequest();
 
         var response = await Mediator.Send<GetFlowsResponse>(request);
 
@@ -147,24 +147,30 @@
     private async System.Threading.Tasks.Task Add()
     {
         NavigationManager.NavigateTo($"/flows/new");
+
+        await Task.CompletedTask;
     }
 
     private async System.Threading.Tasks.Task Details(Guid id)
     {
         NavigationManager.NavigateTo($"/flows/{id}");
+
+        await Task.CompletedTask;
     }
 
     private async System.Threading.Tasks.Task Continue(Guid taskId)
     {
         NavigationManager.NavigateTo($"/flows/continuation?TaskId={taskId}");
+
+        await Task.CompletedTask;
     }
 
     private async System.Threading.Tasks.Task Start(Guid id, long version)
     {
         var request = new StartFlowtimeRequest
             {
-                Id = id,
-                Version = version
+                FlowtimeId = id,
+                FlowtimeVersion = version
             };
 
         var response = await Mediator.Send<StartFlowtimeResponse>(request);
@@ -176,8 +182,8 @@
     {
         var request = new InterruptFlowtimeRequest
             {
-                Id = id,
-                Version = version
+                FlowtimeId = id,
+                FlowtimeVersion = version
             };
 
         var response = await Mediator.Send<InterruptFlowtimeResponse>(request);
@@ -189,9 +195,10 @@
     {
         var request = new StopFlowtimeRequest
             {
-                Id = id,
-                Version = version
+                FlowtimeId = id,
+                FlowtimeVersion = version
             };
+
 
         var response = await Mediator.Send<StopFlowtimeResponse>(request);
 
@@ -204,8 +211,8 @@
         {
             var request = new ArchiveFlowtimeRequest
                 {
-                    Id = item.Id,
-                    Version = item.Version
+                    FlowtimeId = item.Id,
+                    FlowtimeVersion = item.Version
                 };
 
             var response = await Mediator.Send<ArchiveFlowtimeResponse>(request);

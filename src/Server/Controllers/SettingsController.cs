@@ -26,7 +26,7 @@ public class SettingsController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet("TfsIntegration", Name = "GetTfsIntegrationList")]
+    [HttpGet("TfsIntegration")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TfsIntegration>))]
     public async Task<IActionResult> GetTfsIntegrationList([FromQuery] TfsIntegration criteria)
     {
@@ -35,7 +35,7 @@ public class SettingsController : ControllerBase
         return Ok(tfsIntegrationList);
     }
 
-    [HttpPost("TfsIntegration", Name = "PostTfsIntegration")]
+    [HttpPost("TfsIntegration")]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TfsIntegration))]
     public async Task<IActionResult> PostTfsIntegration(TfsIntegration tfsIntegration)
     {
@@ -44,7 +44,7 @@ public class SettingsController : ControllerBase
         return CreatedAtAction(nameof(GetTfsIntegration), new { id = tfsIntegrationCreated.Id }, tfsIntegrationCreated);
     }
 
-    [HttpGet("TfsIntegration/{id}", Name = "GetTfsIntegration")]
+    [HttpGet("TfsIntegration/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TfsIntegration>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetTfsIntegration(Guid id)
@@ -59,7 +59,7 @@ public class SettingsController : ControllerBase
         return Ok(tfsIntegration);
     }
 
-    [HttpPut("TfsIntegration/{id}", Name = "PutTfsIntegration")]
+    [HttpPut("TfsIntegration/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TfsIntegration))]
     public async Task<IActionResult> PutTfsIntegration(Guid id, TfsIntegration tfsIntegration)
     {
@@ -70,8 +70,8 @@ public class SettingsController : ControllerBase
         return Ok(tfsIntegrationUpdated);
     }
 
-    [HttpDelete("TfsIntegration/{id}", Name = "DeleteTfsIntegration")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TfsIntegration))]
+    [HttpDelete("TfsIntegration/{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(TfsIntegration))]
     public async Task<IActionResult> DeleteTfsIntegration(Guid id)
     {
         await _tfsIntegrationRepository.DeleteTfsIntegration(id);
@@ -79,7 +79,7 @@ public class SettingsController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("TrelloIntegration", Name = "GetTrelloIntegrationList")]
+    [HttpGet("TrelloIntegration")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TrelloIntegration>))]
     public async Task<IActionResult> GetTrelloIntegrationList([FromQuery] TrelloIntegration criteria)
     {
@@ -88,7 +88,7 @@ public class SettingsController : ControllerBase
         return Ok(trelloIntegrationList);
     }
 
-    [HttpPost("TrelloIntegration", Name = "PostTrelloIntegration")]
+    [HttpPost   ("TrelloIntegration")]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(TrelloIntegration))]
     public async Task<IActionResult> PostTrelloIntegration(TrelloIntegration trelloIntegration)
     {
@@ -97,7 +97,7 @@ public class SettingsController : ControllerBase
         return CreatedAtAction(nameof(GetTrelloIntegration), new { id = trelloIntegrationCreated.Id }, trelloIntegrationCreated);
     }
 
-    [HttpGet("TrelloIntegration/{id}", Name = "GetTrelloIntegration")]
+    [HttpGet("TrelloIntegration/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<TrelloIntegration>))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetTrelloIntegration(Guid id)
@@ -112,7 +112,7 @@ public class SettingsController : ControllerBase
         return Ok(trelloIntegration);
     }
 
-    [HttpPut("TrelloIntegration/{id}", Name = "PutTrelloIntegration")]
+    [HttpPut("TrelloIntegration/{id}")]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TrelloIntegration))]
     public async Task<IActionResult> PutTrelloIntegration(Guid id, TrelloIntegration trelloIntegration)
     {
@@ -123,8 +123,8 @@ public class SettingsController : ControllerBase
         return Ok(trelloIntegrationUpdated);
     }
 
-    [HttpDelete("TrelloIntegration/{id}", Name = "DeleteTrelloIntegration")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(TrelloIntegration))]
+    [HttpDelete("TrelloIntegration/{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent, Type = typeof(TrelloIntegration))]
     public async Task<IActionResult> DeleteTrelloIntegration(Guid id)
     {
         await _trelloIntegrationRepository.DeleteTrelloIntegration(id);

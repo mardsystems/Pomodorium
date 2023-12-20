@@ -19,7 +19,7 @@ public class TestFolders
     }
 
     public string InputFolder => 
-        Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+        Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().Location).LocalPath);
 
     public string OutputFolder
     {

@@ -11,7 +11,7 @@ public class TaskManagerApiDriver
 
     public ActionAttempt<ChangeTaskDescriptionRequest, ChangeTaskDescriptionResponse> ChangeTaskDescriptionAction { get; }
 
-    public ActionAttempt<GetTasksRequest, GetTasksResponse> GetTasksAction { get; }
+    public ActionAttempt<GetTaskRequest, GetTaskResponse> GetTaskAction { get; }
 
     public ActionAttempt<ArchiveTaskRequest, ArchiveTaskResponse> ArchiveTaskAction { get; }
 
@@ -21,33 +21,18 @@ public class TaskManagerApiDriver
 
         CreateTaskAction = actionAttemptFactory.CreateWithStatusCheck<CreateTaskRequest, CreateTaskResponse>(
             nameof(CreateTaskAction),
-            request => _webApi.ExecutePost<CreateTaskResponse>("api/TaskManager/Tasks/Create", request));
+            request => _webApi.ExecutePost<CreateTaskResponse>("api/TaskManager/CreateTask", request));
 
-        GetTasksAction = actionAttemptFactory.CreateWithStatusCheck<GetTasksRequest, GetTasksResponse>(
-            nameof(GetTasksAction),
-            request => _webApi.ExecuteGet<GetTasksResponse>($"/api/TaskManager/Tasks?description={request.Description}"));
+        GetTaskAction = actionAttemptFactory.CreateWithStatusCheck<GetTaskRequest, GetTaskResponse>(
+            nameof(GetTaskAction),
+            request => _webApi.ExecutePost<GetTaskResponse>($"/api/TaskManager/GetTask", request));
 
         ChangeTaskDescriptionAction = actionAttemptFactory.CreateWithStatusCheck<ChangeTaskDescriptionRequest, ChangeTaskDescriptionResponse>(
             nameof(ChangeTaskDescriptionAction),
-            request => _webApi.ExecutePost<ChangeTaskDescriptionResponse>($"api/TaskManager/Tasks/{request.TaskId}/Description/Change", request));
+            request => _webApi.ExecutePost<ChangeTaskDescriptionResponse>($"api/TaskManager/ChangeTaskDescription", request));
 
         ArchiveTaskAction = actionAttemptFactory.CreateWithStatusCheck<ArchiveTaskRequest, ArchiveTaskResponse>(
             nameof(ArchiveTaskAction),
-            request => _webApi.ExecutePost<ArchiveTaskResponse>($"api/TaskManager/Tasks/{request.TaskId}/Archive", request));
-    }
-
-    public GetTasksResponse GetTasks(GetTasksRequest request)
-    {
-        return _webApi.ExecuteGet<GetTasksResponse>($"/api/TaskManager/Tasks?description={request.Description}").ResponseData;
-    }
-
-    public CreateTaskResponse CreateTask(CreateTaskRequest request)
-    {
-        return _webApi.ExecutePost<CreateTaskResponse>($"/api/TaskManager/Tasks/Create", request).ResponseData;
-    }
-
-    public GetTaskResponse GetTask(Guid taskId)
-    {
-        return _webApi.ExecuteGet<GetTaskResponse>($"/api/TaskManager/Tasks/{taskId}").ResponseData;
+            request => _webApi.ExecutePost<ArchiveTaskResponse>($"api/TaskManager/ArchiveTask", request));
     }
 }

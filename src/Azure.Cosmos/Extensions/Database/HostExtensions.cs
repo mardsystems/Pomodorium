@@ -10,26 +10,25 @@ public static class HostExtensions
 {
     public static void EnsureCreateCosmosDatabase(this IHost host)
     {
-        using (var scope = host.Services.CreateScope())
+        using var scope = host.Services.CreateScope();
+
+        var services = scope.ServiceProvider;
+
+        try
         {
-            var services = scope.ServiceProvider;
+            var cosmosClient = services.GetRequiredService<CosmosClient>();
 
-            try
-            {
-                var cosmosClient = services.GetRequiredService<CosmosClient>();
+            var cosmosOptionsInterface = services.GetService<IOptions<CosmosOptions>>() ?? throw new InvalidOperationException();
 
-                var cosmosOptionsInterface = services.GetService<IOptions<CosmosOptions>>();
+            cosmosClient.EnsureCreated(cosmosOptionsInterface.Value);
+        }
+        catch (Exception)
+        {
+            //var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
 
-                cosmosClient.EnsureCreated(cosmosOptionsInterface.Value);
-            }
-            catch (Exception ex)
-            {
-                var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
+            //logger.LogError(ex, "An error occurred while migrating or seeding the database.");
 
-                logger.LogError(ex, "An error occurred while migrating or seeding the database.");
-
-                throw;
-            }
+            throw;
         }
     }
 }

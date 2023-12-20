@@ -16,7 +16,7 @@ public class FlowtimeCreated : Event
     public Guid TaskId { get; private set; }
 
     [DataMember(Order = 4)]
-    public string TaskDescription { get; private set; }
+    public string? TaskDescription { get; private set; }
 
     [DataMember(Order = 5)]
     public long TaskVersion { get; private set; }
@@ -24,7 +24,7 @@ public class FlowtimeCreated : Event
     [DataMember(Order = 6)]
     public FlowtimeStateEnum State { get; private set; }
 
-    public FlowtimeCreated(Guid id, DateTime creationDate, Guid taskId, string taskDescription, long taskVersion, FlowtimeStateEnum state)
+    public FlowtimeCreated(Guid id, DateTime creationDate, Guid taskId, string? taskDescription, long taskVersion, FlowtimeStateEnum state)
     {
         Id = id;
 

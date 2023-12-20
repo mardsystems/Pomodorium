@@ -4,7 +4,7 @@ public abstract class PomodoroUnitTest : UnitTest
 {
     public Guid Id { get; set; }
 
-    public string? Task { get; set; }
+    public string Task { get; set; }
 
     public TimeSpan Timer { get; set; }
 
@@ -23,7 +23,7 @@ public abstract class PomodoroUnitTest : UnitTest
 
         public class WithSuccess : OnCreateNewPomodoro
         {
-            public override void Arrange()
+            protected override void Arrange()
             {
                 Id = Guid.NewGuid();
 
@@ -43,7 +43,7 @@ public abstract class PomodoroUnitTest : UnitTest
 
         public class WithNullTask : OnCreateNewPomodoro
         {
-            public override void Arrange()
+            protected override void Arrange()
             {
                 Id = Guid.NewGuid();
 

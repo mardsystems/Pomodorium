@@ -2,7 +2,7 @@ namespace System.DomainTests;
 
 public abstract class UnitTest
 {
-    public Action Action { get; set; }
+    public Action? Action { get; set; }
 
     public UnitTest()
     {
@@ -18,7 +18,7 @@ public abstract class UnitTest
         }        
     }
 
-    public abstract void Arrange();
+    protected abstract void Arrange();
 
     public abstract void Act();
 }

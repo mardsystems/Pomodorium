@@ -21,12 +21,7 @@ public class IndexedDBPomodoroDetailsProjection :
 
     public async Task<GetPomodoroResponse> Handle(GetPomodoroRequest request, CancellationToken cancellationToken)
     {
-        var pomodoroDetails = await _db.GetAsync<PomodoroDetails>("PomodoroDetails", request.Id);
-
-        if (pomodoroDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var pomodoroDetails = await _db.GetAsync<PomodoroDetails>("PomodoroDetails", request.Id) ?? throw new EntityNotFoundException();
 
         var response = new GetPomodoroResponse(request.GetCorrelationId()) { PomodoroDetails = pomodoroDetails };
 
@@ -50,12 +45,7 @@ public class IndexedDBPomodoroDetailsProjection :
 
     public async Task Handle(PomodoroChecked notification, CancellationToken cancellationToken)
     {
-        var pomodoroDetails = await _db.GetAsync<PomodoroQueryItem>("PomodoroDetails", notification.Id);
-
-        if (pomodoroDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var pomodoroDetails = await _db.GetAsync<PomodoroQueryItem>("PomodoroDetails", notification.Id) ?? throw new EntityNotFoundException();
 
         pomodoroDetails.State = notification.State;
         pomodoroDetails.Version = notification.Version;
@@ -65,12 +55,7 @@ public class IndexedDBPomodoroDetailsProjection :
 
     public async Task Handle(PomodoroTaskRefined notification, CancellationToken cancellationToken)
     {
-        var pomodoroDetails = await _db.GetAsync<PomodoroQueryItem>("PomodoroDetails", notification.Id);
-
-        if (pomodoroDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var pomodoroDetails = await _db.GetAsync<PomodoroQueryItem>("PomodoroDetails", notification.Id) ?? throw new EntityNotFoundException();
 
         pomodoroDetails.Task = notification.Task;
         pomodoroDetails.Version = notification.Version;
@@ -80,12 +65,7 @@ public class IndexedDBPomodoroDetailsProjection :
 
     public async Task Handle(PomodoroArchived notification, CancellationToken cancellationToken)
     {
-        var pomodoroDetails = await _db.GetAsync<PomodoroDetails>("PomodoroDetails", notification.Id);
-
-        if (pomodoroDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var _ = await _db.GetAsync<PomodoroDetails>("PomodoroDetails", notification.Id) ?? throw new EntityNotFoundException();
 
         await _db.RemoveAsync("PomodoroDetails", notification.Id);
     }

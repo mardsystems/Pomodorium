@@ -11,7 +11,7 @@ public class DetailsViewModel
 
     public Guid TaskId { get; set; }
 
-    public string? TaskDescription { get; set; }
+    public string TaskDescription { get; set; }
 
     public long TaskVersion { get; set; }
 
@@ -44,7 +44,7 @@ public class DetailsViewModel
         Guid id,
         DateTime? creationDate,
         Guid taskId,
-        string? taskDescription,
+        string taskDescription,
         long taskVersion,
         DateTime? startDateTime,
         DateTime? stopDateTime,
@@ -111,7 +111,7 @@ public class DetailsViewModel
 
     public DetailsViewModel(
         Guid taskId,
-        string? taskDescription,
+        string taskDescription,
         long taskVersion)
     {
         TaskId = taskId;
@@ -119,6 +119,8 @@ public class DetailsViewModel
         TaskDescription = taskDescription;
 
         TaskVersion = taskVersion;
+
+        BreakCountdownChanges = Observable.Empty<long>();
     }
 
     public DateTime? GetStartDateTime()
@@ -161,9 +163,11 @@ public class DetailsViewModel
 
     private void OnTick(DateTime moment)
     {
-        if (GetStopDateTime().HasValue && Breaktime.HasValue)
+        var stopDateTime = GetStopDateTime();
+
+        if (stopDateTime != null && Breaktime.HasValue)
         {
-            var breakCountdown = GetStopDateTime().Value.Add(Breaktime.Value) - moment;
+            var breakCountdown = stopDateTime.Value.Add(Breaktime.Value) - moment;
 
             BreakCountdown = new TimeSpan(breakCountdown.Ticks - (breakCountdown.Ticks % 10000000));
         }
@@ -171,6 +175,6 @@ public class DetailsViewModel
 
     public DetailsViewModel()
     {
-
+        BreakCountdownChanges = Observable.Empty<long>();
     }
 }

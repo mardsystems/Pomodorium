@@ -47,6 +47,14 @@ public class FlowTimerController : ControllerBase
         return response;
     }
 
+    [HttpPost("CreateFlowtimeFromTask")]
+    public async Task<CreateFlowtimeFromTaskResponse> CreateFlowtimeFromTask(CreateFlowtimeFromTaskRequest request)
+    {
+        var response = await _mediator.Send<CreateFlowtimeFromTaskResponse>(request);
+
+        return response;
+    }
+
     [HttpPost("StartFlowtime")]
     public async Task<StartFlowtimeResponse> StartFlowtime(StartFlowtimeRequest request)
     {

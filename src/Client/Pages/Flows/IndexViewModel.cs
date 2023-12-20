@@ -9,7 +9,7 @@ namespace Pomodorium.Pages.Flows;
 
 public class IndexViewModel
 {
-    public ObservableCollection<Item>? Items { get; } = new ObservableCollection<Item>();
+    public ObservableCollection<Item> Items { get; } = new ObservableCollection<Item>();
 
     public IObservable<EventPattern<NotifyCollectionChangedEventArgs>> ItemsChanged { get; }
 
@@ -68,7 +68,7 @@ public class IndexViewModel
 
         public Guid TaskId { get; set; }
 
-        public string? TaskDescription { get; set; }
+        public string TaskDescription { get; set; }
 
         public long TaskVersion { get; set; }
 
@@ -98,7 +98,7 @@ public class IndexViewModel
             Guid id,
             DateTime? creationDate,
             Guid taskId,
-            string? taskDescription,
+            string taskDescription,
             DateTime? startDateTime,
             DateTime? stopDateTime,
             bool? interrupted,
@@ -175,7 +175,7 @@ public class IndexViewModel
 
         public Item()
         {
-
+            BreakCountdownChanges = Observable.Empty<long>();
         }
     }
 }

@@ -28,7 +28,10 @@ public class MongoDBPomodoroQueryItemsProjection :
 
         var pomodoroQueryItems = await _mongoCollection.Find(filter).ToListAsync(cancellationToken);
 
-        var response = new GetPomosResponse(request.GetCorrelationId()) { PomodoroQueryItems = pomodoroQueryItems };
+        var response = new GetPomosResponse(request.GetCorrelationId())
+        {
+            PomodoroQueryItems = pomodoroQueryItems
+        };
 
         return response;
     }

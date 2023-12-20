@@ -1,26 +1,17 @@
 ﻿namespace Pomodorium.Features.ActivityManager;
 
-public class PostActivityRequest : Request<PostActivityResponse>
+public record PostActivityRequest : Request<PostActivityResponse>
 {
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public DateTime? StartDateTime { get; set; }
+    public DateTime? StartDateTime { get; init; }
 
-    public DateTime? StopDateTime { get; set; }
+    public DateTime? StopDateTime { get; init; }
 
-    public string Description { get; set; }
+    public string? Description { get; init; }
 }
 
-public class PostActivityResponse : Response
+public record PostActivityResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public PostActivityResponse(Guid correlationId)
-        : base(correlationId)
-    {
 
-    }
-
-    public PostActivityResponse()
-    {
-
-    }
 }

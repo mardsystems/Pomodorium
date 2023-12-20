@@ -24,7 +24,10 @@ public class IndexedDBPomodoroQueryItemsProjection :
     {
         var pomodoroQueryItems = await _db.GetAllAsync<PomodoroQueryItem>("PomodoroQueryItems");
 
-        var response = new GetPomosResponse(request.GetCorrelationId()) { PomodoroQueryItems = pomodoroQueryItems };
+        var response = new GetPomosResponse(request.GetCorrelationId())
+        {
+            PomodoroQueryItems = pomodoroQueryItems
+        };
 
         return response;
     }
@@ -46,12 +49,7 @@ public class IndexedDBPomodoroQueryItemsProjection :
 
     public async Task Handle(PomodoroChecked notification, CancellationToken cancellationToken)
     {
-        var pomodoroQueryItem = await _db.GetAsync<PomodoroQueryItem>("PomodoroQueryItems", notification.Id);
-
-        if (pomodoroQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var pomodoroQueryItem = await _db.GetAsync<PomodoroQueryItem>("PomodoroQueryItems", notification.Id) ?? throw new EntityNotFoundException();
 
         pomodoroQueryItem.State = notification.State;
         pomodoroQueryItem.Version = notification.Version;
@@ -61,12 +59,7 @@ public class IndexedDBPomodoroQueryItemsProjection :
 
     public async Task Handle(PomodoroTaskRefined notification, CancellationToken cancellationToken)
     {
-        var pomodoroQueryItem = await _db.GetAsync<PomodoroQueryItem>("PomodoroQueryItems", notification.Id);
-
-        if (pomodoroQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var pomodoroQueryItem = await _db.GetAsync<PomodoroQueryItem>("PomodoroQueryItems", notification.Id) ?? throw new EntityNotFoundException();
 
         pomodoroQueryItem.Task = notification.Task;
         pomodoroQueryItem.Version = notification.Version;
@@ -76,12 +69,7 @@ public class IndexedDBPomodoroQueryItemsProjection :
 
     public async Task Handle(PomodoroArchived notification, CancellationToken cancellationToken)
     {
-        var pomodoroQueryItem = await _db.GetAsync<PomodoroQueryItem>("PomodoroQueryItems", notification.Id);
-
-        if (pomodoroQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var _ = await _db.GetAsync<PomodoroQueryItem>("PomodoroQueryItems", notification.Id) ?? throw new EntityNotFoundException();
 
         await _db.RemoveAsync("PomodoroQueryItems", notification.Id);
     }

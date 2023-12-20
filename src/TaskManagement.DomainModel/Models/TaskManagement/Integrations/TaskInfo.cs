@@ -8,11 +8,11 @@ public class TaskInfo
 
     public Guid IntegrationId { get; }
 
-    public string IntegrationName { get; }
+    public string IntegrationName { get; } = default!;
 
-    public string Reference { get; }
+    public string Reference { get; } = default!;
 
-    public string Name { get; }
+    public string Name { get; } = default!;
 
     public TaskInfo(
         IntegrationTypeEnum integrationType,

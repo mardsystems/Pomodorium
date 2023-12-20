@@ -23,7 +23,10 @@ public class StartFlowtimeFromTaskHandler : IRequestHandler<StartFlowtimeFromTas
 
         await _repository.Save(flowtime, -1);
 
-        var response = new StartFlowtimeFromTaskResponse(request.GetCorrelationId()) { };
+        var response = new StartFlowtimeFromTaskResponse(request.GetCorrelationId())
+        {
+            FlowtimeVersion = flowtime.Version
+        };
 
         return response;
     }

@@ -55,7 +55,7 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
 
         while (feed.HasMoreResults)
         {
-            var feedResponse = await feed.ReadNextAsync();
+            var feedResponse = await feed.ReadNextAsync(cancellationToken: cancellationToken);
 
             foreach (TaskQueryItem item in feedResponse)
             {
@@ -65,9 +65,12 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
             requestCharge += feedResponse.RequestCharge;
         }
 
-        _logger.LogInformation($"Request charge:\t{requestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", requestCharge);
 
-        var response = new GetTasksResponse(request.GetCorrelationId()) { TaskQueryItems = taskQueryItems };
+        var response = new GetTasksResponse(request.GetCorrelationId())
+        {
+            TaskQueryItems = taskQueryItems
+        };
 
         return response;
     }
@@ -76,21 +79,24 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
     {
         var taskQueryItem = new TaskQueryItem
         {
-            Id = notification.Id,
-            CreationDate = notification.CreationDate,
-            Description = notification.Description,
+            Id = notification.TaskId,
+            CreationDate = notification.TaskCreatedAt,
+            Description = notification.TaskDescription,
             Version = notification.Version
         };
 
         try
         {
-            var response = await _container.CreateItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.Id.ToString()));
+            var response = await _container.CreateItemAsync(
+                item: taskQueryItem,
+                partitionKey: new PartitionKey(notification.TaskId.ToString()),
+                cancellationToken: cancellationToken);
 
-            _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+            _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error on create task query item. (TaskId: {TaskId})", notification.Id);
+            _logger.LogError(ex, "Error on create task query item. (TaskId: {TaskId})", notification.TaskId);
 
             throw;
         }
@@ -100,128 +106,126 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
     {
         var itemResponse = await _container.ReadItemAsync<TaskQueryItem>(
                 id: notification.TaskId.ToString(),
-                partitionKey: new PartitionKey(notification.TaskId.ToString())
+                partitionKey: new PartitionKey(notification.TaskId.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var taskQueryItem = itemResponse.Resource;
-
-        if (taskQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var taskQueryItem = itemResponse.Resource ?? throw new EntityNotFoundException();
 
         taskQueryItem.IntegrationType = notification.IntegrationType;
         taskQueryItem.IntegrationId = notification.IntegrationId;
         taskQueryItem.IntegrationName = notification.IntegrationName;
         taskQueryItem.ExternalReference = notification.ExternalReference;
 
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
-        var response = await _container.UpsertItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.TaskId.ToString()));
+        var response = await _container.UpsertItemAsync(
+            item: taskQueryItem,
+            partitionKey: new PartitionKey(notification.TaskId.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async System.Threading.Tasks.Task Handle(TaskDescriptionChanged notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<TaskQueryItem>(
-                id: notification.Id.ToString(),
-                partitionKey: new PartitionKey(notification.Id.ToString())
+                id: notification.TaskId.ToString(),
+                partitionKey: new PartitionKey(notification.TaskId.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var taskQueryItem = itemResponse.Resource;
+        var taskQueryItem = itemResponse.Resource ?? throw new EntityNotFoundException();
 
-        if (taskQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        taskQueryItem.Description = notification.TaskDescription;
 
-        taskQueryItem.Description = notification.Description;
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
+        var response = await _container.UpsertItemAsync(
+            item: taskQueryItem,
+            partitionKey: new PartitionKey(notification.TaskId.ToString()),
+            cancellationToken: cancellationToken);
 
-        var response = await _container.UpsertItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.Id.ToString()));
-
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async System.Threading.Tasks.Task Handle(FlowtimeStarted notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<TaskQueryItem>(
                 id: notification.TaskId.ToString(),
-                partitionKey: new PartitionKey(notification.TaskId.ToString())
+                partitionKey: new PartitionKey(notification.TaskId.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var taskQueryItem = itemResponse.Resource;
-
-        if (taskQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var taskQueryItem = itemResponse.Resource ?? throw new EntityNotFoundException();
 
         taskQueryItem.HasFocus = true;
 
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
-        var response = await _container.UpsertItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.TaskId.ToString()));
+        var response = await _container.UpsertItemAsync(
+            item: taskQueryItem,
+            partitionKey: new PartitionKey(notification.TaskId.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async System.Threading.Tasks.Task Handle(FlowtimeInterrupted notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<TaskQueryItem>(
                 id: notification.TaskId.ToString(),
-                partitionKey: new PartitionKey(notification.TaskId.ToString())
+                partitionKey: new PartitionKey(notification.TaskId.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var taskQueryItem = itemResponse.Resource;
-
-        if (taskQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var taskQueryItem = itemResponse.Resource ?? throw new EntityNotFoundException();
 
         taskQueryItem.TotalHours += notification.Worktime.TotalHours;
 
         taskQueryItem.HasFocus = false;
 
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
-        var response = await _container.UpsertItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.TaskId.ToString()));
+        var response = await _container.UpsertItemAsync(
+            item: taskQueryItem,
+            partitionKey: new PartitionKey(notification.TaskId.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async System.Threading.Tasks.Task Handle(FlowtimeStopped notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<TaskQueryItem>(
                 id: notification.TaskId.ToString(),
-                partitionKey: new PartitionKey(notification.TaskId.ToString())
+                partitionKey: new PartitionKey(notification.TaskId.ToString()),
+                cancellationToken: cancellationToken
             );
 
-        var taskQueryItem = itemResponse.Resource;
-
-        if (taskQueryItem == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var taskQueryItem = itemResponse.Resource ?? throw new EntityNotFoundException();
 
         taskQueryItem.TotalHours += notification.Worktime.TotalHours;
 
         taskQueryItem.HasFocus = false;
 
-        _logger.LogInformation($"Request charge:\t{itemResponse.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
-        var response = await _container.UpsertItemAsync(item: taskQueryItem, partitionKey: new PartitionKey(notification.TaskId.ToString()));
+        var response = await _container.UpsertItemAsync(
+            item: taskQueryItem,
+            partitionKey: new PartitionKey(notification.TaskId.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
     public async System.Threading.Tasks.Task Handle(TaskArchived notification, CancellationToken cancellationToken)
     {
-        var response = await _container.DeleteItemAsync<TaskQueryItem>(notification.Id.ToString(), new PartitionKey(notification.Id.ToString()));
+        var response = await _container.DeleteItemAsync<TaskQueryItem>(
+            notification.TaskId.ToString(),
+            new PartitionKey(notification.TaskId.ToString()),
+            cancellationToken: cancellationToken);
 
-        _logger.LogInformation($"Request charge:\t{response.RequestCharge:0.00}");
+        _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 }

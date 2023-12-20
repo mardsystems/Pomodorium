@@ -15,7 +15,11 @@ public class CreateTaskHandler : IRequestHandler<CreateTaskRequest, CreateTaskRe
 
         await _repository.Save(task, -1);
 
-        var response = new CreateTaskResponse(request.GetCorrelationId(), task.Id) { };
+        var response = new CreateTaskResponse(request.GetCorrelationId())
+        {
+            TaskId = task.Id,
+            TaskVersion = task.Version,
+        };
 
         return response;
     }

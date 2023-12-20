@@ -10,7 +10,7 @@ public class PomodoroCreated : Event
     public Guid Id { get; private set; }
 
     [DataMember(Order = 2)]
-    public string Task { get; private set; }
+    public string Task { get; private set; } = default!;
 
     [DataMember(Order = 3)]
     public TimeSpan Timer { get; private set; }
@@ -87,7 +87,7 @@ public class PomodoroTaskRefined : Event
     public Guid Id { get; private set; }
 
     [DataMember(Order = 2)]
-    public string Task { get; private set; }
+    public string Task { get; private set; } = default!;
 
     public PomodoroTaskRefined(Guid id, string task)
     {

@@ -6,7 +6,7 @@ namespace Pomodorium.Support;
 
 public class WebApiContext : IDisposable
 {
-    private readonly AppHostingContext _appHostingContext;
+    //private readonly AppHostingContext _appHostingContext;
     private readonly StringBuilder _log = new();
 
     private HttpClient _httpClient;
@@ -15,20 +15,21 @@ public class WebApiContext : IDisposable
     {
         get
         {
-            if (_httpClient == null)
-                _httpClient = _appHostingContext.CreateHttpClient();
+            _httpClient ??= AppHostingContext.CreateHttpClient();
 
             return _httpClient;
         }
     }
 
-    public WebApiContext(AppHostingContext appHostingContext)
-    {
-        _appHostingContext = appHostingContext;
-    }
+    //public WebApiContext(AppHostingContext appHostingContext)
+    //{
+    //    _appHostingContext = appHostingContext;
+    //}
 
     public void Dispose()
     {
+        GC.SuppressFinalize(this);
+
         if (_httpClient != null)
         {
             _httpClient.Dispose();
@@ -52,7 +53,7 @@ public class WebApiContext : IDisposable
 
         var responseContent = ReadContent(httpResponse);
 
-        TData responseData = default(TData);
+        TData responseData = default;
 
         if ((int)httpResponse.StatusCode >= 200 && (int)httpResponse.StatusCode < 300)
             responseData = typeof(TData) == typeof(string)
@@ -96,7 +97,7 @@ public class WebApiContext : IDisposable
 
         var responseContent = ReadContent(httpResponse);
 
-        TData responseData = default(TData);
+        TData responseData = default;
 
         if ((int)httpResponse.StatusCode >= 200 && (int)httpResponse.StatusCode < 300)
             responseData = typeof(TData) == typeof(string)
@@ -133,7 +134,7 @@ public class WebApiContext : IDisposable
 
         var responseContent = ReadContent(httpResponse);
 
-        TData responseData = default(TData);
+        TData responseData = default;
 
         if ((int)httpResponse.StatusCode >= 200 && (int)httpResponse.StatusCode < 300)
             responseData = typeof(TData) == typeof(string)
@@ -148,7 +149,7 @@ public class WebApiContext : IDisposable
         };
     }
 
-    private string ReadContent(HttpResponseMessage response)
+    private static string ReadContent(HttpResponseMessage response)
     {
         try
         {
@@ -161,7 +162,7 @@ public class WebApiContext : IDisposable
     }
 
     // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
-    private void SanityCheck(HttpResponseMessage response, int upperRange = 300)
+    private static void SanityCheck(HttpResponseMessage response, int upperRange = 300)
     {
         if ((int)response.StatusCode < 200 || (int)response.StatusCode >= upperRange)
         {
@@ -171,7 +172,7 @@ public class WebApiContext : IDisposable
         }
     }
 
-    private string GetResponseMessage(HttpResponseMessage response)
+    private static string GetResponseMessage(HttpResponseMessage response)
     {
         if (response == null)
             return null;

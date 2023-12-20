@@ -87,13 +87,13 @@
 
 @code {
     [Parameter]
-    public string? Id { get; set; }
+    public string Id { get; set; }
 
     [Parameter]
     [SupplyParameterFromQuery]
     public Guid? TaskId { get; set; }
 
-    public DetailsViewModel? Model { get; set; }
+    public DetailsViewModel Model { get; set; } = default!;
 
     [Inject]
     private IDialogService DialogService { get; set; }
@@ -108,7 +108,12 @@
         }
         else if (Id == "continuation")
         {
-            var request = new GetTaskRequest { TaskId = TaskId.Value };
+            if (TaskId == null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            var request = new GetTaskRequest(TaskId.Value);
 
             var response = await Mediator.Send<GetTaskResponse>(request);
 
@@ -120,7 +125,9 @@
         }
         else
         {
-            var request = new GetFlowtimeRequest { Id = Guid.Parse(Id) };
+            var flowtimeId = Guid.Parse(Id);
+
+            var request = new GetFlowtimeRequest(flowtimeId);
 
             var response = await Mediator.Send<GetFlowtimeResponse>(request);
 
@@ -158,8 +165,8 @@
     {
         var request = new StartFlowtimeRequest
             {
-                Id = Model.Id,
-                Version = Model.Version
+                FlowtimeId = Model.Id,
+                FlowtimeVersion = Model.Version
             };
 
         var response = await Mediator.Send<StartFlowtimeResponse>(request);
@@ -171,8 +178,8 @@
     {
         var request = new StopFlowtimeRequest
             {
-                Id = Model.Id,
-                Version = Model.Version
+                FlowtimeId = Model.Id,
+                FlowtimeVersion = Model.Version
             };
 
         var response = await Mediator.Send<StopFlowtimeResponse>(request);
@@ -193,14 +200,14 @@
         }
         else if (Id == "continuation")
         {
-            var request = new CreateFlowtimeRequest
+            var request = new CreateFlowtimeFromTaskRequest
                 {
                     TaskId = Model.TaskId,
                     TaskDescription = Model.TaskDescription,
                     TaskVersion = Model.TaskVersion
                 };
 
-            var response = await Mediator.Send<CreateFlowtimeResponse>(request);
+            var response = await Mediator.Send<CreateFlowtimeFromTaskResponse>(request);
         }
         else
         {
@@ -224,10 +231,12 @@
             return;
         }
 
+        var flowtimeId = Guid.Parse(Id);
+
         var request = new ArchiveFlowtimeRequest
             {
-                Id = Guid.Parse(Id),
-                Version = Model.Version
+                FlowtimeId = flowtimeId,
+                FlowtimeVersion = Model.Version
             };
 
         var response = await Mediator.Send<ArchiveFlowtimeResponse>(request);

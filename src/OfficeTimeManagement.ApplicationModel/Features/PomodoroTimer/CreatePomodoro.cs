@@ -1,22 +1,13 @@
 ﻿namespace Pomodorium.Features.PomodoroTimer;
 
-public class CreatePomodoroRequest : Request<CreatePomodoroResponse>
+public record CreatePomodoroRequest : Request<CreatePomodoroResponse>
 {
-    public string? Task { get; set; }
+    public required string Task { get; init; }
 
-    public TimeSpan Timer { get; set; }
+    public TimeSpan Timer { get; init; }
 }
 
-public class CreatePomodoroResponse : Response
+public record CreatePomodoroResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public CreatePomodoroResponse(Guid correlationId)
-        : base(correlationId)
-    {
 
-    }
-
-    public CreatePomodoroResponse()
-    {
-
-    }
 }

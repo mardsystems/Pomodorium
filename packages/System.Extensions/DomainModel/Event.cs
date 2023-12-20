@@ -18,7 +18,7 @@ public abstract class Event : INotification
     }
 
     [IgnoreDataMember]
-    private string name;
+    private string name = default!;
     public string Name
     {
         get { return name; }

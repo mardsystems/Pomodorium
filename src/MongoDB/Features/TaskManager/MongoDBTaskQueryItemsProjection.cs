@@ -42,7 +42,10 @@ public class MongoDBTaskQueryItemsProjection :
 
         var taskQueryItems = await _mongoCollection.Find(filter).ToListAsync(cancellationToken);
 
-        var response = new GetTasksResponse(request.GetCorrelationId()) { TaskQueryItems = taskQueryItems };
+        var response = new GetTasksResponse(request.GetCorrelationId())
+        {
+            TaskQueryItems = taskQueryItems
+        };
 
         return response;
     }
@@ -51,9 +54,9 @@ public class MongoDBTaskQueryItemsProjection :
     {
         var taskQueryItem = new TaskQueryItem
         {
-            Id = notification.Id,
-            CreationDate = notification.CreationDate,
-            Description = notification.Description,
+            Id = notification.TaskId,
+            CreationDate = notification.TaskCreatedAt,
+            Description = notification.TaskDescription,
             Version = notification.Version
         };
 
@@ -75,10 +78,10 @@ public class MongoDBTaskQueryItemsProjection :
 
     public async System.Threading.Tasks.Task Handle(TaskDescriptionChanged notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<TaskQueryItem>.Filter.Eq(x => x.Id, notification.Id);
+        var filter = Builders<TaskQueryItem>.Filter.Eq(x => x.Id, notification.TaskId);
 
         var update = Builders<TaskQueryItem>.Update
-            .Set(x => x.Description, notification.Description);
+            .Set(x => x.Description, notification.TaskDescription);
 
         await _mongoCollection.UpdateManyAsync(filter, update, null, cancellationToken);
     }
@@ -117,7 +120,7 @@ public class MongoDBTaskQueryItemsProjection :
 
     public async System.Threading.Tasks.Task Handle(TaskArchived notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<TaskQueryItem>.Filter.Eq(x => x.Id, notification.Id);
+        var filter = Builders<TaskQueryItem>.Filter.Eq(x => x.Id, notification.TaskId);
 
         await _mongoCollection.DeleteOneAsync(filter, cancellationToken);
     }

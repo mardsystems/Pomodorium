@@ -9,7 +9,7 @@ namespace Pomodorium.Pages.Pomos;
 
 public class IndexViewModel
 {
-    public ObservableCollection<Item>? Items { get; } = new ObservableCollection<Item>();
+    public ObservableCollection<Item> Items { get; } = new ObservableCollection<Item>();
 
     public IObservable<EventPattern<NotifyCollectionChangedEventArgs>> ItemsChanged { get; }
 
@@ -59,15 +59,15 @@ public class IndexViewModel
     {
         public Guid Id { get; set; }
 
-        public string? Task { get; set; }
+        public string Task { get; set; }
 
         public TimeSpan Timer { get; set; }
 
-        public TimeSpan Countdown { get; set; }
+        public TimeSpan? Countdown { get; set; }
 
-        public DateTime StartDateTime { get; set; }
+        public DateTime? StartDateTime { get; set; }
 
-        public DateTime StopDateTime { get; set; }
+        public DateTime? StopDateTime { get; set; }
 
         public PomodoroStateEnum State { get; set; }
 
@@ -77,7 +77,7 @@ public class IndexViewModel
 
         public Item(
             Guid id,
-            string? task,
+            string task,
             TimeSpan timer,
             DateTime? startDateTime,
             PomodoroStateEnum state,
@@ -91,9 +91,23 @@ public class IndexViewModel
 
             Timer = timer;
 
-            StartDateTime = startDateTime.Value;
+            if (startDateTime == null)
+            {
+                StartDateTime = null;
+            }
+            else
+            {
+                StartDateTime = startDateTime.Value;
+            }
 
-            StopDateTime = StartDateTime + Timer;
+            if (StartDateTime == null)
+            {
+                StopDateTime = null;
+            }
+            else
+            {
+                StopDateTime = StartDateTime.Value + Timer;
+            }
 
             Version = version;
 
@@ -120,7 +134,14 @@ public class IndexViewModel
 
         public void OnTick(DateTime moment)
         {
-            Countdown = StopDateTime - moment;
+            if (StopDateTime == null)
+            {
+                Countdown = null;
+            }
+            else
+            {
+                Countdown = StopDateTime - moment;
+            }
 
             if (Countdown > TimeSpan.Zero)
             {
@@ -136,7 +157,7 @@ public class IndexViewModel
 
         public Item()
         {
-
+            CountdownChanges = Observable.Empty<long>();
         }
     }
 }

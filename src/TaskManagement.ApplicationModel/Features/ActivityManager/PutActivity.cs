@@ -1,30 +1,21 @@
 ﻿namespace Pomodorium.Features.ActivityManager;
 
-public class PutActivityRequest : Request<PutActivityResponse>
+public record PutActivityRequest : Request<PutActivityResponse>
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 
-    public string Name { get; set; }
+    public required string Name { get; init; }
 
-    public DateTime? StartDateTime { get; set; }
+    public DateTime? StartDateTime { get; init; }
 
-    public DateTime? StopDateTime { get; set; }
+    public DateTime? StopDateTime { get; init; }
 
-    public string Description { get; set; }
+    public string? Description { get; init; }
 
-    public long Version { get; set; }
+    public long Version { get; init; }
 }
 
-public class PutActivityResponse : Response
+public record PutActivityResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public PutActivityResponse(Guid correlationId)
-        : base(correlationId)
-    {
 
-    }
-
-    public PutActivityResponse()
-    {
-
-    }
 }

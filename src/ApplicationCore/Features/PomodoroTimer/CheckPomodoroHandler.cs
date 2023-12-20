@@ -13,12 +13,7 @@ public class CheckPomodoroHandler : IRequestHandler<CheckPomodoroRequest, CheckP
 
     public async Task<CheckPomodoroResponse> Handle(CheckPomodoroRequest request, CancellationToken cancellationToken)
     {
-        var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id);
-
-        if (pomodoro == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id) ?? throw new EntityNotFoundException();
 
         pomodoro.Check();
 

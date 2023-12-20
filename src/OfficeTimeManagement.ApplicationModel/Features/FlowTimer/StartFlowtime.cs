@@ -1,19 +1,13 @@
 ﻿namespace Pomodorium.Features.FlowTimer;
 
-public class StartFlowtimeRequest : Request<StartFlowtimeResponse>
+public record StartFlowtimeRequest : Request<StartFlowtimeResponse>
 {
-    public Guid Id { get; set; }
+    public Guid FlowtimeId { get; init; }
 
-    public long Version { get; set; }
+    public long FlowtimeVersion { get; init; }
 }
 
-public class StartFlowtimeResponse : Response
+public record StartFlowtimeResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public StartFlowtimeResponse(Guid correlationId)
-        : base(correlationId)
-    {
-
-    }
-
-    public StartFlowtimeResponse() { }
+    public required long FlowtimeVersion { get; init; }
 }

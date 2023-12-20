@@ -13,18 +13,13 @@ public class RefinePomodoroTaskHandler : IRequestHandler<RefinePomodoroTaskReque
 
     public async Task<RefinePomodoroTaskResponse> Handle(RefinePomodoroTaskRequest request, CancellationToken cancellationToken)
     {
-        var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id);
-
-        if (pomodoro == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id) ?? throw new EntityNotFoundException();
 
         pomodoro.RefineTask(request.Task);
 
         await _repository.Save(pomodoro, request.Version);
 
-        var response = new RefinePomodoroTaskResponse(request.GetCorrelationId()) { };
+        var response = new RefinePomodoroTaskResponse(request.GetCorrelationId());
 
         return response;
     }

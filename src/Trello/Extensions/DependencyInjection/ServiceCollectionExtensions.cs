@@ -11,7 +11,12 @@ namespace Pomodorium.Extensions.DependencyInjection
         {
             var trelloConfigurationSection = configuration.GetSection(TrelloIntegrationOptions.CONFIGURATION_SECTION_NAME);
 
-            var trelloIntegrationOptions = trelloConfigurationSection.Get<TrelloIntegrationOptions>();
+            var trelloIntegrationOptions = trelloConfigurationSection.Get<TrelloIntegrationOptions>() ?? throw new InvalidOperationException();
+
+            if (trelloIntegrationOptions.BaseAddress == null)
+            {
+                throw new InvalidOperationException();
+            }
 
             services.AddOptions<TrelloIntegrationOptions>()
                 .Bind(trelloConfigurationSection);

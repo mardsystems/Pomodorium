@@ -13,20 +13,18 @@ public class InterruptFlowtimeHandler : IRequestHandler<InterruptFlowtimeRequest
 
     public async Task<InterruptFlowtimeResponse> Handle(InterruptFlowtimeRequest request, CancellationToken cancellationToken)
     {
-        var flowtime = await _repository.GetAggregateById<Flowtime>(request.Id);
-
-        if (flowtime == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var flowtime = await _repository.GetAggregateById<Flowtime>(request.FlowtimeId) ?? throw new EntityNotFoundException();
 
         var now = DateTime.Now;
 
         flowtime.Interrupt(now);
 
-        await _repository.Save(flowtime, request.Version);
+        await _repository.Save(flowtime, request.FlowtimeVersion);
 
-        var response = new InterruptFlowtimeResponse(request.GetCorrelationId()) { };
+        var response = new InterruptFlowtimeResponse(request.GetCorrelationId())
+        {
+            FlowtimeVersion = flowtime.Version
+        };
 
         return response;
     }

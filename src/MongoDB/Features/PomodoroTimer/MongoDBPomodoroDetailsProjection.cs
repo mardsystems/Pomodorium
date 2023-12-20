@@ -27,14 +27,12 @@ public class MongoDBPomodoroDetailsProjection :
     {
         var filter = Builders<PomodoroDetails>.Filter.Eq(x => x.Id, request.Id);
 
-        var pomodoroDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
+        var pomodoroDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken) ?? throw new EntityNotFoundException();
 
-        if (pomodoroDetails == null)
+        var response = new GetPomodoroResponse(request.GetCorrelationId())
         {
-            throw new EntityNotFoundException();
-        }
-
-        var response = new GetPomodoroResponse(request.GetCorrelationId()) { PomodoroDetails = pomodoroDetails };
+            PomodoroDetails = pomodoroDetails
+        };
 
         return response;
     }

@@ -46,7 +46,9 @@ builder.Services.AddMsalAuthentication(options =>
 {
     builder.Configuration.Bind("AzureAd", options.ProviderOptions.Authentication);
 
-    options.ProviderOptions.DefaultAccessTokenScopes.Add(builder.Configuration.GetSection("ServerApi")["Scopes"]);
+    var scopes = builder.Configuration.GetSection("ServerApi")["Scopes"] ?? throw new InvalidOperationException();
+
+    options.ProviderOptions.DefaultAccessTokenScopes.Add(scopes);
 });
 
 var hubConnectionBuilder = new HubConnectionBuilder();

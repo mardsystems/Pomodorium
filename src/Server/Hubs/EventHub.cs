@@ -41,7 +41,7 @@ public class EventHub : Hub<IHubEvent>
 
         //
 
-        var type = Type.GetType(eventRecord.TypeName);
+        var type = Type.GetType(eventRecord.TypeName) ?? throw new InvalidOperationException();
 
         var @event = EventStore.DesserializeEvent(type, eventRecord.Data);
 

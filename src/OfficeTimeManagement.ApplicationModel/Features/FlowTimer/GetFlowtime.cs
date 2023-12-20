@@ -4,25 +4,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Pomodorium.Features.FlowTimer;
 
-public class GetFlowtimeRequest : Request<GetFlowtimeResponse>
+public record GetFlowtimeRequest(Guid FlowtimeId) : Request<GetFlowtimeResponse>
 {
-    public Guid Id { get; set; }
+
 }
 
-public class GetFlowtimeResponse : Response
+public record GetFlowtimeResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public GetFlowtimeResponse(Guid correlationId)
-        : base(correlationId)
-    {
-
-    }
-
-    public FlowtimeDetails FlowtimeDetails { get; set; }
-
-    public GetFlowtimeResponse()
-    {
-
-    }
+    public required FlowtimeDetails FlowtimeDetails { get; init; }
 }
 
 public class FlowtimeDetails

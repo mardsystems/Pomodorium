@@ -4,10 +4,10 @@ public abstract class AggregateRoot : Entity
 {
     public Guid Id { get; protected set; }
 
-    public string UserId { get; private set; }
+    public string UserId { get; private set; } = default!;
 
     public bool Archived { get; private set; }
-    
+
     public DateTime CreationDate { get; protected set; }
 
     public long Version { get; internal set; }

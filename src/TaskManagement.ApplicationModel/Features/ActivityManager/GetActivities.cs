@@ -3,27 +3,16 @@ using Pomodorium.Enums;
 
 namespace Pomodorium.Features.ActivityManager;
 
-public class GetActivitiesRequest : Request<GetActivitiesResponse>
+public record GetActivitiesRequest : Request<GetActivitiesResponse>
 {
-    public int PageSize { get; set; }
+    public int? PageSize { get; init; }
 
-    public int PageIndex { get; set; }
+    public int? PageIndex { get; init; }
 }
 
-public class GetActivitiesResponse : Response
+public record GetActivitiesResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public GetActivitiesResponse(Guid correlationId)
-        : base(correlationId)
-    {
-
-    }
-
-    public IEnumerable<ActivityQueryItem> ActivityQueryItems { get; set; }
-
-    public GetActivitiesResponse()
-    {
-
-    }
+    public required IEnumerable<ActivityQueryItem> ActivityQueryItems { get; init; }
 }
 
 public class ActivityQueryItem
@@ -31,7 +20,7 @@ public class ActivityQueryItem
     [JsonProperty(PropertyName = "id")]
     public Guid Id { get; set; }
 
-    public string Name { get; set; }
+    public string Name { get; set; } = default!;
 
     public DateTime? StartDateTime { get; set; }
 
@@ -41,7 +30,7 @@ public class ActivityQueryItem
 
     public TimeSpan? Duration { get; set; }
 
-    public string Description { get; set; }
+    public string? Description { get; set; }
 
     public long Version { get; set; }
 }

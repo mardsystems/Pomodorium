@@ -3,24 +3,24 @@ using Pomodorium.Enums;
 
 namespace Pomodorium.Features.FlowTimer;
 
-public class GetFlowsRequest : Request<GetFlowsResponse>
+public record GetFlowsRequest : Request<GetFlowsResponse>
 {
-    public int PageSize { get; set; }
+    public int? PageSize { get; init; }
 
-    public int PageIndex { get; set; }
-}
+    public int? PageIndex { get; init; }
 
-public class GetFlowsResponse : Response
-{
-    public GetFlowsResponse(Guid correlationId)
-        : base(correlationId)
+    public GetFlowsRequest(int? pageSize = null, int? pageIndex = null)
     {
-
+        PageSize = pageSize;
+        PageIndex = pageIndex;
     }
 
-    public IEnumerable<FlowtimeQueryItem> FlowtimeQueryItems { get; set; }
+    private GetFlowsRequest() { }
+}
 
-    public GetFlowsResponse() { }
+public record GetFlowsResponse(Guid CorrelationId) : Response(CorrelationId)
+{
+    public required IEnumerable<FlowtimeQueryItem> FlowtimeQueryItems { get; init; }
 }
 
 public class FlowtimeQueryItem

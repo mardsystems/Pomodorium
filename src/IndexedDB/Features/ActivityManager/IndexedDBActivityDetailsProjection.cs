@@ -20,14 +20,12 @@ public class IndexedDBActivityDetailsProjection :
 
     public async Task<GetActivityResponse> Handle(GetActivityRequest request, CancellationToken cancellationToken)
     {
-        var activityDetails = await _db.GetAsync<ActivityDetails>("ActivityDetails", request.Id);
+        var activityDetails = await _db.GetAsync<ActivityDetails>("ActivityDetails", request.Id) ?? throw new EntityNotFoundException();
 
-        if (activityDetails == null)
+        var response = new GetActivityResponse(request.GetCorrelationId())
         {
-            throw new EntityNotFoundException();
-        }
-
-        var response = new GetActivityResponse(request.GetCorrelationId()) { ActivityDetails = activityDetails };
+            ActivityDetails = activityDetails
+        };
 
         return response;
     }
@@ -36,13 +34,13 @@ public class IndexedDBActivityDetailsProjection :
     {
         var activityDetails = new ActivityDetails
         {
-            Id = notification.Id,
-            Name = notification.Name,
-            State = notification.State,
+            Id = notification.ActivityId,
+            Name = notification.ActivityName,
+            State = notification.ActivityState,
             StartDateTime = notification.StartDateTime,
             StopDateTime = notification.StopDateTime,
-            Duration = notification.Duration,
-            Description = notification.Description,
+            Duration = notification.ActivityDuration,
+            Description = notification.ActivityDescription,
             Version = notification.Version
         };
 
@@ -51,19 +49,14 @@ public class IndexedDBActivityDetailsProjection :
 
     public async Task Handle(ActivityUpdated notification, CancellationToken cancellationToken)
     {
-        var activityDetails = await _db.GetAsync<ActivityDetails>("ActivityDetails", notification.Id);
+        var activityDetails = await _db.GetAsync<ActivityDetails>("ActivityDetails", notification.ActivityId) ?? throw new EntityNotFoundException();
 
-        if (activityDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
-        activityDetails.Name = notification.Name;
-        activityDetails.State = notification.State;
+        activityDetails.Name = notification.ActivityName;
+        activityDetails.State = notification.ActivityState;
         activityDetails.StartDateTime = notification.StartDateTime;
         activityDetails.StopDateTime = notification.StopDateTime;
-        activityDetails.Duration = notification.Duration;
-        activityDetails.Description = notification.Description;
+        activityDetails.Duration = notification.ActivityDuration;
+        activityDetails.Description = notification.ActivityDescription;
         activityDetails.Version = notification.Version;
 
         await _db.PutAsync("ActivityDetails", activityDetails);
@@ -71,13 +64,8 @@ public class IndexedDBActivityDetailsProjection :
 
     public async Task Handle(ActivityDeleted notification, CancellationToken cancellationToken)
     {
-        var activityDetails = await _db.GetAsync<ActivityDetails>("ActivityDetails", notification.Id);
+        var _ = await _db.GetAsync<ActivityDetails>("ActivityDetails", notification.ActivityId) ?? throw new EntityNotFoundException();
 
-        if (activityDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
-
-        await _db.RemoveAsync("ActivityDetails", notification.Id);
+        await _db.RemoveAsync("ActivityDetails", notification.ActivityId);
     }
 }

@@ -1,19 +1,13 @@
 ﻿namespace Pomodorium.Features.TaskManager;
 
-public class ArchiveTaskRequest : Request<ArchiveTaskResponse>
+public record ArchiveTaskRequest : Request<ArchiveTaskResponse>
 {
-    public Guid TaskId { get; set; }
+    public Guid TaskId { get; init; }
 
-    public long TaskVersion { get; set; }
+    public long TaskVersion { get; init; }
 }
 
-public class ArchiveTaskResponse : Response
+public record ArchiveTaskResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public ArchiveTaskResponse(Guid correlationId)
-        : base(correlationId)
-    {
-
-    }
-
-    public ArchiveTaskResponse() { }
+    public required long TaskVersion { get; init; }
 }

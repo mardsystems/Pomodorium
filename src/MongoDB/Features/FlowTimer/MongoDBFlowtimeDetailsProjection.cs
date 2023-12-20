@@ -28,16 +28,14 @@ public class MongoDBFlowtimeDetailsProjection :
 
     public async Task<GetFlowtimeResponse> Handle(GetFlowtimeRequest request, CancellationToken cancellationToken)
     {
-        var filter = Builders<FlowtimeDetails>.Filter.Eq(x => x.Id, request.Id);
+        var filter = Builders<FlowtimeDetails>.Filter.Eq(x => x.Id, request.FlowtimeId);
 
-        var pomodoroDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
+        var flowtimeDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken) ?? throw new EntityNotFoundException();
 
-        if (pomodoroDetails == null)
+        var response = new GetFlowtimeResponse(request.GetCorrelationId())
         {
-            throw new EntityNotFoundException();
-        }
-
-        var response = new GetFlowtimeResponse(request.GetCorrelationId()) { FlowtimeDetails = pomodoroDetails };
+            FlowtimeDetails = flowtimeDetails
+        };
 
         return response;
     }
@@ -62,12 +60,7 @@ public class MongoDBFlowtimeDetailsProjection :
     {
         var filter = Builders<FlowtimeDetails>.Filter.Eq(x => x.Id, notification.Id);
 
-        var flowtimeDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
-
-        if (flowtimeDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var flowtimeDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken) ?? throw new EntityNotFoundException();
 
         var update = Builders<FlowtimeDetails>.Update
             .Set(x => x.StartDateTime, notification.StartDateTime)
@@ -96,12 +89,7 @@ public class MongoDBFlowtimeDetailsProjection :
     {
         var filter = Builders<FlowtimeDetails>.Filter.Eq(x => x.Id, notification.Id);
 
-        var flowtimeDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
-
-        if (flowtimeDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var flowtimeDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken) ?? throw new EntityNotFoundException();
 
         flowtimeDetails.StopDateTime = notification.StopDateTime;
         flowtimeDetails.Interrupted = notification.Interrupted;
@@ -123,10 +111,10 @@ public class MongoDBFlowtimeDetailsProjection :
 
     public async System.Threading.Tasks.Task Handle(TaskDescriptionChanged notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<FlowtimeDetails>.Filter.Eq(x => x.TaskId, notification.Id);
+        var filter = Builders<FlowtimeDetails>.Filter.Eq(x => x.TaskId, notification.TaskId);
 
         var update = Builders<FlowtimeDetails>.Update
-            .Set(x => x.TaskDescription, notification.Description)
+            .Set(x => x.TaskDescription, notification.TaskDescription)
             .Set(x => x.TaskVersion, notification.Version);
 
         await _mongoCollection.UpdateManyAsync(filter, update, null, cancellationToken);
@@ -136,12 +124,7 @@ public class MongoDBFlowtimeDetailsProjection :
     {
         var filter = Builders<FlowtimeDetails>.Filter.Eq(x => x.Id, notification.Id);
 
-        var flowtimeDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken);
-
-        if (flowtimeDetails == null)
-        {
-            throw new EntityNotFoundException();
-        }
+        var _ = await _mongoCollection.Find(filter).FirstAsync(cancellationToken) ?? throw new EntityNotFoundException();
 
         await _mongoCollection.DeleteOneAsync(filter, cancellationToken);
     }

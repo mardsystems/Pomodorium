@@ -3,25 +3,14 @@ using Pomodorium.Enums;
 
 namespace Pomodorium.Features.PomodoroTimer;
 
-public class GetPomodoroRequest : Request<GetPomodoroResponse>
+public record GetPomodoroRequest : Request<GetPomodoroResponse>
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
 }
 
-public class GetPomodoroResponse : Response
+public record GetPomodoroResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public GetPomodoroResponse(Guid correlationId)
-        : base(correlationId)
-    {
-
-    }
-
-    public PomodoroDetails PomodoroDetails { get; set; }
-
-    public GetPomodoroResponse()
-    {
-
-    }
+    public required PomodoroDetails PomodoroDetails { get; init; }
 }
 
 public class PomodoroDetails

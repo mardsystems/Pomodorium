@@ -1,23 +1,15 @@
 ﻿namespace Pomodorium.Features.RoutineTracker;
 
-public class GetRoutinesRequest : Request<GetRoutinesResponse>
+public record GetRoutinesRequest : Request<GetRoutinesResponse>
 {
-    public int PageSize { get; set; }
+    public int? PageSize { get; init; }
 
-    public int PageIndex { get; set; }
+    public int? PageIndex { get; init; }
 }
 
-public class GetRoutinesResponse : Response
+public record GetRoutinesResponse(Guid CorrelationId) : Response(CorrelationId)
 {
-    public GetRoutinesResponse(Guid correlationId)
-        : base(correlationId)
-    {
-
-    }
-
-    public IEnumerable<RoutineQueryItem> RoutineQueryItems { get; set; }
-
-    public GetRoutinesResponse() { }
+    public required IEnumerable<RoutineQueryItem> RoutineQueryItems { get; init; }
 }
 
 public class RoutineQueryItem
