@@ -43,28 +43,27 @@ public class WorkItemAdapter
         };
 
         // create instance of work item tracking http client
-        using (var httpClient = new WorkItemTrackingHttpClient(uri, credentials))
+        using var httpClient = new WorkItemTrackingHttpClient(uri, credentials);
+
+        // execute the query to get the list of work items in the results
+        var result = await httpClient.QueryByWiqlAsync(wiql).ConfigureAwait(false);
+
+        var ids = result.WorkItems.Select(item => item.Id).ToArray();
+
+        // some error handling
+        if (ids.Length == 0)
         {
-            // execute the query to get the list of work items in the results
-            var result = await httpClient.QueryByWiqlAsync(wiql).ConfigureAwait(false);
-
-            var ids = result.WorkItems.Select(item => item.Id).ToArray();
-
-            // some error handling
-            if (ids.Length == 0)
-            {
-                return Array.Empty<TaskInfo>();
-            }
-
-            // build a list of the fields we want to see
-            var fields = new[] { "System.Id", "System.Title", "System.State" };
-
-            // get work items for the ids found in query
-            var workItems = await httpClient.GetWorkItemsAsync(ids, fields, result.AsOf).ConfigureAwait(false);
-
-            var taskInfoList = workItems.Select(x => x.ToTaskInfo(tfsIntegration));
-
-            return taskInfoList;
+            return Array.Empty<TaskInfo>();
         }
+
+        // build a list of the fields we want to see
+        var fields = new[] { "System.Id", "System.Title", "System.State" };
+
+        // get work items for the ids found in query
+        var workItems = await httpClient.GetWorkItemsAsync(ids, fields, result.AsOf).ConfigureAwait(false);
+
+        var taskInfoList = workItems.Select(x => x.ToTaskInfo(tfsIntegration));
+
+        return taskInfoList;
     }
 }
