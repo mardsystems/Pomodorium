@@ -4,9 +4,9 @@ namespace Pomodorium.Support;
 
 public static class TaskManagerStubs
 {
-    public static CreateTaskRequest CreateTask()
+    public static TaskRegistrationRequest CreateTask()
     {
-        return new CreateTaskRequest
+        return new TaskRegistrationRequest
         {
             Description = "Default Task"
         };

@@ -6,7 +6,7 @@ using System.DomainModel;
 namespace Pomodorium.Features.PomodoroTimer;
 
 public class MongoDBPomodoroDetailsProjection :
-    IRequestHandler<GetPomodoroRequest, GetPomodoroResponse>,
+    IRequestHandler<PomodoroDetailsRequest, PomodoroDetailsResponse>,
     INotificationHandler<PomodoroCreated>,
     INotificationHandler<PomodoroChecked>,
     INotificationHandler<PomodoroTaskRefined>,
@@ -23,13 +23,13 @@ public class MongoDBPomodoroDetailsProjection :
         _mongoCollection = _mongoClient.GetDatabase("Pomodorium").GetCollection<PomodoroDetails>("PomodoroDetails");
     }
 
-    public async Task<GetPomodoroResponse> Handle(GetPomodoroRequest request, CancellationToken cancellationToken)
+    public async Task<PomodoroDetailsResponse> Handle(PomodoroDetailsRequest request, CancellationToken cancellationToken)
     {
         var filter = Builders<PomodoroDetails>.Filter.Eq(x => x.Id, request.Id);
 
         var pomodoroDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken) ?? throw new EntityNotFoundException();
 
-        var response = new GetPomodoroResponse(request.GetCorrelationId())
+        var response = new PomodoroDetailsResponse(request.GetCorrelationId())
         {
             PomodoroDetails = pomodoroDetails
         };

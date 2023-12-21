@@ -8,7 +8,7 @@ using System.DomainModel;
 namespace Pomodorium.Features.FlowTimer;
 
 public class CosmosFlowtimeQueryItemsProjection :
-    IRequestHandler<GetFlowsRequest, GetFlowsResponse>,
+    IRequestHandler<FlowtimeQueryRequest, FlowtimeQueryResponse>,
     INotificationHandler<FlowtimeCreated>,
     INotificationHandler<FlowtimeStarted>,
     INotificationHandler<FlowtimeInterrupted>,
@@ -36,7 +36,7 @@ public class CosmosFlowtimeQueryItemsProjection :
         _logger = logger;
     }
 
-    public async Task<GetFlowsResponse> Handle(GetFlowsRequest request, CancellationToken cancellationToken)
+    public async Task<FlowtimeQueryResponse> Handle(FlowtimeQueryRequest request, CancellationToken cancellationToken)
     {
         var flowtimeQueryItems = new List<FlowtimeQueryItem>();
 
@@ -61,7 +61,7 @@ public class CosmosFlowtimeQueryItemsProjection :
 
         _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", requestCharge);
 
-        var response = new GetFlowsResponse(request.GetCorrelationId()) { FlowtimeQueryItems = flowtimeQueryItems };
+        var response = new FlowtimeQueryResponse(request.GetCorrelationId()) { FlowtimeQueryItems = flowtimeQueryItems };
 
         return response;
     }

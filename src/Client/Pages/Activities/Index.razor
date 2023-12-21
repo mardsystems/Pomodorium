@@ -100,9 +100,9 @@
 
     private async Task Refresh()
     {
-        var request = new GetActivitiesRequest { };
+        var request = new ActivityQueryRequest { };
 
-        var response = await Mediator.Send<GetActivitiesResponse>(request);
+        var response = await Mediator.Send<ActivityQueryResponse>(request);
 
         _items.Clear();
 
@@ -123,27 +123,27 @@
     {
         var now = DateTime.Now;
 
-        var request = new PostActivityRequest
+        var request = new ActivityCreationRequest
             {
                 Name = "",
                 StartDateTime = now,
                 Description = Guid.NewGuid().ToString()
             };
 
-        var response = await Mediator.Send<PostActivityResponse>(request);
+        var response = await Mediator.Send<ActivityCreationResponse>(request);
 
         await Refresh();
     }
 
     private async Task Delete(Guid id, long version)
     {
-        var request = new DeleteActivityRequest
+        var request = new ActivityDeletionRequest
             {
                 Id = id,
                 Version = version
             };
 
-        var response = await Mediator.Send<DeleteActivityResponse>(request);
+        var response = await Mediator.Send<ActivityDeletionResponse>(request);
 
         await Refresh();
     }

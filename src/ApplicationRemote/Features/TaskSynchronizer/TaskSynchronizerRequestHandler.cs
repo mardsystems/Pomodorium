@@ -1,8 +1,8 @@
 ﻿namespace Pomodorium.Features.TaskSynchronizer;
 
 public class TaskSynchronizerRequestHandler :
-    IRequestHandler<SyncTasksFromTfsRequest, SyncTasksFromTfsResponse>,
-    IRequestHandler<SyncTasksFromTrelloRequest, SyncTasksFromTrelloResponse>
+    IRequestHandler<TaskSyncFromTfsRequest, TaskSyncFromTfsResponse>,
+    IRequestHandler<TaskSyncFromTrelloRequest, TaskSyncFromTrelloResponse>
 {
     private readonly TaskSynchronizerClient _client;
 
@@ -11,14 +11,14 @@ public class TaskSynchronizerRequestHandler :
         _client = client;
     }
 
-    public async Task<SyncTasksFromTfsResponse> Handle(SyncTasksFromTfsRequest request, CancellationToken cancellationToken)
+    public async Task<TaskSyncFromTfsResponse> Handle(TaskSyncFromTfsRequest request, CancellationToken cancellationToken)
     {
         var response = await _client.SyncTasksFromTfsAsync(request);
 
         return response;
     }
 
-    public async Task<SyncTasksFromTrelloResponse> Handle(SyncTasksFromTrelloRequest request, CancellationToken cancellationToken)
+    public async Task<TaskSyncFromTrelloResponse> Handle(TaskSyncFromTrelloRequest request, CancellationToken cancellationToken)
     {
         var response = await _client.SyncTasksFromTrelloAsync(request, cancellationToken);
 

@@ -97,9 +97,9 @@
 
     private async Task Refresh()
     {
-        var request = new GetPomosRequest { };
+        var request = new PomodoroQueryRequest { };
 
-        var response = await Mediator.Send<GetPomosResponse>(request);
+        var response = await Mediator.Send<PomodoroQueryResponse>(request);
 
         Model.Repopulate(response.PomodoroQueryItems);
     }
@@ -108,26 +108,26 @@
     {
         var now = DateTime.Now;
 
-        var request = new CreatePomodoroRequest
+        var request = new PomodoroCreationRequest
             {
                 Timer = TimeSpan.FromMinutes(25),
                 Task = now.ToString()
             };
 
-        var response = await Mediator.Send<CreatePomodoroResponse>(request);
+        var response = await Mediator.Send<PomodoroCreationResponse>(request);
 
         await Refresh();
     }
 
     private async Task Archive(Guid id, long version)
     {
-        var request = new ArchivePomodoroRequest
+        var request = new PomodoroArchivingRequest
             {
                 Id = id,
                 Version = version
             };
 
-        var response = await Mediator.Send<ArchivePomodoroResponse>(request);
+        var response = await Mediator.Send<PomodoroArchivingResponse>(request);
 
         await Refresh();
     }

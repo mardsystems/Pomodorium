@@ -115,9 +115,9 @@
 
     private async System.Threading.Tasks.Task Refresh()
     {
-        var request = new GetTasksRequest { };
+        var request = new TaskQueryRequest { };
 
-        var response = await Mediator.Send<GetTasksResponse>(request);
+        var response = await Mediator.Send<TaskQueryResponse>(request);
 
         Model.Repopulate(response.TaskQueryItems);
     }
@@ -131,22 +131,22 @@
 
     private async Task SyncTasksFromTFS()
     {
-        var request = new SyncTasksFromTfsRequest
+        var request = new TaskSyncFromTfsRequest
         {
 
         };
 
-        await Mediator.Send<SyncTasksFromTfsResponse>(request);
+        await Mediator.Send<TaskSyncFromTfsResponse>(request);
     }
 
     private async Task SyncTasksFromTrello()
     {
-        var request = new SyncTasksFromTrelloRequest
+        var request = new TaskSyncFromTrelloRequest
         {
 
         };
 
-        await Mediator.Send<SyncTasksFromTrelloResponse>(request);
+        await Mediator.Send<TaskSyncFromTrelloResponse>(request);
     }
 
     private async System.Threading.Tasks.Task Details(Guid id)
@@ -158,12 +158,12 @@
 
     private async System.Threading.Tasks.Task FocusWithFlowtime(Guid taskId)
     {
-        var request = new StartFlowtimeFromTaskRequest
+        var request = new FlowtimeStartFromTaskRequest
             {
                 TaskId = taskId
             };
 
-        var response = await Mediator.Send<StartFlowtimeFromTaskResponse>(request);
+        var response = await Mediator.Send<FlowtimeStartFromTaskResponse>(request);
 
         await Refresh();
     }
@@ -172,13 +172,13 @@
     {
         foreach (var item in _selectedItems)
         {
-            var request = new ArchiveTaskRequest
+            var request = new TaskArchiveRequest
                 {
                     TaskId = item.Id,
                     TaskVersion = item.Version
                 };
 
-            var response = await Mediator.Send<ArchiveTaskResponse>(request);
+            var response = await Mediator.Send<TaskArchiveResponse>(request);
         }
 
         await Refresh();

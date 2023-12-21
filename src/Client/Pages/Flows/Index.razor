@@ -137,9 +137,9 @@
 
     private async System.Threading.Tasks.Task Refresh()
     {
-        var request = new GetFlowsRequest();
+        var request = new FlowtimeQueryRequest();
 
-        var response = await Mediator.Send<GetFlowsResponse>(request);
+        var response = await Mediator.Send<FlowtimeQueryResponse>(request);
 
         Model.Repopulate(response.FlowtimeQueryItems);
     }
@@ -167,40 +167,40 @@
 
     private async System.Threading.Tasks.Task Start(Guid id, long version)
     {
-        var request = new StartFlowtimeRequest
+        var request = new FlowtimeStartRequest
             {
                 FlowtimeId = id,
                 FlowtimeVersion = version
             };
 
-        var response = await Mediator.Send<StartFlowtimeResponse>(request);
+        var response = await Mediator.Send<FlowtimeStartResponse>(request);
 
         await Refresh();
     }
 
     private async System.Threading.Tasks.Task Interrupt(Guid id, long version)
     {
-        var request = new InterruptFlowtimeRequest
+        var request = new FlowtimeInterruptionRequest
             {
                 FlowtimeId = id,
                 FlowtimeVersion = version
             };
 
-        var response = await Mediator.Send<InterruptFlowtimeResponse>(request);
+        var response = await Mediator.Send<FlowtimeInterruptionResponse>(request);
 
         await Refresh();
     }
 
     private async System.Threading.Tasks.Task Stop(Guid id, long version)
     {
-        var request = new StopFlowtimeRequest
+        var request = new FlowtimeStopRequest
             {
                 FlowtimeId = id,
                 FlowtimeVersion = version
             };
 
 
-        var response = await Mediator.Send<StopFlowtimeResponse>(request);
+        var response = await Mediator.Send<FlowtimeStopResponse>(request);
 
         await Refresh();
     }
@@ -209,13 +209,13 @@
     {
         foreach (var item in _selectedItems)
         {
-            var request = new ArchiveFlowtimeRequest
+            var request = new FlowtimeArchivingRequest
                 {
                     FlowtimeId = item.Id,
                     FlowtimeVersion = item.Version
                 };
 
-            var response = await Mediator.Send<ArchiveFlowtimeResponse>(request);
+            var response = await Mediator.Send<FlowtimeArchivingResponse>(request);
         }
 
         await Refresh();

@@ -8,7 +8,7 @@ using System.DomainModel;
 namespace Pomodorium.Features.ActivityManager;
 
 public class CosmosActivityQueryItemsProjection :
-    IRequestHandler<GetActivitiesRequest, GetActivitiesResponse>,
+    IRequestHandler<ActivityQueryRequest, ActivityQueryResponse>,
     INotificationHandler<ActivityCreated>,
     INotificationHandler<ActivityUpdated>,
     INotificationHandler<ActivityDeleted>
@@ -33,7 +33,7 @@ public class CosmosActivityQueryItemsProjection :
         _logger = logger;
     }
 
-    public async Task<GetActivitiesResponse> Handle(GetActivitiesRequest request, CancellationToken cancellationToken)
+    public async Task<ActivityQueryResponse> Handle(ActivityQueryRequest request, CancellationToken cancellationToken)
     {
         var activityQueryItems = new List<ActivityQueryItem>();
 
@@ -58,7 +58,7 @@ public class CosmosActivityQueryItemsProjection :
 
         _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", requestCharge);
 
-        var response = new GetActivitiesResponse(request.GetCorrelationId())
+        var response = new ActivityQueryResponse(request.GetCorrelationId())
         {
             ActivityQueryItems = activityQueryItems
         };

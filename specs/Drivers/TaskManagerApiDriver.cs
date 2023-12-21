@@ -7,32 +7,32 @@ public class TaskManagerApiDriver
 {
     private readonly WebApiContext _webApi;
 
-    public ActionAttempt<CreateTaskRequest, CreateTaskResponse> CreateTaskAction { get; }
+    public ActionAttempt<TaskRegistrationRequest, TaskRegistrationResponse> CreateTaskAction { get; }
 
-    public ActionAttempt<ChangeTaskDescriptionRequest, ChangeTaskDescriptionResponse> ChangeTaskDescriptionAction { get; }
+    public ActionAttempt<TaskDescriptionChangeRequest, TaskDescriptionChangeResponse> ChangeTaskDescriptionAction { get; }
 
-    public ActionAttempt<GetTaskRequest, GetTaskResponse> GetTaskAction { get; }
+    public ActionAttempt<TaskDetailsRequest, TaskDetailsResponse> GetTaskAction { get; }
 
-    public ActionAttempt<ArchiveTaskRequest, ArchiveTaskResponse> ArchiveTaskAction { get; }
+    public ActionAttempt<TaskArchiveRequest, TaskArchiveResponse> ArchiveTaskAction { get; }
 
     public TaskManagerApiDriver(WebApiContext webApi, ActionAttemptFactory actionAttemptFactory)
     {
         _webApi = webApi;
 
-        CreateTaskAction = actionAttemptFactory.CreateWithStatusCheck<CreateTaskRequest, CreateTaskResponse>(
+        CreateTaskAction = actionAttemptFactory.CreateWithStatusCheck<TaskRegistrationRequest, TaskRegistrationResponse>(
             nameof(CreateTaskAction),
-            request => _webApi.ExecutePost<CreateTaskResponse>("api/TaskManager/CreateTask", request));
+            request => _webApi.ExecutePost<TaskRegistrationResponse>("api/TaskManager/CreateTask", request));
 
-        GetTaskAction = actionAttemptFactory.CreateWithStatusCheck<GetTaskRequest, GetTaskResponse>(
+        GetTaskAction = actionAttemptFactory.CreateWithStatusCheck<TaskDetailsRequest, TaskDetailsResponse>(
             nameof(GetTaskAction),
-            request => _webApi.ExecutePost<GetTaskResponse>($"/api/TaskManager/GetTask", request));
+            request => _webApi.ExecutePost<TaskDetailsResponse>($"/api/TaskManager/GetTask", request));
 
-        ChangeTaskDescriptionAction = actionAttemptFactory.CreateWithStatusCheck<ChangeTaskDescriptionRequest, ChangeTaskDescriptionResponse>(
+        ChangeTaskDescriptionAction = actionAttemptFactory.CreateWithStatusCheck<TaskDescriptionChangeRequest, TaskDescriptionChangeResponse>(
             nameof(ChangeTaskDescriptionAction),
-            request => _webApi.ExecutePost<ChangeTaskDescriptionResponse>($"api/TaskManager/ChangeTaskDescription", request));
+            request => _webApi.ExecutePost<TaskDescriptionChangeResponse>($"api/TaskManager/ChangeTaskDescription", request));
 
-        ArchiveTaskAction = actionAttemptFactory.CreateWithStatusCheck<ArchiveTaskRequest, ArchiveTaskResponse>(
+        ArchiveTaskAction = actionAttemptFactory.CreateWithStatusCheck<TaskArchiveRequest, TaskArchiveResponse>(
             nameof(ArchiveTaskAction),
-            request => _webApi.ExecutePost<ArchiveTaskResponse>($"api/TaskManager/ArchiveTask", request));
+            request => _webApi.ExecutePost<TaskArchiveResponse>($"api/TaskManager/ArchiveTask", request));
     }
 }

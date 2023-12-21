@@ -113,9 +113,9 @@
                 throw new InvalidOperationException();
             }
 
-            var request = new GetTaskRequest(TaskId.Value);
+            var request = new TaskDetailsRequest(TaskId.Value);
 
-            var response = await Mediator.Send<GetTaskResponse>(request);
+            var response = await Mediator.Send<TaskDetailsResponse>(request);
 
             Model = new DetailsViewModel(
                 response.TaskDetails.Id,
@@ -127,9 +127,9 @@
         {
             var flowtimeId = Guid.Parse(Id);
 
-            var request = new GetFlowtimeRequest(flowtimeId);
+            var request = new FlowtimeDetailsRequest(flowtimeId);
 
-            var response = await Mediator.Send<GetFlowtimeResponse>(request);
+            var response = await Mediator.Send<FlowtimeDetailsResponse>(request);
 
             Model = new DetailsViewModel(
                 response.FlowtimeDetails.Id,
@@ -163,26 +163,26 @@
 
     private async System.Threading.Tasks.Task Start()
     {
-        var request = new StartFlowtimeRequest
+        var request = new FlowtimeStartRequest
             {
                 FlowtimeId = Model.Id,
                 FlowtimeVersion = Model.Version
             };
 
-        var response = await Mediator.Send<StartFlowtimeResponse>(request);
+        var response = await Mediator.Send<FlowtimeStartResponse>(request);
 
         Navigation.NavigateTo("flows");
     }
 
     private async System.Threading.Tasks.Task Stop()
     {
-        var request = new StopFlowtimeRequest
+        var request = new FlowtimeStopRequest
             {
                 FlowtimeId = Model.Id,
                 FlowtimeVersion = Model.Version
             };
 
-        var response = await Mediator.Send<StopFlowtimeResponse>(request);
+        var response = await Mediator.Send<FlowtimeStopResponse>(request);
 
         Navigation.NavigateTo("flows");
     }
@@ -191,34 +191,34 @@
     {
         if (Id == null || Id == "new")
         {
-            var request = new CreateFlowtimeRequest
+            var request = new FlowtimeCreationRequest
                 {
                     TaskDescription = Model.TaskDescription
                 };
 
-            var response = await Mediator.Send<CreateFlowtimeResponse>(request);
+            var response = await Mediator.Send<FlowtimeCreationResponse>(request);
         }
         else if (Id == "continuation")
         {
-            var request = new CreateFlowtimeFromTaskRequest
+            var request = new FlowtimeCreationFromTaskRequest
                 {
                     TaskId = Model.TaskId,
                     TaskDescription = Model.TaskDescription,
                     TaskVersion = Model.TaskVersion
                 };
 
-            var response = await Mediator.Send<CreateFlowtimeFromTaskResponse>(request);
+            var response = await Mediator.Send<FlowtimeCreationFromTaskResponse>(request);
         }
         else
         {
-            var request = new ChangeTaskDescriptionRequest
+            var request = new TaskDescriptionChangeRequest
                 {
                     TaskId = Model.TaskId,
                     Description = Model.TaskDescription,
                     TaskVersion = Model.TaskVersion
                 };
 
-            var response = await Mediator.Send<ChangeTaskDescriptionResponse>(request);
+            var response = await Mediator.Send<TaskDescriptionChangeResponse>(request);
         }
 
         Navigation.NavigateTo("flows");
@@ -233,13 +233,13 @@
 
         var flowtimeId = Guid.Parse(Id);
 
-        var request = new ArchiveFlowtimeRequest
+        var request = new FlowtimeArchivingRequest
             {
                 FlowtimeId = flowtimeId,
                 FlowtimeVersion = Model.Version
             };
 
-        var response = await Mediator.Send<ArchiveFlowtimeResponse>(request);
+        var response = await Mediator.Send<FlowtimeArchivingResponse>(request);
 
         Navigation.NavigateTo("flows");
     }

@@ -24,17 +24,17 @@ public class TaskSynchronizerController : ControllerBase
     }
 
     [HttpPost("SyncTasksFromTfs")]
-    public async Task<SyncTasksFromTfsResponse> SyncTasksFromTfs(SyncTasksFromTfsRequest request)
+    public async Task<TaskSyncFromTfsResponse> SyncTasksFromTfs(TaskSyncFromTfsRequest request)
     {
-        var response = await _mediator.Send<SyncTasksFromTfsResponse>(request);
+        var response = await _mediator.Send<TaskSyncFromTfsResponse>(request);
 
         return response;
     }
 
     [HttpPost("SyncTasksFromTrello")]
-    public async Task<SyncTasksFromTrelloResponse> SyncTasksFromTrello(SyncTasksFromTrelloRequest request)
+    public async Task<TaskSyncFromTrelloResponse> SyncTasksFromTrello(TaskSyncFromTrelloRequest request)
     {
-        var response = await _mediator.Send<SyncTasksFromTrelloResponse>(request);
+        var response = await _mediator.Send<TaskSyncFromTrelloResponse>(request);
 
         return response;
     }

@@ -9,7 +9,7 @@ using System.DomainModel;
 namespace Pomodorium.Features.TaskManager;
 
 public class CosmosTaskQueryItemsProjection :
-    IRequestHandler<GetTasksRequest, GetTasksResponse>,
+    IRequestHandler<TaskQueryRequest, TaskQueryResponse>,
     INotificationHandler<TaskCreated>,
     INotificationHandler<TaskIntegrated>,
     INotificationHandler<TaskDescriptionChanged>,
@@ -38,7 +38,7 @@ public class CosmosTaskQueryItemsProjection :
         _logger = logger;
     }
 
-    public async Task<GetTasksResponse> Handle(GetTasksRequest request, CancellationToken cancellationToken)
+    public async Task<TaskQueryResponse> Handle(TaskQueryRequest request, CancellationToken cancellationToken)
     {
         var taskQueryItems = new List<TaskQueryItem>();
 
@@ -67,7 +67,7 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
 
         _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", requestCharge);
 
-        var response = new GetTasksResponse(request.GetCorrelationId())
+        var response = new TaskQueryResponse(request.GetCorrelationId())
         {
             TaskQueryItems = taskQueryItems
         };

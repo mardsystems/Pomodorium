@@ -6,7 +6,7 @@ using Pomodorium.Models.TaskManagement.Tasks;
 namespace Pomodorium.Features.FlowTimer;
 
 public class MongoDBFlowtimeQueryItemsProjection :
-    IRequestHandler<GetFlowsRequest, GetFlowsResponse>,
+    IRequestHandler<FlowtimeQueryRequest, FlowtimeQueryResponse>,
     INotificationHandler<FlowtimeCreated>,
     INotificationHandler<FlowtimeStarted>,
     INotificationHandler<FlowtimeInterrupted>,
@@ -25,13 +25,13 @@ public class MongoDBFlowtimeQueryItemsProjection :
         _mongoCollection = _mongoClient.GetDatabase("Pomodorium").GetCollection<FlowtimeQueryItem>("FlowtimeQueryItems");
     }
 
-    public async Task<GetFlowsResponse> Handle(GetFlowsRequest request, CancellationToken cancellationToken)
+    public async Task<FlowtimeQueryResponse> Handle(FlowtimeQueryRequest request, CancellationToken cancellationToken)
     {
         var filter = Builders<FlowtimeQueryItem>.Filter.Empty;
 
         var flowtimeQueryItems = await _mongoCollection.Find(filter).ToListAsync(cancellationToken);
 
-        var response = new GetFlowsResponse(request.GetCorrelationId())
+        var response = new FlowtimeQueryResponse(request.GetCorrelationId())
         {
             FlowtimeQueryItems = flowtimeQueryItems
         };

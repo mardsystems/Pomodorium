@@ -7,7 +7,7 @@ using System.DomainModel;
 namespace Pomodorium.Features.PomodoroTimer;
 
 public class CosmosPomodoroQueryItemsProjection :
-    IRequestHandler<GetPomosRequest, GetPomosResponse>,
+    IRequestHandler<PomodoroQueryRequest, PomodoroQueryResponse>,
     INotificationHandler<PomodoroCreated>,
     INotificationHandler<PomodoroChecked>,
     INotificationHandler<PomodoroTaskRefined>,
@@ -33,7 +33,7 @@ public class CosmosPomodoroQueryItemsProjection :
         _logger = logger;
     }
 
-    public async Task<GetPomosResponse> Handle(GetPomosRequest request, CancellationToken cancellationToken)
+    public async Task<PomodoroQueryResponse> Handle(PomodoroQueryRequest request, CancellationToken cancellationToken)
     {
         var pomodoroQueryItems = new List<PomodoroQueryItem>();
 
@@ -58,7 +58,7 @@ public class CosmosPomodoroQueryItemsProjection :
 
         _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", requestCharge);
 
-        var response = new GetPomosResponse(request.GetCorrelationId()) { PomodoroQueryItems = pomodoroQueryItems };
+        var response = new PomodoroQueryResponse(request.GetCorrelationId()) { PomodoroQueryItems = pomodoroQueryItems };
 
         return response;
     }

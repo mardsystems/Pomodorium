@@ -90,9 +90,9 @@
         }
         else
         {
-            var request = new GetActivityRequest { Id = Guid.Parse(Id) };
+            var request = new ActivityDetailsRequest { Id = Guid.Parse(Id) };
 
-            var response = await Mediator.Send<GetActivityResponse>(request);
+            var response = await Mediator.Send<ActivityDetailsResponse>(request);
 
             Model = new DetailsViewModel(
                 response.ActivityDetails.Id,
@@ -119,7 +119,7 @@
     {
         if (Id == null || Id == "new")
         {
-            var request = new PostActivityRequest
+            var request = new ActivityCreationRequest
                 {
                     Name = Model.Name,
                     StartDateTime = Model.GetStartDateTime(),
@@ -127,11 +127,11 @@
                     Description = Model.Description
                 };
 
-            var response = await Mediator.Send<PostActivityResponse>(request);
+            var response = await Mediator.Send<ActivityCreationResponse>(request);
         }
         else
         {
-            var request = new PutActivityRequest
+            var request = new ActivityUpdatingRequest
                 {
                     Id = Guid.Parse(Id),
                     Name = Model.Name,
@@ -141,7 +141,7 @@
                     Version = Model.Version
                 };
 
-            var response = await Mediator.Send<PutActivityResponse>(request);
+            var response = await Mediator.Send<ActivityUpdatingResponse>(request);
         }
 
         Navigation.NavigateTo("activities");
@@ -156,13 +156,13 @@
 
         if (result == true)
         {
-            var request = new DeleteActivityRequest
+            var request = new ActivityDeletionRequest
                 {
                     Id = Guid.Parse(Id),
                     Version = Model.Version
                 };
 
-            var response = await Mediator.Send<DeleteActivityResponse>(request);
+            var response = await Mediator.Send<ActivityDeletionResponse>(request);
 
             Navigation.NavigateTo("activities");
         }

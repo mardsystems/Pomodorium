@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Builder\**" />
+    <EmbeddedResource Remove="Builder\**" />
+    <None Remove="Builder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.*" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
@@ -25,10 +31,6 @@
     <ProjectReference Include="..\RoutineTracking.DomainModel\Pomodorium.RoutineTracking.DomainModel.csproj" />
     <ProjectReference Include="..\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
     <ProjectReference Include="..\TaskManagement.DomainModel\Pomodorium.TaskManagement.DomainModel.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Builder\" />
   </ItemGroup>
 
 </Project>
