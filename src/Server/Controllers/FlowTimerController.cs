@@ -24,73 +24,73 @@ public class FlowTimerController : ControllerBase
     }
 
     [HttpPost("GetFlows")]
-    public async Task<GetFlowsResponse> GetFlows(GetFlowsRequest request)
+    public async Task<FlowtimeQueryResponse> GetFlows(FlowtimeQueryRequest request)
     {
-        var response = await _mediator.Send<GetFlowsResponse>(request);
+        var response = await _mediator.Send<FlowtimeQueryResponse>(request);
 
         return response;
     }
 
     [HttpPost("GetFlowtime")]
-    public async Task<GetFlowtimeResponse> GetFlowtime(GetFlowtimeRequest request)
+    public async Task<FlowtimeDetailsResponse> GetFlowtime(FlowtimeDetailsRequest request)
     {
-        var response = await _mediator.Send<GetFlowtimeResponse>(request);
+        var response = await _mediator.Send<FlowtimeDetailsResponse>(request);
 
         return response;
     }
 
     [HttpPost("CreateFlowtime")]
-    public async Task<CreateFlowtimeResponse> CreateFlowtime(CreateFlowtimeRequest request)
+    public async Task<FlowtimeCreationResponse> CreateFlowtime(FlowtimeCreationRequest request)
     {
-        var response = await _mediator.Send<CreateFlowtimeResponse>(request);
+        var response = await _mediator.Send<FlowtimeCreationResponse>(request);
 
         return response;
     }
 
     [HttpPost("CreateFlowtimeFromTask")]
-    public async Task<CreateFlowtimeFromTaskResponse> CreateFlowtimeFromTask(CreateFlowtimeFromTaskRequest request)
+    public async Task<FlowtimeCreationFromTaskResponse> CreateFlowtimeFromTask(FlowtimeCreationFromTaskRequest request)
     {
-        var response = await _mediator.Send<CreateFlowtimeFromTaskResponse>(request);
+        var response = await _mediator.Send<FlowtimeCreationFromTaskResponse>(request);
 
         return response;
     }
 
     [HttpPost("StartFlowtime")]
-    public async Task<StartFlowtimeResponse> StartFlowtime(StartFlowtimeRequest request)
+    public async Task<FlowtimeStartResponse> StartFlowtime(FlowtimeStartRequest request)
     {
-        var response = await _mediator.Send<StartFlowtimeResponse>(request);
+        var response = await _mediator.Send<FlowtimeStartResponse>(request);
 
         return response;
     }
 
     [HttpPost("StartFlowtimeFromTask")]
-    public async Task<StartFlowtimeFromTaskResponse> StartFlowtimeFromTask(StartFlowtimeFromTaskRequest request)
+    public async Task<FlowtimeStartFromTaskResponse> StartFlowtimeFromTask(FlowtimeStartFromTaskRequest request)
     {
-        var response = await _mediator.Send<StartFlowtimeFromTaskResponse>(request);
+        var response = await _mediator.Send<FlowtimeStartFromTaskResponse>(request);
 
         return response;
     }
 
     [HttpPost("InterruptFlowtime")]
-    public async Task<InterruptFlowtimeResponse> InterruptFlowtime(InterruptFlowtimeRequest request)
+    public async Task<FlowtimeInterruptionResponse> InterruptFlowtime(FlowtimeInterruptionRequest request)
     {
-        var response = await _mediator.Send<InterruptFlowtimeResponse>(request);
+        var response = await _mediator.Send<FlowtimeInterruptionResponse>(request);
 
         return response;
     }
 
     [HttpPost("StopFlowtime")]
-    public async Task<StopFlowtimeResponse> StopFlowtime(StopFlowtimeRequest request)
+    public async Task<FlowtimeStopResponse> StopFlowtime(FlowtimeStopRequest request)
     {
-        var response = await _mediator.Send<StopFlowtimeResponse>(request);
+        var response = await _mediator.Send<FlowtimeStopResponse>(request);
 
         return response;
     }
 
     [HttpPost("ArchiveFlowtime")]
-    public async Task<ArchiveFlowtimeResponse> ArchiveFlowtime(ArchiveFlowtimeRequest request)
+    public async Task<FlowtimeArchivingResponse> ArchiveFlowtime(FlowtimeArchivingRequest request)
     {
-        var response = await _mediator.Send<ArchiveFlowtimeResponse>(request);
+        var response = await _mediator.Send<FlowtimeArchivingResponse>(request);
 
         return response;
     }

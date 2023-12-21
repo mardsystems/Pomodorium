@@ -90,9 +90,9 @@
         {
             var taskId = Guid.Parse(Id);
 
-            var request = new GetTaskRequest(taskId);
+            var request = new TaskDetailsRequest(taskId);
 
-            var response = await Mediator.Send<GetTaskResponse>(request);
+            var response = await Mediator.Send<TaskDetailsResponse>(request);
 
             Model = new DetailsViewModel(
                 response.TaskDetails.Id,
@@ -115,23 +115,23 @@
     {
         if (Id == null || Id == "new")
         {
-            var request = new CreateTaskRequest
+            var request = new TaskRegistrationRequest
                 {
                     Description = Model.Description
                 };
 
-            var response = await Mediator.Send<CreateTaskResponse>(request);
+            var response = await Mediator.Send<TaskRegistrationResponse>(request);
         }
         else
         {
-            var request = new ChangeTaskDescriptionRequest
+            var request = new TaskDescriptionChangeRequest
                 {
                     TaskId = Model.Id,
                     Description = Model.Description,
                     TaskVersion = Model.Version
                 };
 
-            var response = await Mediator.Send<ChangeTaskDescriptionResponse>(request);
+            var response = await Mediator.Send<TaskDescriptionChangeResponse>(request);
         }
 
         Navigation.NavigateTo("tasks");
@@ -146,13 +146,13 @@
 
         var taskId = Guid.Parse(Id);
 
-        var request = new ArchiveTaskRequest
+        var request = new TaskArchiveRequest
             {
                 TaskId = taskId,
                 TaskVersion = Model.Version
             };
 
-        var response = await Mediator.Send<ArchiveTaskResponse>(request);
+        var response = await Mediator.Send<TaskArchiveResponse>(request);
 
         Navigation.NavigateTo("tasks");
     }

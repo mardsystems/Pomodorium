@@ -8,7 +8,7 @@ using System.DomainModel;
 namespace Pomodorium.Features.TaskManager;
 
 public class IndexedDBTaskQueryItemsProjection :
-    IRequestHandler<GetTasksRequest, GetTasksResponse>,
+    IRequestHandler<TaskQueryRequest, TaskQueryResponse>,
     INotificationHandler<TaskCreated>,
     INotificationHandler<TaskIntegrated>,
     INotificationHandler<TaskDescriptionChanged>,
@@ -24,13 +24,13 @@ public class IndexedDBTaskQueryItemsProjection :
         _db = db;
     }
 
-    public async Task<GetTasksResponse> Handle(GetTasksRequest request, CancellationToken cancellationToken)
+    public async Task<TaskQueryResponse> Handle(TaskQueryRequest request, CancellationToken cancellationToken)
     {
         var taskQueryItems = await _db.GetAllAsync<TaskQueryItem>("TaskQueryItems");
 
         var orderedTaskQueryItems = taskQueryItems.OrderByDescending(x => x.CreationDate);
 
-        var response = new GetTasksResponse(request.GetCorrelationId())
+        var response = new TaskQueryResponse(request.GetCorrelationId())
         {
             TaskQueryItems = orderedTaskQueryItems
         };

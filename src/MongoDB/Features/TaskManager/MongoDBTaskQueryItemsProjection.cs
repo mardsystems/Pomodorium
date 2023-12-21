@@ -7,7 +7,7 @@ using Pomodorium.Models.TaskManagement.Tasks;
 namespace Pomodorium.Features.TaskManager;
 
 public class MongoDBTaskQueryItemsProjection :
-    IRequestHandler<GetTasksRequest, GetTasksResponse>,
+    IRequestHandler<TaskQueryRequest, TaskQueryResponse>,
     INotificationHandler<TaskCreated>,
     INotificationHandler<TaskIntegrated>,
     INotificationHandler<TaskDescriptionChanged>,
@@ -27,7 +27,7 @@ public class MongoDBTaskQueryItemsProjection :
         _mongoCollection = _mongoClient.GetDatabase("Pomodorium").GetCollection<TaskQueryItem>("TaskQueryItems");
     }
 
-    public async Task<GetTasksResponse> Handle(GetTasksRequest request, CancellationToken cancellationToken)
+    public async Task<TaskQueryResponse> Handle(TaskQueryRequest request, CancellationToken cancellationToken)
     {
         FilterDefinition<TaskQueryItem> filter;
 
@@ -42,7 +42,7 @@ public class MongoDBTaskQueryItemsProjection :
 
         var taskQueryItems = await _mongoCollection.Find(filter).ToListAsync(cancellationToken);
 
-        var response = new GetTasksResponse(request.GetCorrelationId())
+        var response = new TaskQueryResponse(request.GetCorrelationId())
         {
             TaskQueryItems = taskQueryItems
         };

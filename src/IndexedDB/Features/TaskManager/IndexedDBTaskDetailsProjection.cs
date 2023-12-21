@@ -6,7 +6,7 @@ using System.DomainModel;
 namespace Pomodorium.Features.TaskManager;
 
 public class IndexedDBTaskDetailsProjection :
-    IRequestHandler<GetTaskRequest, GetTaskResponse>,
+    IRequestHandler<TaskDetailsRequest, TaskDetailsResponse>,
     INotificationHandler<TaskCreated>,
     INotificationHandler<TaskDescriptionChanged>,
     INotificationHandler<TaskArchived>
@@ -18,11 +18,11 @@ public class IndexedDBTaskDetailsProjection :
         _db = db;
     }
 
-    public async Task<GetTaskResponse> Handle(GetTaskRequest request, CancellationToken cancellationToken)
+    public async Task<TaskDetailsResponse> Handle(TaskDetailsRequest request, CancellationToken cancellationToken)
     {
         var taskDetails = await _db.GetAsync<TaskDetails>("TaskDetails", request.TaskId) ?? throw new EntityNotFoundException();
 
-        var response = new GetTaskResponse(request.GetCorrelationId())
+        var response = new TaskDetailsResponse(request.GetCorrelationId())
         {
             TaskDetails = taskDetails
         };

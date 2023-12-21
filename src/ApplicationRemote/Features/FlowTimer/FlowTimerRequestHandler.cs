@@ -1,14 +1,14 @@
 ﻿namespace Pomodorium.Features.FlowTimer;
 
 public class FlowTimerRequestHandler :
-    IRequestHandler<GetFlowsRequest, GetFlowsResponse>,
-    IRequestHandler<GetFlowtimeRequest, GetFlowtimeResponse>,
-    IRequestHandler<CreateFlowtimeRequest, CreateFlowtimeResponse>,
-    IRequestHandler<StartFlowtimeRequest, StartFlowtimeResponse>,
-    IRequestHandler<StartFlowtimeFromTaskRequest, StartFlowtimeFromTaskResponse>,
-    IRequestHandler<InterruptFlowtimeRequest, InterruptFlowtimeResponse>,
-    IRequestHandler<StopFlowtimeRequest, StopFlowtimeResponse>,
-    IRequestHandler<ArchiveFlowtimeRequest, ArchiveFlowtimeResponse>
+    IRequestHandler<FlowtimeQueryRequest, FlowtimeQueryResponse>,
+    IRequestHandler<FlowtimeDetailsRequest, FlowtimeDetailsResponse>,
+    IRequestHandler<FlowtimeCreationRequest, FlowtimeCreationResponse>,
+    IRequestHandler<FlowtimeStartRequest, FlowtimeStartResponse>,
+    IRequestHandler<FlowtimeStartFromTaskRequest, FlowtimeStartFromTaskResponse>,
+    IRequestHandler<FlowtimeInterruptionRequest, FlowtimeInterruptionResponse>,
+    IRequestHandler<FlowtimeStopRequest, FlowtimeStopResponse>,
+    IRequestHandler<FlowtimeArchivingRequest, FlowtimeArchivingResponse>
 {
     private readonly FlowTimerClient _client;
 
@@ -17,56 +17,56 @@ public class FlowTimerRequestHandler :
         _client = client;
     }
 
-    public async Task<GetFlowsResponse> Handle(GetFlowsRequest request, CancellationToken cancellationToken)
+    public async Task<FlowtimeQueryResponse> Handle(FlowtimeQueryRequest request, CancellationToken cancellationToken)
     {
         var response = await _client.GetFlowsAsync(request, cancellationToken);
 
         return response;
     }
 
-    public async Task<GetFlowtimeResponse> Handle(GetFlowtimeRequest request, CancellationToken cancellationToken)
+    public async Task<FlowtimeDetailsResponse> Handle(FlowtimeDetailsRequest request, CancellationToken cancellationToken)
     {
         var response = await _client.GetFlowtimeAsync(request, cancellationToken);
 
         return response;
     }
 
-    public async Task<CreateFlowtimeResponse> Handle(CreateFlowtimeRequest request, CancellationToken cancellationToken)
+    public async Task<FlowtimeCreationResponse> Handle(FlowtimeCreationRequest request, CancellationToken cancellationToken)
     {
         var response = await _client.CreateFlowtimeAsync(request, cancellationToken);
 
         return response;
     }
 
-    public async Task<StartFlowtimeResponse> Handle(StartFlowtimeRequest request, CancellationToken cancellationToken)
+    public async Task<FlowtimeStartResponse> Handle(FlowtimeStartRequest request, CancellationToken cancellationToken)
     {
         var response = await _client.StartFlowtimeAsync(request, cancellationToken);
 
         return response;
     }
 
-    public async Task<StartFlowtimeFromTaskResponse> Handle(StartFlowtimeFromTaskRequest request, CancellationToken cancellationToken)
+    public async Task<FlowtimeStartFromTaskResponse> Handle(FlowtimeStartFromTaskRequest request, CancellationToken cancellationToken)
     {
         var response = await _client.StartFlowtimeFromTaskAsync(request, cancellationToken);
 
         return response;
     }
 
-    public async Task<InterruptFlowtimeResponse> Handle(InterruptFlowtimeRequest request, CancellationToken cancellationToken)
+    public async Task<FlowtimeInterruptionResponse> Handle(FlowtimeInterruptionRequest request, CancellationToken cancellationToken)
     {
         var response = await _client.InterruptFlowtimeAsync(request, cancellationToken);
 
         return response;
     }
 
-    public async Task<StopFlowtimeResponse> Handle(StopFlowtimeRequest request, CancellationToken cancellationToken)
+    public async Task<FlowtimeStopResponse> Handle(FlowtimeStopRequest request, CancellationToken cancellationToken)
     {
         var response = await _client.StopFlowtimeAsync(request, cancellationToken);
 
         return response;
     }
 
-    public async Task<ArchiveFlowtimeResponse> Handle(ArchiveFlowtimeRequest request, CancellationToken cancellationToken)
+    public async Task<FlowtimeArchivingResponse> Handle(FlowtimeArchivingRequest request, CancellationToken cancellationToken)
     {
         var response = await _client.ArchiveFlowtimeAsync(request, cancellationToken);
 

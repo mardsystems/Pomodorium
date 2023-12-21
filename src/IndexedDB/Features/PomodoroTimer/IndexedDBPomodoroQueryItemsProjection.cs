@@ -7,7 +7,7 @@ namespace Pomodorium.Features.PomodoroTimer;
 
 
 public class IndexedDBPomodoroQueryItemsProjection :
-    IRequestHandler<GetPomosRequest, GetPomosResponse>,
+    IRequestHandler<PomodoroQueryRequest, PomodoroQueryResponse>,
     INotificationHandler<PomodoroCreated>,
     INotificationHandler<PomodoroChecked>,
     INotificationHandler<PomodoroTaskRefined>,
@@ -20,11 +20,11 @@ public class IndexedDBPomodoroQueryItemsProjection :
         _db = db;
     }
 
-    public async Task<GetPomosResponse> Handle(GetPomosRequest request, CancellationToken cancellationToken)
+    public async Task<PomodoroQueryResponse> Handle(PomodoroQueryRequest request, CancellationToken cancellationToken)
     {
         var pomodoroQueryItems = await _db.GetAllAsync<PomodoroQueryItem>("PomodoroQueryItems");
 
-        var response = new GetPomosResponse(request.GetCorrelationId())
+        var response = new PomodoroQueryResponse(request.GetCorrelationId())
         {
             PomodoroQueryItems = pomodoroQueryItems
         };

@@ -51,6 +51,60 @@
     }
     else
     {
+        @* <MudDataGrid @ref="_mudTable" Style="white-space: nowrap"
+                     Groupable="true" Items="Model.Items" Dense="_dataGridDense" Hover="true" Striped="true" MultiSelection="true"
+                     SelectOnRowClick="false" T="IndexViewModel.Item" @bind-SelectedItems="_selectedItems">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Flows</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <Columns>
+                <SelectColumn T="IndexViewModel.Item" />
+                <TemplateColumn Title="@SharedResource["State"]">
+                    <CellTemplate>
+                        <MudText Class="d-flex">
+                            @if (@context.Item.State == FlowtimeStateEnum.NotStarted)
+                        {
+                            <MudIcon Icon="@Icons.Material.TwoTone.PauseCircle" Title="Not Started" />
+                        }
+                        else if (@context.Item.State == FlowtimeStateEnum.Flow)
+                        {
+                            <MudIcon Icon="@Icons.Material.TwoTone.ArrowCircleRight" Color="Color.Info" Title="Flow" />
+                        }
+                        else if (@context.Item.State == FlowtimeStateEnum.Stopped)
+                        {
+                            <MudIcon Icon="@Icons.Material.TwoTone.CheckCircle" Color="Color.Success" Title="Stopped" />
+                        }
+                    </MudText>
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Property="x => x.TaskDescription" Title="@SharedResource["Task"]" />
+            <PropertyColumn Property="x => x.StartDateTime" Title="@SharedResource["Start Date Time"]" />
+            <PropertyColumn Property="x => x.StopDateTime" Title="@SharedResource["Stop Date Time"]" />
+            <PropertyColumn Property="x => x.Interrupted" Title="@SharedResource["Interrupted?"]" Hideable="true" />
+            <PropertyColumn Property="x => x.Worktime" Title="@SharedResource["Worktime"]" />
+            <PropertyColumn Property="x => x.Breaktime" Title="@SharedResource["Breaktime"]" />
+            <PropertyColumn Property="x => x.CreationDate" Title="@SharedResource["Creation Date"]" Hideable="true" />
+            <TemplateColumn StickyRight="true" Sortable="false">
+                <CellTemplate>
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Add" OnClick="@(() => Continue(context.Item.TaskId))"></MudIconButton>
+                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => Details(context.Item.Id))"></MudIconButton>
+                    @if (context.Item.State == FlowtimeStateEnum.NotStarted)
+                    {
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.PlayArrow" OnClick="@(() => Start(context.Item.Id, context.Item.Version))"></MudIconButton>
+                    }
+                    else if (context.Item.State == FlowtimeStateEnum.Flow)
+                    {
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Stop" OnClick="@(() => Stop(context.Item.Id, context.Item.Version))"></MudIconButton>
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Pause" OnClick="@(() => Interrupt(context.Item.Id, context.Item.Version))"></MudIconButton>
+                    }
+                </CellTemplate>
+            </TemplateColumn>
+        </Columns>
+    </MudDataGrid> *@
+
         <MudTable Items="_items" Hover="true" Striped="true" SortLabel="@SharedResource["Sort By"]" @ref="mudTable" RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="ActivityQueryItem" Style="cursor: pointer">
             <HeaderContent>
                 <MudTh><MudTableSortLabel SortBy="new Func<ActivityQueryItem, object>(x => x.State!)">@SharedResource["State"]</MudTableSortLabel></MudTh>
@@ -98,11 +152,21 @@
         await Refresh();
     }
 
+    // protected override async System.Threading.Tasks.Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     await base.OnAfterRenderAsync(firstRender);
+
+    //     if (firstRender)
+    //     {
+    //         await _mudTable.SetSortAsync("CreationDate", SortDirection.Descending, (x) => x.CreationDate);
+    //     }
+    // }
+
     private async Task Refresh()
     {
-        var request = new GetActivitiesRequest { };
+        var request = new ActivityQueryRequest { };
 
-        var response = await Mediator.Send<GetActivitiesResponse>(request);
+        var response = await Mediator.Send<ActivityQueryResponse>(request);
 
         _items.Clear();
 
@@ -123,27 +187,27 @@
     {
         var now = DateTime.Now;
 
-        var request = new PostActivityRequest
+        var request = new ActivityCreationRequest
             {
                 Name = "",
                 StartDateTime = now,
                 Description = Guid.NewGuid().ToString()
             };
 
-        var response = await Mediator.Send<PostActivityResponse>(request);
+        var response = await Mediator.Send<ActivityCreationResponse>(request);
 
         await Refresh();
     }
 
     private async Task Delete(Guid id, long version)
     {
-        var request = new DeleteActivityRequest
+        var request = new ActivityDeletionRequest
             {
                 Id = id,
                 Version = version
             };
 
-        var response = await Mediator.Send<DeleteActivityResponse>(request);
+        var response = await Mediator.Send<ActivityDeletionResponse>(request);
 
         await Refresh();
     }

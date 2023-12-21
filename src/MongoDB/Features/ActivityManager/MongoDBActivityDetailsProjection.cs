@@ -6,7 +6,7 @@ using System.DomainModel;
 namespace Pomodorium.Features.ActivityManager;
 
 public class MongoDBActivityDetailsProjection :
-    IRequestHandler<GetActivityRequest, GetActivityResponse>,
+    IRequestHandler<ActivityDetailsRequest, ActivityDetailsResponse>,
     INotificationHandler<ActivityCreated>,
     INotificationHandler<ActivityUpdated>,
     INotificationHandler<ActivityDeleted>
@@ -22,13 +22,13 @@ public class MongoDBActivityDetailsProjection :
         _mongoCollection = _mongoClient.GetDatabase("Pomodorium").GetCollection<ActivityDetails>("ActivityDetails");
     }
 
-    public async Task<GetActivityResponse> Handle(GetActivityRequest request, CancellationToken cancellationToken)
+    public async Task<ActivityDetailsResponse> Handle(ActivityDetailsRequest request, CancellationToken cancellationToken)
     {
         var filter = Builders<ActivityDetails>.Filter.Eq(x => x.Id, request.Id);
 
         var activityDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken) ?? throw new EntityNotFoundException();
 
-        var response = new GetActivityResponse(request.GetCorrelationId())
+        var response = new ActivityDetailsResponse(request.GetCorrelationId())
         {
             ActivityDetails = activityDetails
         };

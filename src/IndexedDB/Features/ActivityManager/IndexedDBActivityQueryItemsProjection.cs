@@ -6,7 +6,7 @@ using System.DomainModel;
 namespace Pomodorium.Features.ActivityManager;
 
 public class IndexedDBActivityQueryItemsProjection :
-    IRequestHandler<GetActivitiesRequest, GetActivitiesResponse>,
+    IRequestHandler<ActivityQueryRequest, ActivityQueryResponse>,
     INotificationHandler<ActivityCreated>,
     INotificationHandler<ActivityUpdated>,
     INotificationHandler<ActivityDeleted>
@@ -18,11 +18,11 @@ public class IndexedDBActivityQueryItemsProjection :
         _db = db;
     }
 
-    public async Task<GetActivitiesResponse> Handle(GetActivitiesRequest request, CancellationToken cancellationToken)
+    public async Task<ActivityQueryResponse> Handle(ActivityQueryRequest request, CancellationToken cancellationToken)
     {
         var activityQueryItems = await _db.GetAllAsync<ActivityQueryItem>("ActivityQueryItems");
 
-        var response = new GetActivitiesResponse(request.GetCorrelationId())
+        var response = new ActivityQueryResponse(request.GetCorrelationId())
         {
             ActivityQueryItems = activityQueryItems
         };

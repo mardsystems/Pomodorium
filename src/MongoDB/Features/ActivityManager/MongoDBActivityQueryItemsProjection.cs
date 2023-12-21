@@ -5,7 +5,7 @@ using Pomodorium.Models.TaskManagement.Activities;
 namespace Pomodorium.Features.ActivityManager;
 
 public class MongoDBActivityQueryItemsProjection :
-    IRequestHandler<GetActivitiesRequest, GetActivitiesResponse>,
+    IRequestHandler<ActivityQueryRequest, ActivityQueryResponse>,
     INotificationHandler<ActivityCreated>,
     INotificationHandler<ActivityUpdated>,
     INotificationHandler<ActivityDeleted>
@@ -21,13 +21,13 @@ public class MongoDBActivityQueryItemsProjection :
         _mongoCollection = _mongoClient.GetDatabase("Pomodorium").GetCollection<ActivityQueryItem>("ActivityQueryItems");
     }
 
-    public async Task<GetActivitiesResponse> Handle(GetActivitiesRequest request, CancellationToken cancellationToken)
+    public async Task<ActivityQueryResponse> Handle(ActivityQueryRequest request, CancellationToken cancellationToken)
     {
         var filter = Builders<ActivityQueryItem>.Filter.Empty;
 
         var activityQueryItems = await _mongoCollection.Find(filter).ToListAsync(cancellationToken);
 
-        var response = new GetActivitiesResponse(request.GetCorrelationId())
+        var response = new ActivityQueryResponse(request.GetCorrelationId())
         {
             ActivityQueryItems = activityQueryItems
         };

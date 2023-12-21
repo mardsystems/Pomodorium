@@ -7,7 +7,7 @@ using System.DomainModel;
 namespace Pomodorium.Features.FlowTimer;
 
 public class IndexedDBFlowtimeDetailsProjection :
-    IRequestHandler<GetFlowtimeRequest, GetFlowtimeResponse>,
+    IRequestHandler<FlowtimeDetailsRequest, FlowtimeDetailsResponse>,
     INotificationHandler<FlowtimeCreated>,
     INotificationHandler<FlowtimeStarted>,
     INotificationHandler<FlowtimeInterrupted>,
@@ -22,11 +22,11 @@ public class IndexedDBFlowtimeDetailsProjection :
         _db = db;
     }
 
-    public async Task<GetFlowtimeResponse> Handle(GetFlowtimeRequest request, CancellationToken cancellationToken)
+    public async Task<FlowtimeDetailsResponse> Handle(FlowtimeDetailsRequest request, CancellationToken cancellationToken)
     {
         var flowtimeDetails = await _db.GetAsync<FlowtimeDetails>("FlowtimeDetails", request.FlowtimeId) ?? throw new EntityNotFoundException();
 
-        var response = new GetFlowtimeResponse(request.GetCorrelationId())
+        var response = new FlowtimeDetailsResponse(request.GetCorrelationId())
         {
             FlowtimeDetails = flowtimeDetails
         };

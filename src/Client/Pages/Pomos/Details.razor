@@ -95,9 +95,9 @@
         }
         else
         {
-            var request = new GetPomodoroRequest { Id = Guid.Parse(Id) };
+            var request = new PomodoroDetailsRequest { Id = Guid.Parse(Id) };
 
-            var response = await Mediator.Send<GetPomodoroResponse>(request);
+            var response = await Mediator.Send<PomodoroDetailsResponse>(request);
 
             Model = new DetailsViewModel(
                 response.PomodoroDetails.Id,
@@ -116,13 +116,13 @@
 
     private async Task Check()
     {
-        var request = new CheckPomodoroRequest
+        var request = new PomodoroCheckingRequest
             {
                 Id = Guid.Parse(Id),
                 Version = Model.Version
             };
 
-        var response = await Mediator.Send<CheckPomodoroResponse>(request);
+        var response = await Mediator.Send<PomodoroCheckingResponse>(request);
 
         Navigation.NavigateTo("pomos");
     }
@@ -140,24 +140,24 @@
     {
         if (Id == null || Id == "new")
         {
-            var request = new CreatePomodoroRequest
+            var request = new PomodoroCreationRequest
                 {
                     Task = Model.Task,
                     Timer = Model.Timer.Value
                 };
 
-            var response = await Mediator.Send<CreatePomodoroResponse>(request);
+            var response = await Mediator.Send<PomodoroCreationResponse>(request);
         }
         else
         {
-            var request = new RefinePomodoroTaskRequest
+            var request = new PomodoroTaskRefinementRequest
                 {
                     Id = Guid.Parse(Id),
                     Task = Model.Task,
                     Version = Model.Version
                 };
 
-            var response = await Mediator.Send<RefinePomodoroTaskResponse>(request);
+            var response = await Mediator.Send<PomodoroTaskRefinementResponse>(request);
         }
 
         Navigation.NavigateTo("pomos");
@@ -170,13 +170,13 @@
             return;
         }
 
-        var request = new ArchivePomodoroRequest
+        var request = new PomodoroArchivingRequest
             {
                 Id = Guid.Parse(Id),
                 Version = Model.Version
             };
 
-        var response = await Mediator.Send<ArchivePomodoroResponse>(request);
+        var response = await Mediator.Send<PomodoroArchivingResponse>(request);
 
         Navigation.NavigateTo("pomos");
     }

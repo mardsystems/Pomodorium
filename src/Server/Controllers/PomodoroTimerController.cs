@@ -24,49 +24,49 @@ public class PomodoroTimerController : ControllerBase
     }
 
     [HttpPost("GetPomos")]
-    public async Task<GetPomosResponse> GetPomos(GetPomosRequest request)
+    public async Task<PomodoroQueryResponse> GetPomos(PomodoroQueryRequest request)
     {
-        var response = await _mediator.Send<GetPomosResponse>(request);
+        var response = await _mediator.Send<PomodoroQueryResponse>(request);
 
         return response;
     }
 
     [HttpPost("GetPomodoro")]
-    public async Task<GetPomodoroResponse> GetPomodoro(GetPomodoroRequest request)
+    public async Task<PomodoroDetailsResponse> GetPomodoro(PomodoroDetailsRequest request)
     {
-        var response = await _mediator.Send<GetPomodoroResponse>(request);
+        var response = await _mediator.Send<PomodoroDetailsResponse>(request);
 
         return response;
     }
 
     [HttpPost("CreatePomodoro")]
-    public async Task<CreatePomodoroResponse> CreatePomodoro(CreatePomodoroRequest request)
+    public async Task<PomodoroCreationResponse> CreatePomodoro(PomodoroCreationRequest request)
     {
-        var response = await _mediator.Send<CreatePomodoroResponse>(request);
+        var response = await _mediator.Send<PomodoroCreationResponse>(request);
 
         return response;
     }
 
     [HttpPost("CheckPomodoro")]
-    public async Task<CheckPomodoroResponse> CheckPomodoro(CheckPomodoroRequest request)
+    public async Task<PomodoroCheckingResponse> CheckPomodoro(PomodoroCheckingRequest request)
     {
-        var response = await _mediator.Send<CheckPomodoroResponse>(request);
+        var response = await _mediator.Send<PomodoroCheckingResponse>(request);
 
         return response;
     }
 
     [HttpPost("RefinePomodoroTask")]
-    public async Task<RefinePomodoroTaskResponse> RefinePomodoroTask(RefinePomodoroTaskRequest request)
+    public async Task<PomodoroTaskRefinementResponse> RefinePomodoroTask(PomodoroTaskRefinementRequest request)
     {
-        var response = await _mediator.Send<RefinePomodoroTaskResponse>(request);
+        var response = await _mediator.Send<PomodoroTaskRefinementResponse>(request);
 
         return response;
     }
 
     [HttpPost("ArchivePomodoro")]
-    public async Task<ArchivePomodoroResponse> ArchivePomodoro(ArchivePomodoroRequest request)
+    public async Task<PomodoroArchivingResponse> ArchivePomodoro(PomodoroArchivingRequest request)
     {
-        var response = await _mediator.Send<ArchivePomodoroResponse>(request);
+        var response = await _mediator.Send<PomodoroArchivingResponse>(request);
 
         return response;
     }

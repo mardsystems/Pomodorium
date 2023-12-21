@@ -37,7 +37,7 @@ namespace Pomodorium.StepDefinitions
         {
             _taskDescription = description;
 
-            var request = new CreateTaskRequest
+            var request = new TaskRegistrationRequest
             {
                 Description = _taskDescription
             };
@@ -54,7 +54,7 @@ namespace Pomodorium.StepDefinitions
         {
             _taskDescription = description;
 
-            var request = new ChangeTaskDescriptionRequest
+            var request = new TaskDescriptionChangeRequest
             {
                 TaskId = _taskId,
                 Description = _taskDescription,
@@ -69,7 +69,7 @@ namespace Pomodorium.StepDefinitions
         [Then(@"the task should be registered as expected")]
         public void ThenTheTaskShouldBeRegisteredAsExpected()
         {
-            var task = _taskManagerApiDriver.GetTaskAction.Perform(new GetTaskRequest(_taskId)).TaskDetails;
+            var task = _taskManagerApiDriver.GetTaskAction.Perform(new TaskDetailsRequest(_taskId)).TaskDetails;
 
             task.Description.Should().Be(_taskDescription);
         }

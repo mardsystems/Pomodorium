@@ -5,7 +5,7 @@ using Pomodorium.Models.PomodoroTechnique;
 namespace Pomodorium.Features.PomodoroTimer;
 
 public class MongoDBPomodoroQueryItemsProjection :
-    IRequestHandler<GetPomosRequest, GetPomosResponse>,
+    IRequestHandler<PomodoroQueryRequest, PomodoroQueryResponse>,
     INotificationHandler<PomodoroCreated>,
     INotificationHandler<PomodoroChecked>,
     INotificationHandler<PomodoroTaskRefined>,
@@ -22,13 +22,13 @@ public class MongoDBPomodoroQueryItemsProjection :
         _mongoCollection = _mongoClient.GetDatabase("Pomodorium").GetCollection<PomodoroQueryItem>("PomodoroQueryItems");
     }
 
-    public async Task<GetPomosResponse> Handle(GetPomosRequest request, CancellationToken cancellationToken)
+    public async Task<PomodoroQueryResponse> Handle(PomodoroQueryRequest request, CancellationToken cancellationToken)
     {
         var filter = Builders<PomodoroQueryItem>.Filter.Empty;
 
         var pomodoroQueryItems = await _mongoCollection.Find(filter).ToListAsync(cancellationToken);
 
-        var response = new GetPomosResponse(request.GetCorrelationId())
+        var response = new PomodoroQueryResponse(request.GetCorrelationId())
         {
             PomodoroQueryItems = pomodoroQueryItems
         };
