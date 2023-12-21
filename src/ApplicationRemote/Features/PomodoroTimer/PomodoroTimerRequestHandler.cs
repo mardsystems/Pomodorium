@@ -17,42 +17,42 @@ public class PomodoroTimerRequestHandler :
 
     public async Task<PomodoroQueryResponse> Handle(PomodoroQueryRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.GetPomosAsync(request, cancellationToken);
+        var response = await _client.GetPomodoroQueryAsync(request.PageSize,request.PageIndex, cancellationToken);
 
         return response;
     }
 
     public async Task<PomodoroDetailsResponse> Handle(PomodoroDetailsRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.GetPomodoroAsync(request, cancellationToken);
+        var response = await _client.GetPomodoroDetailsAsync(request.Id, cancellationToken);
 
         return response;
     }
 
     public async Task<PomodoroCreationResponse> Handle(PomodoroCreationRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.CreatePomodoroAsync(request, cancellationToken);
+        var response = await _client.PostPomodoroCreationAsync(request, cancellationToken);
 
         return response;
     }
 
     public async Task<PomodoroCheckingResponse> Handle(PomodoroCheckingRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.CheckPomodoroAsync(request, cancellationToken);
+        var response = await _client.PostPomodoroCheckingAsync(request, cancellationToken);
 
         return response;
     }
 
     public async Task<PomodoroTaskRefinementResponse> Handle(PomodoroTaskRefinementRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.RefinePomodoroTaskAsync(request, cancellationToken);
+        var response = await _client.PostPomodoroTaskRefinementAsync(request, cancellationToken);
 
         return response;
     }
 
     public async Task<PomodoroArchivingResponse> Handle(PomodoroArchivingRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.ArchivePomodoroAsync(request, cancellationToken);
+        var response = await _client.PostPomodoroArchivingAsync(request, cancellationToken);
 
         return response;
     }

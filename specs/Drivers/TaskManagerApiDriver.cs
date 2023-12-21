@@ -13,7 +13,7 @@ public class TaskManagerApiDriver
 
     public ActionAttempt<TaskDetailsRequest, TaskDetailsResponse> GetTaskAction { get; }
 
-    public ActionAttempt<TaskArchiveRequest, TaskArchiveResponse> ArchiveTaskAction { get; }
+    public ActionAttempt<TaskArchivingRequest, TaskArchivingResponse> ArchiveTaskAction { get; }
 
     public TaskManagerApiDriver(WebApiContext webApi, ActionAttemptFactory actionAttemptFactory)
     {
@@ -21,18 +21,18 @@ public class TaskManagerApiDriver
 
         CreateTaskAction = actionAttemptFactory.CreateWithStatusCheck<TaskRegistrationRequest, TaskRegistrationResponse>(
             nameof(CreateTaskAction),
-            request => _webApi.ExecutePost<TaskRegistrationResponse>("api/TaskManager/CreateTask", request));
+            request => _webApi.ExecutePost<TaskRegistrationResponse>("api/TaskManager/TaskRegistration", request));
 
         GetTaskAction = actionAttemptFactory.CreateWithStatusCheck<TaskDetailsRequest, TaskDetailsResponse>(
             nameof(GetTaskAction),
-            request => _webApi.ExecutePost<TaskDetailsResponse>($"/api/TaskManager/GetTask", request));
+            request => _webApi.ExecuteGet<TaskDetailsResponse>($"/api/TaskManager/TaskDetails?TaskId={request.TaskId}"));
 
         ChangeTaskDescriptionAction = actionAttemptFactory.CreateWithStatusCheck<TaskDescriptionChangeRequest, TaskDescriptionChangeResponse>(
             nameof(ChangeTaskDescriptionAction),
-            request => _webApi.ExecutePost<TaskDescriptionChangeResponse>($"api/TaskManager/ChangeTaskDescription", request));
+            request => _webApi.ExecutePost<TaskDescriptionChangeResponse>($"api/TaskManager/TaskDescriptionChange", request));
 
-        ArchiveTaskAction = actionAttemptFactory.CreateWithStatusCheck<TaskArchiveRequest, TaskArchiveResponse>(
+        ArchiveTaskAction = actionAttemptFactory.CreateWithStatusCheck<TaskArchivingRequest, TaskArchivingResponse>(
             nameof(ArchiveTaskAction),
-            request => _webApi.ExecutePost<TaskArchiveResponse>($"api/TaskManager/ArchiveTask", request));
+            request => _webApi.ExecutePost<TaskArchivingResponse>($"api/TaskManager/TaskArchiving", request));
     }
 }

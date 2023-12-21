@@ -8,14 +8,6 @@ public record FlowtimeQueryRequest : Request<FlowtimeQueryResponse>
     public int? PageSize { get; init; }
 
     public int? PageIndex { get; init; }
-
-    public FlowtimeQueryRequest(int? pageSize = null, int? pageIndex = null)
-    {
-        PageSize = pageSize;
-        PageIndex = pageIndex;
-    }
-
-    private FlowtimeQueryRequest() { }
 }
 
 public record FlowtimeQueryResponse(Guid CorrelationId) : Response(CorrelationId)

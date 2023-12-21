@@ -2,7 +2,7 @@
 
 public record TaskDescriptionChangeRequest : Request<TaskDescriptionChangeResponse>
 {
-    public Guid TaskId { get; init; }
+    public required Guid TaskId { get; init; }
 
     public required string Description { get; init; }
 

@@ -30,6 +30,7 @@ public class FlowtimeCreationFromTaskHandler : IRequestHandler<FlowtimeCreationF
 
         var response = new FlowtimeCreationFromTaskResponse(request.GetCorrelationId())
         {
+            FlowtimeId = flowtime.Id,
             FlowtimeVersion = flowtime.Version
         };
 

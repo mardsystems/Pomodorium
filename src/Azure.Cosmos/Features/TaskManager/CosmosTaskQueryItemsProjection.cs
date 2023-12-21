@@ -16,7 +16,7 @@ public class CosmosTaskQueryItemsProjection :
     INotificationHandler<FlowtimeStarted>,
     INotificationHandler<FlowtimeInterrupted>,
     INotificationHandler<FlowtimeStopped>,
-    INotificationHandler<TaskArchived>
+    INotificationHandler<TaskArchivingd>
 {
     private readonly CosmosClient _cosmosClient;
 
@@ -44,9 +44,9 @@ public class CosmosTaskQueryItemsProjection :
 
         var query = new QueryDefinition(
             query: @"SELECT * FROM TaskQueryItems p WHERE 1 = 1
-AND (IS_NULL(@description) = true OR p.Description = @description)
+AND (IS_NULL(@description) = true OR p.Description LIKE @description)
 AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalReference)")
-            .WithParameter("@description", request.Description)
+            .WithParameter("@description", $"%{request.Description}%")
             .WithParameter("@externalReference", request.ExternalReference);
 
         using var feed = _container.GetItemQueryIterator<TaskQueryItem>(queryDefinition: query);
@@ -219,7 +219,7 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
         _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
-    public async System.Threading.Tasks.Task Handle(TaskArchived notification, CancellationToken cancellationToken)
+    public async System.Threading.Tasks.Task Handle(TaskArchivingd notification, CancellationToken cancellationToken)
     {
         var response = await _container.DeleteItemAsync<TaskQueryItem>(
             notification.TaskId.ToString(),

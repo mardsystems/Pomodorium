@@ -15,59 +15,47 @@ public class TaskManagerController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    private readonly ILogger<TaskManagerController> _logger;
-
-    public TaskManagerController(IMediator mediator, ILogger<TaskManagerController> logger)
+    public TaskManagerController(IMediator mediator)
     {
         _mediator = mediator;
-
-        _logger = logger;
     }
 
-    [HttpPost("GetTasks")]
-    public async Task<TaskQueryResponse> GetTasks(TaskQueryRequest request)
+    [HttpGet("TaskQuery")]
+    public async Task<TaskQueryResponse> GetTaskQuery([FromQuery] TaskQueryRequest request)
     {
         var response = await _mediator.Send<TaskQueryResponse>(request);
 
         return response;
     }
 
-    [HttpPost("CreateTask")]
-    public async Task<TaskRegistrationResponse> CreateTask(TaskRegistrationRequest request)
-    {
-        var response = await _mediator.Send<TaskRegistrationResponse>(request);
-
-        return response;
-    }
-
-    [HttpPost("GetTask")]
-    public async Task<TaskDetailsResponse> GetTask(TaskDetailsRequest request)
+    [HttpGet("TaskDetails")]
+    public async Task<TaskDetailsResponse> GetTaskDetails([FromQuery] TaskDetailsRequest request)
     {
         var response = await _mediator.Send<TaskDetailsResponse>(request);
 
         return response;
     }
 
-    [HttpPost("ChangeTaskDescription")]
-    public async Task<TaskDescriptionChangeResponse> ChangeTaskDescription(TaskDescriptionChangeRequest request)
+    [HttpPost("TaskRegistration")]
+    public async Task<TaskRegistrationResponse> PostTaskRegistration(TaskRegistrationRequest request)
+    {
+        var response = await _mediator.Send<TaskRegistrationResponse>(request);
+
+        return response;
+    }
+
+    [HttpPost("TaskDescriptionChange")]
+    public async Task<TaskDescriptionChangeResponse> PostTaskDescriptionChange(TaskDescriptionChangeRequest request)
     {
         var response = await _mediator.Send<TaskDescriptionChangeResponse>(request);
 
         return response;
     }
 
-    [HttpPost("FocusWithFlowtime")]
-    public async Task<FlowtimeStartFromTaskResponse> FocusWithFlowtime(FlowtimeStartFromTaskRequest request)
+    [HttpPost("TaskArchiving")]
+    public async Task<TaskArchivingResponse> PostTaskArchiving(TaskArchivingRequest request)
     {
-        var response = await _mediator.Send<FlowtimeStartFromTaskResponse>(request);
-
-        return response;
-    }
-
-    [HttpPost("ArchiveTask")]
-    public async Task<TaskArchiveResponse> ArchiveTask(TaskArchiveRequest request)
-    {
-        var response = await _mediator.Send<TaskArchiveResponse>(request);
+        var response = await _mediator.Send<TaskArchivingResponse>(request);
 
         return response;
     }

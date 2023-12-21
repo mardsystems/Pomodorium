@@ -46,14 +46,28 @@ public class TaskDescriptionChanged : Event
 }
 
 [DataContract]
-public class TaskArchived : Event
+public class TaskArchivingd : Event
 {
     [DataMember(Order = 1)]
     public Guid TaskId { get; private set; }
 
-    public TaskArchived(Guid taskId)
+    public TaskArchivingd(Guid taskId)
     {
         TaskId = taskId;
+    }
+
+    private TaskArchivingd() { }
+}
+
+[DataContract]
+public class TaskArchived : Event
+{
+    [DataMember(Order = 1)]
+    public Guid Id { get; private set; }
+
+    public TaskArchived(Guid id)
+    {
+        Id = id;
     }
 
     private TaskArchived() { }

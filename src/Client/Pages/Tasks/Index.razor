@@ -189,13 +189,13 @@
 
         foreach (var item in _selectedItems)
         {
-            var request = new TaskArchiveRequest
+            var request = new TaskArchivingRequest
                 {
                     TaskId = item.Id,
                     TaskVersion = item.Version
                 };
 
-            var response = await Mediator.Send<TaskArchiveResponse>(request);
+            var response = await Mediator.Send<TaskArchivingResponse>(request);
         }
 
         await Refresh();

@@ -146,13 +146,13 @@
 
         var taskId = Guid.Parse(Id);
 
-        var request = new TaskArchiveRequest
+        var request = new TaskArchivingRequest
             {
                 TaskId = taskId,
                 TaskVersion = Model.Version
             };
 
-        var response = await Mediator.Send<TaskArchiveResponse>(request);
+        var response = await Mediator.Send<TaskArchivingResponse>(request);
 
         Navigation.NavigateTo("tasks");
     }

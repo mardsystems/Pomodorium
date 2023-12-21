@@ -14,25 +14,21 @@ public class TaskSynchronizerController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    private readonly ILogger<TaskSynchronizerController> _logger;
-
-    public TaskSynchronizerController(IMediator mediator, ILogger<TaskSynchronizerController> logger)
+    public TaskSynchronizerController(IMediator mediator)
     {
         _mediator = mediator;
-
-        _logger = logger;
     }
 
-    [HttpPost("SyncTasksFromTfs")]
-    public async Task<TaskSyncFromTfsResponse> SyncTasksFromTfs(TaskSyncFromTfsRequest request)
+    [HttpPost("TaskSyncFromTfs")]
+    public async Task<TaskSyncFromTfsResponse> PostTaskSyncFromTfs(TaskSyncFromTfsRequest request)
     {
         var response = await _mediator.Send<TaskSyncFromTfsResponse>(request);
 
         return response;
     }
 
-    [HttpPost("SyncTasksFromTrello")]
-    public async Task<TaskSyncFromTrelloResponse> SyncTasksFromTrello(TaskSyncFromTrelloRequest request)
+    [HttpPost("TaskSyncFromTrello")]
+    public async Task<TaskSyncFromTrelloResponse> PostTaskSyncFromTrello(TaskSyncFromTrelloRequest request)
     {
         var response = await _mediator.Send<TaskSyncFromTrelloResponse>(request);
 

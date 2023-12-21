@@ -2,7 +2,7 @@
 
 public record FlowtimeInterruptionRequest : Request<FlowtimeInterruptionResponse>
 {
-    public Guid FlowtimeId { get; init; }
+    public required Guid FlowtimeId { get; init; }
 
     public long FlowtimeVersion { get; init; }
 }
