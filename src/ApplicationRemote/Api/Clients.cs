@@ -47,20 +47,26 @@ namespace Pomodorium.Api
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FlowtimeQueryResponse> GetFlowsAsync(FlowtimeQueryRequest request)
+        public virtual System.Threading.Tasks.Task<FlowtimeQueryResponse> GetFlowtimeQueryAsync(int? pageSize, int? pageIndex)
         {
-            return GetFlowsAsync(request, System.Threading.CancellationToken.None);
+            return GetFlowtimeQueryAsync(pageSize, pageIndex, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FlowtimeQueryResponse> GetFlowsAsync(FlowtimeQueryRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FlowtimeQueryResponse> GetFlowtimeQueryAsync(int? pageSize, int? pageIndex, System.Threading.CancellationToken cancellationToken)
         {
-            if (request == null)
-                throw new System.ArgumentNullException("request");
-
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/FlowTimer/GetFlows");
+            urlBuilder_.Append("api/FlowTimer/FlowtimeQuery?");
+            if (pageSize != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("PageSize") + "=").Append(System.Uri.EscapeDataString(ConvertToString(pageSize, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (pageIndex != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("PageIndex") + "=").Append(System.Uri.EscapeDataString(ConvertToString(pageIndex, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -68,11 +74,7 @@ namespace Pomodorium.Api
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(request, _settings.Value);
-                    var content_ = new System.Net.Http.StringContent(json_);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                    request_.Content = content_;
-                    request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -126,20 +128,22 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FlowtimeDetailsResponse> GetFlowtimeAsync(FlowtimeDetailsRequest request)
+        public virtual System.Threading.Tasks.Task<FlowtimeDetailsResponse> GetFlowtimeDetailsAsync(System.Guid? flowtimeId)
         {
-            return GetFlowtimeAsync(request, System.Threading.CancellationToken.None);
+            return GetFlowtimeDetailsAsync(flowtimeId, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FlowtimeDetailsResponse> GetFlowtimeAsync(FlowtimeDetailsRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FlowtimeDetailsResponse> GetFlowtimeDetailsAsync(System.Guid? flowtimeId, System.Threading.CancellationToken cancellationToken)
         {
-            if (request == null)
-                throw new System.ArgumentNullException("request");
-
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/FlowTimer/GetFlowtime");
+            urlBuilder_.Append("api/FlowTimer/FlowtimeDetails?");
+            if (flowtimeId != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("FlowtimeId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(flowtimeId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -147,11 +151,7 @@ namespace Pomodorium.Api
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(request, _settings.Value);
-                    var content_ = new System.Net.Http.StringContent(json_);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                    request_.Content = content_;
-                    request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -205,20 +205,20 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FlowtimeCreationResponse> CreateFlowtimeAsync(FlowtimeCreationRequest request)
+        public virtual System.Threading.Tasks.Task<FlowtimeCreationResponse> PostFlowtimeCreationAsync(FlowtimeCreationRequest request)
         {
-            return CreateFlowtimeAsync(request, System.Threading.CancellationToken.None);
+            return PostFlowtimeCreationAsync(request, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FlowtimeCreationResponse> CreateFlowtimeAsync(FlowtimeCreationRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FlowtimeCreationResponse> PostFlowtimeCreationAsync(FlowtimeCreationRequest request, System.Threading.CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new System.ArgumentNullException("request");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/FlowTimer/CreateFlowtime");
+            urlBuilder_.Append("api/FlowTimer/FlowtimeCreation");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -284,20 +284,99 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FlowtimeStartResponse> StartFlowtimeAsync(FlowtimeStartRequest request)
+        public virtual System.Threading.Tasks.Task<FlowtimeCreationFromTaskResponse> PostFlowtimeCreationFromTaskAsync(FlowtimeCreationFromTaskRequest request)
         {
-            return StartFlowtimeAsync(request, System.Threading.CancellationToken.None);
+            return PostFlowtimeCreationFromTaskAsync(request, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FlowtimeStartResponse> StartFlowtimeAsync(FlowtimeStartRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FlowtimeCreationFromTaskResponse> PostFlowtimeCreationFromTaskAsync(FlowtimeCreationFromTaskRequest request, System.Threading.CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new System.ArgumentNullException("request");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/FlowTimer/StartFlowtime");
+            urlBuilder_.Append("api/FlowTimer/FlowtimeCreationFromTask");
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(request, _settings.Value);
+                    var content_ = new System.Net.Http.StringContent(json_);
+                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+                    request_.Content = content_;
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<FlowtimeCreationFromTaskResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task<FlowtimeStartResponse> PostFlowtimeStartAsync(FlowtimeStartRequest request)
+        {
+            return PostFlowtimeStartAsync(request, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<FlowtimeStartResponse> PostFlowtimeStartAsync(FlowtimeStartRequest request, System.Threading.CancellationToken cancellationToken)
+        {
+            if (request == null)
+                throw new System.ArgumentNullException("request");
+
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append("api/FlowTimer/FlowtimeStart");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -363,20 +442,20 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FlowtimeStartFromTaskResponse> StartFlowtimeFromTaskAsync(FlowtimeStartFromTaskRequest request)
+        public virtual System.Threading.Tasks.Task<FlowtimeStartFromTaskResponse> PostFlowtimeStartFromTaskAsync(FlowtimeStartFromTaskRequest request)
         {
-            return StartFlowtimeFromTaskAsync(request, System.Threading.CancellationToken.None);
+            return PostFlowtimeStartFromTaskAsync(request, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FlowtimeStartFromTaskResponse> StartFlowtimeFromTaskAsync(FlowtimeStartFromTaskRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FlowtimeStartFromTaskResponse> PostFlowtimeStartFromTaskAsync(FlowtimeStartFromTaskRequest request, System.Threading.CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new System.ArgumentNullException("request");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/FlowTimer/StartFlowtimeFromTask");
+            urlBuilder_.Append("api/FlowTimer/FlowtimeStartFromTask");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -442,20 +521,20 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FlowtimeInterruptionResponse> InterruptFlowtimeAsync(FlowtimeInterruptionRequest request)
+        public virtual System.Threading.Tasks.Task<FlowtimeInterruptionResponse> PostFlowtimeInterruptionAsync(FlowtimeInterruptionRequest request)
         {
-            return InterruptFlowtimeAsync(request, System.Threading.CancellationToken.None);
+            return PostFlowtimeInterruptionAsync(request, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FlowtimeInterruptionResponse> InterruptFlowtimeAsync(FlowtimeInterruptionRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FlowtimeInterruptionResponse> PostFlowtimeInterruptionAsync(FlowtimeInterruptionRequest request, System.Threading.CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new System.ArgumentNullException("request");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/FlowTimer/InterruptFlowtime");
+            urlBuilder_.Append("api/FlowTimer/FlowtimeInterruption");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -521,20 +600,20 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FlowtimeStopResponse> StopFlowtimeAsync(FlowtimeStopRequest request)
+        public virtual System.Threading.Tasks.Task<FlowtimeStopResponse> PostFlowtimeStopAsync(FlowtimeStopRequest request)
         {
-            return StopFlowtimeAsync(request, System.Threading.CancellationToken.None);
+            return PostFlowtimeStopAsync(request, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FlowtimeStopResponse> StopFlowtimeAsync(FlowtimeStopRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FlowtimeStopResponse> PostFlowtimeStopAsync(FlowtimeStopRequest request, System.Threading.CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new System.ArgumentNullException("request");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/FlowTimer/StopFlowtime");
+            urlBuilder_.Append("api/FlowTimer/FlowtimeStop");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -600,20 +679,20 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FlowtimeArchivingResponse> ArchiveFlowtimeAsync(FlowtimeArchivingRequest request)
+        public virtual System.Threading.Tasks.Task<FlowtimeArchivingResponse> PostFlowtimeArchivingAsync(FlowtimeArchivingRequest request)
         {
-            return ArchiveFlowtimeAsync(request, System.Threading.CancellationToken.None);
+            return PostFlowtimeArchivingAsync(request, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FlowtimeArchivingResponse> ArchiveFlowtimeAsync(FlowtimeArchivingRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FlowtimeArchivingResponse> PostFlowtimeArchivingAsync(FlowtimeArchivingRequest request, System.Threading.CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new System.ArgumentNullException("request");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/FlowTimer/ArchiveFlowtime");
+            urlBuilder_.Append("api/FlowTimer/FlowtimeArchiving");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -809,20 +888,26 @@ namespace Pomodorium.Api
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<PomodoroQueryResponse> GetPomosAsync(PomodoroQueryRequest request)
+        public virtual System.Threading.Tasks.Task<PomodoroQueryResponse> GetPomodoroQueryAsync(int? pageSize, int? pageIndex)
         {
-            return GetPomosAsync(request, System.Threading.CancellationToken.None);
+            return GetPomodoroQueryAsync(pageSize, pageIndex, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<PomodoroQueryResponse> GetPomosAsync(PomodoroQueryRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<PomodoroQueryResponse> GetPomodoroQueryAsync(int? pageSize, int? pageIndex, System.Threading.CancellationToken cancellationToken)
         {
-            if (request == null)
-                throw new System.ArgumentNullException("request");
-
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/PomodoroTimer/GetPomos");
+            urlBuilder_.Append("api/PomodoroTimer/PomodoroQuery?");
+            if (pageSize != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("PageSize") + "=").Append(System.Uri.EscapeDataString(ConvertToString(pageSize, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (pageIndex != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("PageIndex") + "=").Append(System.Uri.EscapeDataString(ConvertToString(pageIndex, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -830,11 +915,7 @@ namespace Pomodorium.Api
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(request, _settings.Value);
-                    var content_ = new System.Net.Http.StringContent(json_);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                    request_.Content = content_;
-                    request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -888,20 +969,22 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<PomodoroDetailsResponse> GetPomodoroAsync(PomodoroDetailsRequest request)
+        public virtual System.Threading.Tasks.Task<PomodoroDetailsResponse> GetPomodoroDetailsAsync(System.Guid? id)
         {
-            return GetPomodoroAsync(request, System.Threading.CancellationToken.None);
+            return GetPomodoroDetailsAsync(id, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<PomodoroDetailsResponse> GetPomodoroAsync(PomodoroDetailsRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<PomodoroDetailsResponse> GetPomodoroDetailsAsync(System.Guid? id, System.Threading.CancellationToken cancellationToken)
         {
-            if (request == null)
-                throw new System.ArgumentNullException("request");
-
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/PomodoroTimer/GetPomodoro");
+            urlBuilder_.Append("api/PomodoroTimer/PomodoroDetails?");
+            if (id != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("Id") + "=").Append(System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -909,10 +992,7 @@ namespace Pomodorium.Api
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(request, _settings.Value);
-                    var content_ = new System.Net.Http.StringContent(json_);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                    request_.Content = content_;
+                    request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
                     request_.Method = new System.Net.Http.HttpMethod("POST");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
@@ -967,20 +1047,20 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<PomodoroCreationResponse> CreatePomodoroAsync(PomodoroCreationRequest request)
+        public virtual System.Threading.Tasks.Task<PomodoroCreationResponse> PostPomodoroCreationAsync(PomodoroCreationRequest request)
         {
-            return CreatePomodoroAsync(request, System.Threading.CancellationToken.None);
+            return PostPomodoroCreationAsync(request, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<PomodoroCreationResponse> CreatePomodoroAsync(PomodoroCreationRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<PomodoroCreationResponse> PostPomodoroCreationAsync(PomodoroCreationRequest request, System.Threading.CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new System.ArgumentNullException("request");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/PomodoroTimer/CreatePomodoro");
+            urlBuilder_.Append("api/PomodoroTimer/PomodoroCreation");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1046,20 +1126,20 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<PomodoroCheckingResponse> CheckPomodoroAsync(PomodoroCheckingRequest request)
+        public virtual System.Threading.Tasks.Task<PomodoroCheckingResponse> PostPomodoroCheckingAsync(PomodoroCheckingRequest request)
         {
-            return CheckPomodoroAsync(request, System.Threading.CancellationToken.None);
+            return PostPomodoroCheckingAsync(request, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<PomodoroCheckingResponse> CheckPomodoroAsync(PomodoroCheckingRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<PomodoroCheckingResponse> PostPomodoroCheckingAsync(PomodoroCheckingRequest request, System.Threading.CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new System.ArgumentNullException("request");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/PomodoroTimer/CheckPomodoro");
+            urlBuilder_.Append("api/PomodoroTimer/PomodoroChecking");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1125,20 +1205,20 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<PomodoroTaskRefinementResponse> RefinePomodoroTaskAsync(PomodoroTaskRefinementRequest request)
+        public virtual System.Threading.Tasks.Task<PomodoroTaskRefinementResponse> PostPomodoroTaskRefinementAsync(PomodoroTaskRefinementRequest request)
         {
-            return RefinePomodoroTaskAsync(request, System.Threading.CancellationToken.None);
+            return PostPomodoroTaskRefinementAsync(request, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<PomodoroTaskRefinementResponse> RefinePomodoroTaskAsync(PomodoroTaskRefinementRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<PomodoroTaskRefinementResponse> PostPomodoroTaskRefinementAsync(PomodoroTaskRefinementRequest request, System.Threading.CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new System.ArgumentNullException("request");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/PomodoroTimer/RefinePomodoroTask");
+            urlBuilder_.Append("api/PomodoroTimer/PomodoroTaskRefinement");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -1204,20 +1284,20 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<PomodoroArchivingResponse> ArchivePomodoroAsync(PomodoroArchivingRequest request)
+        public virtual System.Threading.Tasks.Task<PomodoroArchivingResponse> PostPomodoroArchivingAsync(PomodoroArchivingRequest request)
         {
-            return ArchivePomodoroAsync(request, System.Threading.CancellationToken.None);
+            return PostPomodoroArchivingAsync(request, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<PomodoroArchivingResponse> ArchivePomodoroAsync(PomodoroArchivingRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<PomodoroArchivingResponse> PostPomodoroArchivingAsync(PomodoroArchivingRequest request, System.Threading.CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new System.ArgumentNullException("request");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/PomodoroTimer/ArchivePomodoro");
+            urlBuilder_.Append("api/PomodoroTimer/PomodoroArchiving");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -2588,20 +2668,34 @@ namespace Pomodorium.Api
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<TaskQueryResponse> GetTasksAsync(TaskQueryRequest request)
+        public virtual System.Threading.Tasks.Task<TaskQueryResponse> GetTaskQueryAsync(int? pageSize, int? pageIndex, string description, string externalReference)
         {
-            return GetTasksAsync(request, System.Threading.CancellationToken.None);
+            return GetTaskQueryAsync(pageSize, pageIndex, description, externalReference, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<TaskQueryResponse> GetTasksAsync(TaskQueryRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<TaskQueryResponse> GetTaskQueryAsync(int? pageSize, int? pageIndex, string description, string externalReference, System.Threading.CancellationToken cancellationToken)
         {
-            if (request == null)
-                throw new System.ArgumentNullException("request");
-
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/TaskManager/GetTasks");
+            urlBuilder_.Append("api/TaskManager/TaskQuery?");
+            if (pageSize != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("PageSize") + "=").Append(System.Uri.EscapeDataString(ConvertToString(pageSize, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (pageIndex != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("PageIndex") + "=").Append(System.Uri.EscapeDataString(ConvertToString(pageIndex, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (description != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("Description") + "=").Append(System.Uri.EscapeDataString(ConvertToString(description, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (externalReference != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("ExternalReference") + "=").Append(System.Uri.EscapeDataString(ConvertToString(externalReference, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -2609,11 +2703,7 @@ namespace Pomodorium.Api
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(request, _settings.Value);
-                    var content_ = new System.Net.Http.StringContent(json_);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                    request_.Content = content_;
-                    request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -2667,20 +2757,97 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<TaskRegistrationResponse> CreateTaskAsync(TaskRegistrationRequest request)
+        public virtual System.Threading.Tasks.Task<TaskDetailsResponse> GetTaskDetailsAsync(System.Guid? taskId)
         {
-            return CreateTaskAsync(request, System.Threading.CancellationToken.None);
+            return GetTaskDetailsAsync(taskId, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<TaskRegistrationResponse> CreateTaskAsync(TaskRegistrationRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<TaskDetailsResponse> GetTaskDetailsAsync(System.Guid? taskId, System.Threading.CancellationToken cancellationToken)
+        {
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append("api/TaskManager/TaskDetails?");
+            if (taskId != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("TaskId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(taskId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<TaskDetailsResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task<TaskRegistrationResponse> PostTaskRegistrationAsync(TaskRegistrationRequest request)
+        {
+            return PostTaskRegistrationAsync(request, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<TaskRegistrationResponse> PostTaskRegistrationAsync(TaskRegistrationRequest request, System.Threading.CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new System.ArgumentNullException("request");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/TaskManager/CreateTask");
+            urlBuilder_.Append("api/TaskManager/TaskRegistration");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -2746,99 +2913,20 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<TaskDetailsResponse> GetTaskAsync(TaskDetailsRequest request)
+        public virtual System.Threading.Tasks.Task<TaskDescriptionChangeResponse> PostTaskDescriptionChangeAsync(TaskDescriptionChangeRequest request)
         {
-            return GetTaskAsync(request, System.Threading.CancellationToken.None);
+            return PostTaskDescriptionChangeAsync(request, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<TaskDetailsResponse> GetTaskAsync(TaskDetailsRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<TaskDescriptionChangeResponse> PostTaskDescriptionChangeAsync(TaskDescriptionChangeRequest request, System.Threading.CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new System.ArgumentNullException("request");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/TaskManager/GetTask");
-
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(request, _settings.Value);
-                    var content_ = new System.Net.Http.StringContent(json_);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                    request_.Content = content_;
-                    request_.Method = new System.Net.Http.HttpMethod("POST");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<TaskDetailsResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<TaskDescriptionChangeResponse> ChangeTaskDescriptionAsync(TaskDescriptionChangeRequest request)
-        {
-            return ChangeTaskDescriptionAsync(request, System.Threading.CancellationToken.None);
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<TaskDescriptionChangeResponse> ChangeTaskDescriptionAsync(TaskDescriptionChangeRequest request, System.Threading.CancellationToken cancellationToken)
-        {
-            if (request == null)
-                throw new System.ArgumentNullException("request");
-
-            var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/TaskManager/ChangeTaskDescription");
+            urlBuilder_.Append("api/TaskManager/TaskDescriptionChange");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -2904,20 +2992,20 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FlowtimeStartFromTaskResponse> FocusWithFlowtimeAsync(FlowtimeStartFromTaskRequest request)
+        public virtual System.Threading.Tasks.Task<TaskArchivingResponse> PostTaskArchivingAsync(TaskArchivingRequest request)
         {
-            return FocusWithFlowtimeAsync(request, System.Threading.CancellationToken.None);
+            return PostTaskArchivingAsync(request, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FlowtimeStartFromTaskResponse> FocusWithFlowtimeAsync(FlowtimeStartFromTaskRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<TaskArchivingResponse> PostTaskArchivingAsync(TaskArchivingRequest request, System.Threading.CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new System.ArgumentNullException("request");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/TaskManager/FocusWithFlowtime");
+            urlBuilder_.Append("api/TaskManager/TaskArchiving");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -2955,86 +3043,7 @@ namespace Pomodorium.Api
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<FlowtimeStartFromTaskResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            return objectResponse_.Object;
-                        }
-                        else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<TaskArchiveResponse> ArchiveTaskAsync(TaskArchiveRequest request)
-        {
-            return ArchiveTaskAsync(request, System.Threading.CancellationToken.None);
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<TaskArchiveResponse> ArchiveTaskAsync(TaskArchiveRequest request, System.Threading.CancellationToken cancellationToken)
-        {
-            if (request == null)
-                throw new System.ArgumentNullException("request");
-
-            var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/TaskManager/ArchiveTask");
-
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    var json_ = Newtonsoft.Json.JsonConvert.SerializeObject(request, _settings.Value);
-                    var content_ = new System.Net.Http.StringContent(json_);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                    request_.Content = content_;
-                    request_.Method = new System.Net.Http.HttpMethod("POST");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<TaskArchiveResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<TaskArchivingResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -3192,20 +3201,20 @@ namespace Pomodorium.Api
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<TaskSyncFromTfsResponse> SyncTasksFromTfsAsync(TaskSyncFromTfsRequest request)
+        public virtual System.Threading.Tasks.Task<TaskSyncFromTfsResponse> PostTaskSyncFromTfsAsync(TaskSyncFromTfsRequest request)
         {
-            return SyncTasksFromTfsAsync(request, System.Threading.CancellationToken.None);
+            return PostTaskSyncFromTfsAsync(request, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<TaskSyncFromTfsResponse> SyncTasksFromTfsAsync(TaskSyncFromTfsRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<TaskSyncFromTfsResponse> PostTaskSyncFromTfsAsync(TaskSyncFromTfsRequest request, System.Threading.CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new System.ArgumentNullException("request");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/TaskSynchronizer/SyncTasksFromTfs");
+            urlBuilder_.Append("api/TaskSynchronizer/TaskSyncFromTfs");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -3271,20 +3280,20 @@ namespace Pomodorium.Api
         }
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<TaskSyncFromTrelloResponse> SyncTasksFromTrelloAsync(TaskSyncFromTrelloRequest request)
+        public virtual System.Threading.Tasks.Task<TaskSyncFromTrelloResponse> PostTaskSyncFromTrelloAsync(TaskSyncFromTrelloRequest request)
         {
-            return SyncTasksFromTrelloAsync(request, System.Threading.CancellationToken.None);
+            return PostTaskSyncFromTrelloAsync(request, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<TaskSyncFromTrelloResponse> SyncTasksFromTrelloAsync(TaskSyncFromTrelloRequest request, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<TaskSyncFromTrelloResponse> PostTaskSyncFromTrelloAsync(TaskSyncFromTrelloRequest request, System.Threading.CancellationToken cancellationToken)
         {
             if (request == null)
                 throw new System.ArgumentNullException("request");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/TaskSynchronizer/SyncTasksFromTrello");
+            urlBuilder_.Append("api/TaskSynchronizer/TaskSyncFromTrello");
 
             var client_ = _httpClient;
             var disposeClient_ = false;

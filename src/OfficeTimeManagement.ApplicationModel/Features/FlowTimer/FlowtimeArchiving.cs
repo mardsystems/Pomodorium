@@ -2,9 +2,9 @@
 
 public record FlowtimeArchivingRequest : Request<FlowtimeArchivingResponse>
 {
-    public Guid FlowtimeId { get; init; }
+    public required Guid FlowtimeId { get; init; }
 
-    public long FlowtimeVersion { get; init; }
+    public long? FlowtimeVersion { get; init; }
 }
 
 public record FlowtimeArchivingResponse(Guid CorrelationId) : Response(CorrelationId)

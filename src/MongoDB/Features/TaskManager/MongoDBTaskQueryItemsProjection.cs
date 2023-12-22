@@ -14,7 +14,7 @@ public class MongoDBTaskQueryItemsProjection :
     INotificationHandler<FlowtimeStarted>,
     INotificationHandler<FlowtimeInterrupted>,
     INotificationHandler<FlowtimeStopped>,
-    INotificationHandler<TaskArchived>
+    INotificationHandler<TaskArchivingd>
 {
     private readonly MongoClient _mongoClient;
 
@@ -118,7 +118,7 @@ public class MongoDBTaskQueryItemsProjection :
         await _mongoCollection.UpdateManyAsync(filter, update, null, cancellationToken);
     }
 
-    public async System.Threading.Tasks.Task Handle(TaskArchived notification, CancellationToken cancellationToken)
+    public async System.Threading.Tasks.Task Handle(TaskArchivingd notification, CancellationToken cancellationToken)
     {
         var filter = Builders<TaskQueryItem>.Filter.Eq(x => x.Id, notification.TaskId);
 

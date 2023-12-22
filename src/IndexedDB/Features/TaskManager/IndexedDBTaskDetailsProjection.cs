@@ -9,7 +9,7 @@ public class IndexedDBTaskDetailsProjection :
     IRequestHandler<TaskDetailsRequest, TaskDetailsResponse>,
     INotificationHandler<TaskCreated>,
     INotificationHandler<TaskDescriptionChanged>,
-    INotificationHandler<TaskArchived>
+    INotificationHandler<TaskArchivingd>
 {
     private readonly IndexedDBAccessor _db;
 
@@ -53,7 +53,7 @@ public class IndexedDBTaskDetailsProjection :
         await _db.PutAsync("TaskDetails", taskDetails);
     }
 
-    public async System.Threading.Tasks.Task Handle(TaskArchived notification, CancellationToken cancellationToken)
+    public async System.Threading.Tasks.Task Handle(TaskArchivingd notification, CancellationToken cancellationToken)
     {
         var _ = await _db.GetAsync<TaskDetails>("TaskDetails", notification.TaskId) ?? throw new EntityNotFoundException();
 

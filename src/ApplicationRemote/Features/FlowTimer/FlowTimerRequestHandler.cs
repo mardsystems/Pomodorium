@@ -19,56 +19,56 @@ public class FlowTimerRequestHandler :
 
     public async Task<FlowtimeQueryResponse> Handle(FlowtimeQueryRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.GetFlowsAsync(request, cancellationToken);
+        var response = await _client.GetFlowtimeQueryAsync(request.PageSize,request.PageIndex, cancellationToken);
 
         return response;
     }
 
     public async Task<FlowtimeDetailsResponse> Handle(FlowtimeDetailsRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.GetFlowtimeAsync(request, cancellationToken);
+        var response = await _client.GetFlowtimeDetailsAsync(request.FlowtimeId, cancellationToken);
 
         return response;
     }
 
     public async Task<FlowtimeCreationResponse> Handle(FlowtimeCreationRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.CreateFlowtimeAsync(request, cancellationToken);
+        var response = await _client.PostFlowtimeCreationAsync(request, cancellationToken);
 
         return response;
     }
 
     public async Task<FlowtimeStartResponse> Handle(FlowtimeStartRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.StartFlowtimeAsync(request, cancellationToken);
+        var response = await _client.PostFlowtimeStartAsync(request, cancellationToken);
 
         return response;
     }
 
     public async Task<FlowtimeStartFromTaskResponse> Handle(FlowtimeStartFromTaskRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.StartFlowtimeFromTaskAsync(request, cancellationToken);
+        var response = await _client.PostFlowtimeStartFromTaskAsync(request, cancellationToken);
 
         return response;
     }
 
     public async Task<FlowtimeInterruptionResponse> Handle(FlowtimeInterruptionRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.InterruptFlowtimeAsync(request, cancellationToken);
+        var response = await _client.PostFlowtimeInterruptionAsync(request, cancellationToken);
 
         return response;
     }
 
     public async Task<FlowtimeStopResponse> Handle(FlowtimeStopRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.StopFlowtimeAsync(request, cancellationToken);
+        var response = await _client.PostFlowtimeStopAsync(request, cancellationToken);
 
         return response;
     }
 
     public async Task<FlowtimeArchivingResponse> Handle(FlowtimeArchivingRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.ArchiveFlowtimeAsync(request, cancellationToken);
+        var response = await _client.PostFlowtimeArchivingAsync(request, cancellationToken);
 
         return response;
     }

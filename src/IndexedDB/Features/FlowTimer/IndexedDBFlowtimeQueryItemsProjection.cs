@@ -53,10 +53,10 @@ public class IndexedDBFlowtimeQueryItemsProjection :
 
     public async System.Threading.Tasks.Task Handle(FlowtimeStarted notification, CancellationToken cancellationToken)
     {
-        var flowtimeQueryItem = await _db.GetAsync<FlowtimeQueryItem>("FlowtimeQueryItems", notification.Id) ?? throw new EntityNotFoundException();
+        var flowtimeQueryItem = await _db.GetAsync<FlowtimeQueryItem>("FlowtimeQueryItems", notification.FlowtimeId) ?? throw new EntityNotFoundException();
 
-        flowtimeQueryItem.StartDateTime = notification.StartDateTime;
-        flowtimeQueryItem.State = notification.State;
+        flowtimeQueryItem.StartDateTime = notification.StartedAt;
+        flowtimeQueryItem.State = notification.FlowtimeState;
         flowtimeQueryItem.Version = notification.Version;
 
         await _db.PutAsync("FlowtimeQueryItems", flowtimeQueryItem);

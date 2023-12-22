@@ -5,7 +5,7 @@ public class TaskManagerRequestHandler :
     IRequestHandler<TaskDetailsRequest, TaskDetailsResponse>,
     IRequestHandler<TaskRegistrationRequest, TaskRegistrationResponse>,
     IRequestHandler<TaskDescriptionChangeRequest, TaskDescriptionChangeResponse>,
-    IRequestHandler<TaskArchiveRequest, TaskArchiveResponse>
+    IRequestHandler<TaskArchivingRequest, TaskArchivingResponse>
 {
     private readonly TaskManagerClient _client;
 
@@ -16,35 +16,35 @@ public class TaskManagerRequestHandler :
 
     public async Task<TaskQueryResponse> Handle(TaskQueryRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.GetTasksAsync(request);
+        var response = await _client.GetTaskQueryAsync(request.PageSize, request.PageIndex, request.Description, request.ExternalReference, cancellationToken);
 
         return response;
     }
 
     public async Task<TaskDetailsResponse> Handle(TaskDetailsRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.GetTaskAsync(request, cancellationToken);
+        var response = await _client.GetTaskDetailsAsync(request.TaskId, cancellationToken);
 
         return response;
     }
 
     public async Task<TaskRegistrationResponse> Handle(TaskRegistrationRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.CreateTaskAsync(request, cancellationToken);
+        var response = await _client.PostTaskRegistrationAsync(request, cancellationToken);
 
         return response;
     }
 
     public async Task<TaskDescriptionChangeResponse> Handle(TaskDescriptionChangeRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.ChangeTaskDescriptionAsync(request, cancellationToken);
+        var response = await _client.PostTaskDescriptionChangeAsync(request, cancellationToken);
 
         return response;
     }
 
-    public async Task<TaskArchiveResponse> Handle(TaskArchiveRequest request, CancellationToken cancellationToken)
+    public async Task<TaskArchivingResponse> Handle(TaskArchivingRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.ArchiveTaskAsync(request, cancellationToken);
+        var response = await _client.PostTaskArchivingAsync(request, cancellationToken);
 
         return response;
     }

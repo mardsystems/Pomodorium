@@ -1,22 +1,5 @@
 ﻿@page "/flows"
-@using MediatR;
-@using Microsoft.AspNetCore.Authorization
-@using Pomodorium.Enums
-@using Pomodorium.Hubs;
-@using Pomodorium.Shared
-@using System.DomainModel;
-@using System.DomainModel.Storage;
-@using System.Collections.ObjectModel;
-@using System.Collections.Specialized;
-@using System.Reactive.Linq;
-@using System.Reactive.Threading.Tasks;
-@using System.Reactive.Subjects;
-@using Pomodorium.Features.FlowTimer
 @attribute [Authorize]
-@inject IMediator Mediator
-@inject NavigationManager NavigationManager
-@* @inject EventHubClient EventHubClient *@
-@inject IStringLocalizer<SharedResource> SharedResource
 
 <PageTitle>Flows</PageTitle>
 
@@ -41,7 +24,7 @@
     }
     else
     {
-        <MudTable Items="_model.Items" Hover="true" Striped="true" Loading="_loading" Dense="_dense" MultiSelection="true" SortLabel="@SharedResource["Sort By"]" @ref="_mudTable" T="IndexViewModel.Item" @bind-SelectedItems="_selectedItems" Style="white-space: nowrap">
+        <MudTable Items="_model.Items" Hover="true" Striped="true" Loading="_loading" Dense="_dense" MultiSelection="true" SortLabel="@SharedResource["Sort By"]" T="IndexViewModel.Item" @bind-SelectedItems="_selectedItems" Style="white-space: nowrap">
             <ToolBarContent>
                 <MudText Typo="Typo.h6">Flows</MudText>
                 <MudSpacer />
@@ -101,145 +84,3 @@
         </MudTable>
     }
 </MudContainer>
-
-@code {
-    private IndexViewModel _model = new();
-
-    private MudTable<IndexViewModel.Item> _mudTable;
-
-    private bool _loading;
-
-    private bool _dense = false;
-
-    private string _searchString;
-
-    private HashSet<IndexViewModel.Item> _selectedItems = new();
-
-    protected override async System.Threading.Tasks.Task OnInitializedAsync()
-    {
-        _model.ItemsChanged.Subscribe((x) =>
-            {
-                StateHasChanged();
-            });
-
-        _model.BreakCountdownChanges.Subscribe(x =>
-        {
-            StateHasChanged();
-        });
-
-        // EventHubClient.Notification
-        //     .Throttle(TimeSpan.FromSeconds(1))
-        //     .Subscribe(async (x) =>
-        //     {
-        //         await Refresh();
-        //     });
-
-        await Refresh();
-    }
-
-    private async System.Threading.Tasks.Task Refresh()
-    {
-        _loading = true;
-
-        var request = new FlowtimeQueryRequest();
-
-        var response = await Mediator.Send<FlowtimeQueryResponse>(request);
-
-        _model.Repopulate(response.FlowtimeQueryItems);
-
-        _loading = false;
-    }
-
-    private async System.Threading.Tasks.Task Add()
-    {
-        NavigationManager.NavigateTo($"/flows/new");
-
-        await Task.CompletedTask;
-    }
-
-    private async System.Threading.Tasks.Task Details(Guid id)
-    {
-        NavigationManager.NavigateTo($"/flows/{id}");
-
-        await Task.CompletedTask;
-    }
-
-    private async System.Threading.Tasks.Task Continue(Guid taskId)
-    {
-        NavigationManager.NavigateTo($"/flows/continuation?TaskId={taskId}");
-
-        await Task.CompletedTask;
-    }
-
-    private async System.Threading.Tasks.Task Start(Guid id, long version)
-    {
-        _loading = true;
-
-        var request = new FlowtimeStartRequest
-            {
-                FlowtimeId = id,
-                FlowtimeVersion = version
-            };
-
-        var response = await Mediator.Send<FlowtimeStartResponse>(request);
-
-        await Refresh();
-        
-        _loading = false;
-    }
-
-    private async System.Threading.Tasks.Task Interrupt(Guid id, long version)
-    {
-        _loading = true;
-
-        var request = new FlowtimeInterruptionRequest
-            {
-                FlowtimeId = id,
-                FlowtimeVersion = version
-            };
-
-        var response = await Mediator.Send<FlowtimeInterruptionResponse>(request);
-
-        await Refresh();
-
-        _loading = false;
-    }
-
-    private async System.Threading.Tasks.Task Stop(Guid id, long version)
-    {
-        _loading = true;
-
-        var request = new FlowtimeStopRequest
-            {
-                FlowtimeId = id,
-                FlowtimeVersion = version
-            };
-
-
-        var response = await Mediator.Send<FlowtimeStopResponse>(request);
-
-        await Refresh();
-
-        _loading = false;
-    }
-
-    private async System.Threading.Tasks.Task Archive()
-    {
-        _loading = true;
-
-        foreach (var item in _selectedItems)
-        {
-            var request = new FlowtimeArchivingRequest
-                {
-                    FlowtimeId = item.Id,
-                    FlowtimeVersion = item.Version
-                };
-
-            var response = await Mediator.Send<FlowtimeArchivingResponse>(request);
-        }
-
-        await Refresh();
-
-        _loading = false;
-    }
-}

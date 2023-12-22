@@ -15,7 +15,7 @@ public class IndexedDBTaskQueryItemsProjection :
     INotificationHandler<FlowtimeStarted>,
     INotificationHandler<FlowtimeInterrupted>,
     INotificationHandler<FlowtimeStopped>,
-    INotificationHandler<TaskArchived>
+    INotificationHandler<TaskArchivingd>
 {
     private readonly IndexedDBAccessor _db;
 
@@ -103,7 +103,7 @@ public class IndexedDBTaskQueryItemsProjection :
         await _db.PutAsync("TaskQueryItems", taskQueryItem);
     }
 
-    public async System.Threading.Tasks.Task Handle(TaskArchived notification, CancellationToken cancellationToken)
+    public async System.Threading.Tasks.Task Handle(TaskArchivingd notification, CancellationToken cancellationToken)
     {
         var _ = await _db.GetAsync<TaskQueryItem>("TaskQueryItems", notification.TaskId) ?? throw new EntityNotFoundException();
 

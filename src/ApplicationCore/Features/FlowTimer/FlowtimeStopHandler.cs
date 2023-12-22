@@ -19,7 +19,7 @@ public class FlowtimeStopHandler : IRequestHandler<FlowtimeStopRequest, Flowtime
 
         flowtime.Stop(now);
 
-        await _repository.Save(flowtime, request.FlowtimeVersion);
+        await _repository.Save(flowtime, request.FlowtimeVersion ?? -1);
 
         var response = new FlowtimeStopResponse(request.GetCorrelationId())
         {

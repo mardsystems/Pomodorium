@@ -40,5 +40,7 @@ public class TaskQueryItem
 
     public bool? HasFocus { get; set; }
 
+    public Guid? FlowtimeId { get; set; }
+
     public long Version { get; set; }
 }

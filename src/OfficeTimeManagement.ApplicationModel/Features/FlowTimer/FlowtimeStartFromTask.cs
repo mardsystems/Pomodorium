@@ -2,7 +2,7 @@
 
 public record FlowtimeStartFromTaskRequest : Request<FlowtimeStartFromTaskResponse>
 {
-    public Guid TaskId { get; init; }
+    public required Guid TaskId { get; init; }
 }
 
 public record FlowtimeStartFromTaskResponse(Guid CorrelationId) : Response(CorrelationId)

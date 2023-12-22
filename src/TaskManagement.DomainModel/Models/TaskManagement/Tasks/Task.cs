@@ -33,5 +33,15 @@ public class Task : AggregateRoot
         Description = e.TaskDescription;
     }
 
+    public override void Archive()
+    {
+        Apply(new TaskArchived(Id));
+    }
+
+    public void When(TaskArchived e)
+    {
+        base.Archive();
+    }
+
     public Task() { }
 }

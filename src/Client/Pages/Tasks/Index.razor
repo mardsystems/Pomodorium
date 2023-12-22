@@ -1,23 +1,5 @@
 ﻿@page "/tasks"
-@using MediatR;
-@using Microsoft.AspNetCore.Authorization
-@using Pomodorium.Features.FlowTimer
-@using Pomodorium.Hubs;
-@using Pomodorium.Shared
-@using System.DomainModel;
-@using System.DomainModel.Storage;
-@using System.Collections.ObjectModel;
-@using System.Collections.Specialized;
-@using System.Reactive.Linq;
-@using System.Reactive.Threading.Tasks;
-@using System.Reactive.Subjects;
-@using Pomodorium.Features.TaskManager
-@using Pomodorium.Features.TaskSynchronizer
 @attribute [Authorize]
-@inject IMediator Mediator
-@inject NavigationManager NavigationManager
-@* @inject EventHubClient EventHubClient *@
-@inject IStringLocalizer<SharedResource> SharedResource
 
 <PageTitle>Tasks</PageTitle>
 
@@ -32,33 +14,33 @@
     }
     <MudSpacer />
     <MudText Typo="Typo.button" Class="mx-4" Style="text-wrap: nowrap">Total: @_model.Items?.Count</MudText>
-    <MudMenu Icon="@Icons.Material.Filled.MoreVert">
-        <MudMenuItem OnClick="@(() => _dense = !_dense)">Dense: @(_dense ? "On" : "Off")</MudMenuItem>
-    </MudMenu>
-</MudToolBar>
+        <MudMenu Icon="@Icons.Material.Filled.MoreVert">
+            <MudMenuItem OnClick="@(() => _dense = !_dense)">Dense: @(_dense ? "On" : "Off")</MudMenuItem>
+        </MudMenu>
+    </MudToolBar>
 
-<MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mb-4">
-    <MudTable Items="_model.Items" Hover="true" Striped="true" Loading="_loading" Dense="_dense" MultiSelection="true" SortLabel="@SharedResource["Sort By"]" @ref="_mudTable" T="IndexViewModel.Item" @bind-SelectedItems="_selectedItems" Style="white-space: nowrap">
-        <ToolBarContent>
-            <MudText Typo="Typo.h6">Tasks</MudText>
-            <MudSpacer />
-            <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
-                            AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
-        </ToolBarContent>
-        <HeaderContent>
-            <MudTh>@SharedResource["State"]</MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.Description)">@SharedResource["Description"]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.TotalHours)">@SharedResource["Total Hours"]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.IntegrationType)">@SharedResource["Integration Type"]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.IntegrationName)">@SharedResource["Integration Name"]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.ExternalReference)">@SharedResource["External Reference"]</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.CreationDate)" InitialDirection="SortDirection.Descending">@SharedResource["Creation Date"]</MudTableSortLabel></MudTh>
-            <MudTh>@SharedResource["Actions"]</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd Style="white-space: nowrap; justify-content: center">
-                <MudText Class="d-flex">
-                    @context.HasFocus
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="mb-4">
+        <MudTable Items="_model.Items" Hover="true" Striped="true" Loading="_loading" Dense="_dense" MultiSelection="true" SortLabel="@SharedResource["Sort By"]" T="IndexViewModel.Item" @bind-SelectedItems="_selectedItems" Style="white-space: nowrap">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6">Tasks</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" Immediate="true"
+                              AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+            </ToolBarContent>
+            <HeaderContent>
+                <MudTh>@SharedResource["Has Focus"]</MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.Description)">@SharedResource["Description"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.TotalHours)">@SharedResource["Total Hours"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.IntegrationType)">@SharedResource["Integration Type"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.IntegrationName)">@SharedResource["Integration Name"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.ExternalReference)">@SharedResource["External Reference"]</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<IndexViewModel.Item, object>(x => x.CreationDate)" InitialDirection="SortDirection.Descending">@SharedResource["Creation Date"]</MudTableSortLabel></MudTh>
+                <MudTh>@SharedResource["Actions"]</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd Style="white-space: nowrap; justify-content: center">
+                    <MudText Class="d-flex">
+                        @context.HasFocus
                 </MudText>
             </MudTd>
             <MudTd DataLabel="@SharedResource["Description"]">@context.Description</MudTd>
@@ -71,7 +53,10 @@
                 <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => Details(context.Id))"></MudIconButton>
                 @if (context.HasFocus == true)
                 {
-
+                    if (context.FlowtimeId != null)
+                    {
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Stop" OnClick="@(() => StopFlowtime(context.FlowtimeId.Value))"></MudIconButton>
+                    }
                 }
                 else
                 {
@@ -81,125 +66,3 @@
         </RowTemplate>
     </MudTable>
 </MudContainer>
-
-@code {
-    private IndexViewModel _model = new();
-
-    private MudTable<IndexViewModel.Item> _mudTable;
-
-    private bool _loading;
-
-    private bool _dense = false;
-
-    private string _searchString;
-
-    private HashSet<IndexViewModel.Item> _selectedItems = new();
-
-    protected override async System.Threading.Tasks.Task OnInitializedAsync()
-    {
-        _model.ItemsChanged.Subscribe((x) =>
-            {
-                StateHasChanged();
-            });
-
-        // EventHubClient.Notification
-        //     .Throttle(TimeSpan.FromSeconds(1))
-        //     .Subscribe(async (x) =>
-        //     {
-        //         await Refresh();
-        //     });
-
-        await Refresh();
-    }
-
-    private async System.Threading.Tasks.Task Refresh()
-    {
-        _loading = true;
-
-        var request = new TaskQueryRequest { };
-
-        var response = await Mediator.Send<TaskQueryResponse>(request);
-
-        _model.Repopulate(response.TaskQueryItems);
-
-        _loading = false;
-    }
-
-    private async System.Threading.Tasks.Task Add()
-    {
-        NavigationManager.NavigateTo($"/tasks/new");
-
-        await Task.CompletedTask;
-    }
-
-    private async Task SyncTasksFromTFS()
-    {
-        _loading = true;
-
-        var request = new TaskSyncFromTfsRequest
-        {
-
-        };
-
-        await Mediator.Send<TaskSyncFromTfsResponse>(request);
-
-        _loading = false;
-    }
-
-    private async Task SyncTasksFromTrello()
-    {
-        _loading = true;
-
-        var request = new TaskSyncFromTrelloRequest
-        {
-
-        };
-
-        await Mediator.Send<TaskSyncFromTrelloResponse>(request);
-
-        _loading = false;
-    }
-
-    private async System.Threading.Tasks.Task Details(Guid id)
-    {
-        NavigationManager.NavigateTo($"/tasks/{id}");
-
-        await Task.CompletedTask;
-    }
-
-    private async System.Threading.Tasks.Task FocusWithFlowtime(Guid taskId)
-    {
-        _loading = true;
-
-        var request = new FlowtimeStartFromTaskRequest
-            {
-                TaskId = taskId
-            };
-
-        var response = await Mediator.Send<FlowtimeStartFromTaskResponse>(request);
-
-        await Refresh();
-
-        _loading = false;
-    }
-
-    private async System.Threading.Tasks.Task Archive()
-    {
-        _loading = true;
-
-        foreach (var item in _selectedItems)
-        {
-            var request = new TaskArchiveRequest
-                {
-                    TaskId = item.Id,
-                    TaskVersion = item.Version
-                };
-
-            var response = await Mediator.Send<TaskArchiveResponse>(request);
-        }
-
-        await Refresh();
-
-        _loading = false;
-    }
-}

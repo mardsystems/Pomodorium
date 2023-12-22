@@ -19,7 +19,7 @@ public class FlowtimeCreationFromTaskHandler : IRequestHandler<FlowtimeCreationF
         {
             task.ChangeDescription(request.TaskDescription);
 
-            await _repository.Save(task, request.TaskVersion);
+            await _repository.Save(task, request.TaskVersion ?? -1);
 
             task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId);
         }
@@ -30,6 +30,7 @@ public class FlowtimeCreationFromTaskHandler : IRequestHandler<FlowtimeCreationF
 
         var response = new FlowtimeCreationFromTaskResponse(request.GetCorrelationId())
         {
+            FlowtimeId = flowtime.Id,
             FlowtimeVersion = flowtime.Version
         };
 

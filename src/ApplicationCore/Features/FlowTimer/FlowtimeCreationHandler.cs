@@ -29,6 +29,7 @@ public class FlowtimeCreationHandler : IRequestHandler<FlowtimeCreationRequest, 
 
         var response = new FlowtimeCreationResponse(request.GetCorrelationId())
         {
+            FlowtimeId = flowtime.Id,
             FlowtimeVersion = flowtime.Version
         };
 

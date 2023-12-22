@@ -58,13 +58,13 @@ public class MongoDBFlowtimeDetailsProjection :
 
     public async System.Threading.Tasks.Task Handle(FlowtimeStarted notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<FlowtimeDetails>.Filter.Eq(x => x.Id, notification.Id);
+        var filter = Builders<FlowtimeDetails>.Filter.Eq(x => x.Id, notification.FlowtimeId);
 
         var flowtimeDetails = await _mongoCollection.Find(filter).FirstAsync(cancellationToken) ?? throw new EntityNotFoundException();
 
         var update = Builders<FlowtimeDetails>.Update
-            .Set(x => x.StartDateTime, notification.StartDateTime)
-            .Set(x => x.State, notification.State)
+            .Set(x => x.StartDateTime, notification.StartedAt)
+            .Set(x => x.State, notification.FlowtimeState)
             .Set(x => x.Version, notification.Version);
 
         await _mongoCollection.UpdateOneAsync(filter, update, null, cancellationToken);
