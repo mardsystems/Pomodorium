@@ -1,7 +1,6 @@
-﻿namespace System.DomainModel
-{
-    public class EntityNotFoundException : ApplicationException
-    {
+﻿namespace System.DomainModel;
 
-    }
+public class EntityNotFoundException : ApplicationException
+{
+
 }

@@ -55,7 +55,7 @@ public partial class Index
 
     private async Task Add()
     {
-        NavigationManager.NavigateTo($"/tasks/new");
+        Navigation.NavigateTo($"/tasks/new");
 
         await Task.CompletedTask;
     }
@@ -90,7 +90,7 @@ public partial class Index
 
     private async Task Details(Guid id)
     {
-        NavigationManager.NavigateTo($"/tasks/{id}");
+        Navigation.NavigateTo($"/tasks/{id}");
 
         await Task.CompletedTask;
     }

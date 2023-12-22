@@ -75,7 +75,7 @@ public partial class Details
             var _ = await Mediator.Send<TaskDescriptionChangeResponse>(request);
         }
 
-        NavigationManager.NavigateTo("tasks");
+        Navigation.NavigateTo("tasks");
     }
 
     private async Task Archive()
@@ -95,6 +95,6 @@ public partial class Details
 
         var _ = await Mediator.Send<TaskArchivingResponse>(request);
 
-        NavigationManager.NavigateTo("tasks");
+        Navigation.NavigateTo("tasks");
     }
 }

@@ -1,7 +1,5 @@
 ﻿@page "/"
 
-@inject IStringLocalizer<SharedResource> SharedResource;
-
 <PageTitle>Home</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="my-4">
@@ -15,10 +13,6 @@
         <MudNavLink Href="fetchdata" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Fetch data</MudNavLink>
     </MudNavMenu>
 </MudContainer>
-
-@code {
-
-}
 
 @* <h1>@SharedResource["Hello, world!"]</h1>
 

@@ -2,22 +2,21 @@
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 
-namespace Pomodorium.Extensions.DependencyInjection
+namespace Pomodorium.Extensions.DependencyInjection;
+
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+    public static IServiceCollection AddRabbitMQ(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection AddRabbitMQ(this IServiceCollection services, IConfiguration configuration)
+        var connectionFactory = new ConnectionFactory()
         {
-            var connectionFactory = new ConnectionFactory()
-            {
-                HostName = configuration["MessageBroker"]
-            };
+            HostName = configuration["MessageBroker"]
+        };
 
-            //var connection = connectionFactory.CreateConnection();
+        //var connection = connectionFactory.CreateConnection();
 
-            //builder.Services.AddScoped((factory) => new RabbitMQPublisher(connection));
+        //builder.Services.AddScoped((factory) => new RabbitMQPublisher(connection));
 
-            return services;
-        }
+        return services;
     }
 }

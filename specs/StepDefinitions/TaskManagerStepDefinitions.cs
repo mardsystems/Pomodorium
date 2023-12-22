@@ -2,76 +2,75 @@ using Pomodorium.Drivers;
 using Pomodorium.Features.TaskManager;
 using Pomodorium.Support;
 
-namespace Pomodorium.StepDefinitions
+namespace Pomodorium.StepDefinitions;
+
+[Binding]
+public class TaskManagerStepDefinitions
 {
-    [Binding]
-    public class TaskManagerStepDefinitions
+    private readonly TaskManagerApiDriver _taskManagerApiDriver;
+
+    private Guid _taskId;
+
+    private string _taskDescription;
+
+    private long _taskVersion;
+
+    public TaskManagerStepDefinitions(TaskManagerApiDriver taskManagerApiDriver)
     {
-        private readonly TaskManagerApiDriver _taskManagerApiDriver;
+        _taskManagerApiDriver = taskManagerApiDriver;
+    }
 
-        private Guid _taskId;
+    [Given(@"that there is any customer")]
+    public void GivenThatThereIsAnyCustomer()
+    {
+        var request = TaskManagerStubs.CreateTask();
 
-        private string _taskDescription;
+        var response = _taskManagerApiDriver.CreateTaskAction.Perform(request, true);
 
-        private long _taskVersion;
+        _taskId = response.TaskId;
 
-        public TaskManagerStepDefinitions(TaskManagerApiDriver taskManagerApiDriver)
+        _taskVersion = response.TaskVersion;
+    }
+
+    [When(@"Programmer registers a task '([^']*)'")]
+    public void WhenProgrammerRegistersATask(string description)
+    {
+        _taskDescription = description;
+
+        var request = new TaskRegistrationRequest
         {
-            _taskManagerApiDriver = taskManagerApiDriver;
-        }
+            Description = _taskDescription
+        };
 
-        [Given(@"that there is any customer")]
-        public void GivenThatThereIsAnyCustomer()
+        var response = _taskManagerApiDriver.CreateTaskAction.Perform(request);
+
+        _taskId = response.TaskId;
+
+        _taskVersion = response.TaskVersion;
+    }
+
+    [When(@"Programmer change a task to '([^']*)'")]
+    public void WhenProgrammerChangeATaskTo(string description)
+    {
+        _taskDescription = description;
+
+        var request = new TaskDescriptionChangeRequest
         {
-            var request = TaskManagerStubs.CreateTask();
+            TaskId = _taskId,
+            Description = _taskDescription,
+            TaskVersion = _taskVersion
+        };
 
-            var response = _taskManagerApiDriver.CreateTaskAction.Perform(request, true);
+        var response = _taskManagerApiDriver.ChangeTaskDescriptionAction.Perform(request);
 
-            _taskId = response.TaskId;
+        _taskVersion = response.TaskVersion;
+    }
 
-            _taskVersion = response.TaskVersion;
-        }
+    [Then(@"the task should be registered as expected")]
+    public void ThenTheTaskShouldBeRegisteredAsExpected()
+    {
+        var task = _taskManagerApiDriver.GetTaskAction.Perform(new TaskDetailsRequest(_taskId)).TaskDetails;
 
-        [When(@"Programmer registers a task '([^']*)'")]
-        public void WhenProgrammerRegistersATask(string description)
-        {
-            _taskDescription = description;
-
-            var request = new TaskRegistrationRequest
-            {
-                Description = _taskDescription
-            };
-
-            var response = _taskManagerApiDriver.CreateTaskAction.Perform(request);
-
-            _taskId = response.TaskId;
-
-            _taskVersion = response.TaskVersion;
-        }
-
-        [When(@"Programmer change a task to '([^']*)'")]
-        public void WhenProgrammerChangeATaskTo(string description)
-        {
-            _taskDescription = description;
-
-            var request = new TaskDescriptionChangeRequest
-            {
-                TaskId = _taskId,
-                Description = _taskDescription,
-                TaskVersion = _taskVersion
-            };
-
-            var response = _taskManagerApiDriver.ChangeTaskDescriptionAction.Perform(request);
-
-            _taskVersion = response.TaskVersion;
-        }
-
-        [Then(@"the task should be registered as expected")]
-        public void ThenTheTaskShouldBeRegisteredAsExpected()
-        {
-            var task = _taskManagerApiDriver.GetTaskAction.Perform(new TaskDetailsRequest(_taskId)).TaskDetails;
-
-            task.Description.Should().Be(_taskDescription);
-        }
+        task.Description.Should().Be(_taskDescription);
     }
 }
