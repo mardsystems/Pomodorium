@@ -46,26 +46,26 @@ public class FlowtimeCreated : Event
 public class FlowtimeStarted : Event
 {
     [DataMember(Order = 1)]
-    public Guid Id { get; private set; }
+    public Guid FlowtimeId { get; private set; }
 
     [DataMember(Order = 2)]
     public Guid TaskId { get; private set; }
 
     [DataMember(Order = 3)]
-    public DateTime StartDateTime { get; private set; }
+    public DateTime StartedAt { get; private set; }
 
     [DataMember(Order = 4)]
-    public FlowtimeStateEnum State { get; private set; }
+    public FlowtimeStateEnum FlowtimeState { get; private set; }
 
-    public FlowtimeStarted(Guid id, Guid taskId, DateTime startDateTime, FlowtimeStateEnum state)
+    public FlowtimeStarted(Guid flowtimeId, Guid taskId, DateTime startedAt, FlowtimeStateEnum flowtimeState)
     {
-        Id = id;
+        FlowtimeId = flowtimeId;
 
         TaskId = taskId;
 
-        StartDateTime = startDateTime;
+        StartedAt = startedAt;
 
-        State = state;
+        FlowtimeState = flowtimeState;
     }
 
     private FlowtimeStarted() { }

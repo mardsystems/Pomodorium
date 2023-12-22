@@ -15,7 +15,7 @@ public class TaskDescriptionChangeHandler : IRequestHandler<TaskDescriptionChang
 
         task.ChangeDescription(request.Description);
 
-        await _repository.Save(task, request.TaskVersion);
+        await _repository.Save(task, request.TaskVersion ?? -1);
 
         var response = new TaskDescriptionChangeResponse(request.GetCorrelationId())
         {

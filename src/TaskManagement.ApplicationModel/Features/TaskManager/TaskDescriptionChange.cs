@@ -6,7 +6,7 @@ public record TaskDescriptionChangeRequest : Request<TaskDescriptionChangeRespon
 
     public required string Description { get; init; }
 
-    public long TaskVersion { get; init; }
+    public long? TaskVersion { get; init; }
 }
 
 public record TaskDescriptionChangeResponse(Guid CorrelationId) : Response(CorrelationId)

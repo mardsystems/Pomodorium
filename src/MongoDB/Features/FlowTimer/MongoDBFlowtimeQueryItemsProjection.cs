@@ -56,11 +56,11 @@ public class MongoDBFlowtimeQueryItemsProjection :
 
     public async System.Threading.Tasks.Task Handle(FlowtimeStarted notification, CancellationToken cancellationToken)
     {
-        var filter = Builders<FlowtimeQueryItem>.Filter.Eq(x => x.Id, notification.Id);
+        var filter = Builders<FlowtimeQueryItem>.Filter.Eq(x => x.Id, notification.FlowtimeId);
 
         var update = Builders<FlowtimeQueryItem>.Update
-            .Set(x => x.StartDateTime, notification.StartDateTime)
-            .Set(x => x.State, notification.State)
+            .Set(x => x.StartDateTime, notification.StartedAt)
+            .Set(x => x.State, notification.FlowtimeState)
             .Set(x => x.Version, notification.Version);
 
         await _mongoCollection.UpdateOneAsync(filter, update, null, cancellationToken);

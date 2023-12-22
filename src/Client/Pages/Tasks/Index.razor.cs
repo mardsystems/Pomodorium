@@ -111,6 +111,22 @@ public partial class Index
         _loading = false;
     }
 
+    private async Task StopFlowtime(Guid id)
+    {
+        _loading = true;
+
+        var request = new FlowtimeStopRequest
+        {
+            FlowtimeId = id
+        };
+
+        var _ = await Mediator.Send<FlowtimeStopResponse>(request);
+
+        await Refresh();
+
+        _loading = false;
+    }
+
     private async Task Archive()
     {
         _loading = true;

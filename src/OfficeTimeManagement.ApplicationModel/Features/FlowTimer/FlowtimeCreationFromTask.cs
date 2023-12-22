@@ -6,7 +6,7 @@ public record FlowtimeCreationFromTaskRequest : Request<FlowtimeCreationFromTask
 
     public required string TaskDescription { get; init; }
 
-    public long TaskVersion { get; init; }
+    public long? TaskVersion { get; init; }
 }
 
 public record FlowtimeCreationFromTaskResponse(Guid CorrelationId) : Response(CorrelationId)

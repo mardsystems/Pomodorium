@@ -66,9 +66,9 @@ public class Flowtime : AggregateRoot
 
     public void When(FlowtimeStarted e)
     {
-        StartDateTime = e.StartDateTime;
+        StartDateTime = e.StartedAt;
 
-        State = e.State;
+        State = e.FlowtimeState;
     }
 
     public void OnTick(DateTime now)

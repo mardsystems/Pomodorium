@@ -4,7 +4,7 @@ public record TaskArchivingRequest : Request<TaskArchivingResponse>
 {
     public required Guid TaskId { get; init; }
 
-    public long TaskVersion { get; init; }
+    public long? TaskVersion { get; init; }
 }
 
 public record TaskArchivingResponse(Guid CorrelationId) : Response(CorrelationId)

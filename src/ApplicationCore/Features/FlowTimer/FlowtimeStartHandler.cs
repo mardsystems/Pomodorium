@@ -19,7 +19,7 @@ public class FlowtimeStartHandler : IRequestHandler<FlowtimeStartRequest, Flowti
 
         flowtime.Start(now);
 
-        await _repository.Save(flowtime, request.FlowtimeVersion);
+        await _repository.Save(flowtime, request.FlowtimeVersion ?? -1);
 
         var response = new FlowtimeStartResponse(request.GetCorrelationId())
         {

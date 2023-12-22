@@ -36,6 +36,7 @@ public class IndexViewModel
                 item.IntegrationName,
                 item.ExternalReference,
                 item.HasFocus,
+                item.FlowtimeId,
                 item.Version));
         }
     }
@@ -60,6 +61,8 @@ public class IndexViewModel
 
         public bool? HasFocus { get; set; }
 
+        public Guid? FlowtimeId { get; set; }
+
         public long Version { get; set; }
 
         public IObservable<long> BreakCountdownChanges { get; set; }
@@ -74,6 +77,7 @@ public class IndexViewModel
             string integrationName,
             string externalReference,
             bool? hasFocus,
+            Guid? flowtimeId,
             long version)
         {
             Id = id;
@@ -100,6 +104,8 @@ public class IndexViewModel
             ExternalReference = externalReference;
 
             HasFocus = hasFocus;
+
+            FlowtimeId = flowtimeId;
 
             Version = version;
 

@@ -15,7 +15,7 @@ public class TaskArchivingHandler : IRequestHandler<TaskArchivingRequest, TaskAr
 
         task.Archive();
 
-        await _repository.Save(task, request.TaskVersion);
+        await _repository.Save(task, request.TaskVersion ?? -1);
 
         var response = new TaskArchivingResponse(request.GetCorrelationId())
         {

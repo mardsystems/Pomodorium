@@ -17,7 +17,7 @@ public class FlowtimeArchivingHandler : IRequestHandler<FlowtimeArchivingRequest
 
         flowtime.Archive();
 
-        await _repository.Save(flowtime, request.FlowtimeVersion);
+        await _repository.Save(flowtime, request.FlowtimeVersion ?? -1);
 
         var response = new FlowtimeArchivingResponse(request.GetCorrelationId())
         {

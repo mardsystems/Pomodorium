@@ -160,6 +160,7 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
         var taskQueryItem = itemResponse.Resource ?? throw new EntityNotFoundException();
 
         taskQueryItem.HasFocus = true;
+        taskQueryItem.FlowtimeId = notification.FlowtimeId;
 
         _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
@@ -184,6 +185,7 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
         taskQueryItem.TotalHours += notification.Worktime.TotalHours;
 
         taskQueryItem.HasFocus = false;
+        taskQueryItem.FlowtimeId = null;
 
         _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
@@ -208,6 +210,7 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
         taskQueryItem.TotalHours += notification.Worktime.TotalHours;
 
         taskQueryItem.HasFocus = false;
+        taskQueryItem.FlowtimeId = null;
 
         _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 

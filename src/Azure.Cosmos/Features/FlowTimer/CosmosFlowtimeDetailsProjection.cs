@@ -80,22 +80,22 @@ public class CosmosFlowtimeDetailsProjection :
     public async System.Threading.Tasks.Task Handle(FlowtimeStarted notification, CancellationToken cancellationToken)
     {
         var itemResponse = await _container.ReadItemAsync<FlowtimeDetails>(
-                id: notification.Id.ToString(),
-                partitionKey: new PartitionKey(notification.Id.ToString()),
+                id: notification.FlowtimeId.ToString(),
+                partitionKey: new PartitionKey(notification.FlowtimeId.ToString()),
                 cancellationToken: cancellationToken
             );
 
         var flowtimeDetails = itemResponse.Resource ?? throw new EntityNotFoundException();
 
-        flowtimeDetails.StartDateTime = notification.StartDateTime;
-        flowtimeDetails.State = notification.State;
+        flowtimeDetails.StartDateTime = notification.StartedAt;
+        flowtimeDetails.State = notification.FlowtimeState;
         flowtimeDetails.Version = notification.Version;
 
         _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
         var response = await _container.UpsertItemAsync(
             item: flowtimeDetails,
-            partitionKey: new PartitionKey(notification.Id.ToString()),
+            partitionKey: new PartitionKey(notification.FlowtimeId.ToString()),
             cancellationToken: cancellationToken);
 
         _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
