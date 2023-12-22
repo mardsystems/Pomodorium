@@ -20,7 +20,7 @@ if (APP_REMOTE)
 {
     builder.Services.AddApplicationRemote();
 
-    builder.Services.AddSharedInfrastructure(builder.Configuration);
+    builder.Services.AddSharedInfrastructure();
 }
 else
 {

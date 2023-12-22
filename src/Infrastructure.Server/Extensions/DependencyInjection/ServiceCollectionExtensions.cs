@@ -8,7 +8,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddServerInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSharedInfrastructure(configuration);
+        services.AddSharedInfrastructure();
 
         services.AddCosmos(configuration);
 
