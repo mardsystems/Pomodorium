@@ -8,7 +8,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddClientInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSharedInfrastructure(configuration);
+        services.AddSharedInfrastructure();
 
         services.AddIndexedDB(configuration);
 

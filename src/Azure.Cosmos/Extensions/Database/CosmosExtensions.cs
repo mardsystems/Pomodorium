@@ -46,30 +46,28 @@ public static class CosmosExtensions
 
         database = databaseResponse.Database;
 
-        database.CreateContainerIfNotExists("ActivityDetails");
-
-        database.CreateContainerIfNotExists("ActivityQueryItems");
-
-        database.CreateContainerIfNotExists("FlowtimeDetails");
-
-        database.CreateContainerIfNotExists("FlowtimeQueryItems");
-
-        database.CreateContainerIfNotExists("PomodoroDetails");
-
-        database.CreateContainerIfNotExists("PomodoroQueryItems");
-
-        database.CreateContainerIfNotExists("TfsIntegrationContainer");
-
-        database.CreateContainerIfNotExists("TrelloIntegrationContainer");
+        // Write database.
 
         database.CreateContainerIfNotExists("EventStore");
 
-        database.CreateContainerIfNotExists("TaskDetails");
+        // Database.
 
+        database.CreateContainerIfNotExists("TfsIntegrationContainer");
+        database.CreateContainerIfNotExists("TrelloIntegrationContainer");
+
+        // Read database.
+
+        database.CreateContainerIfNotExists("ActivityDetails");
+        database.CreateContainerIfNotExists("ActivityQueryItems");
+        database.CreateContainerIfNotExists("FlowtimeDetails");
+        database.CreateContainerIfNotExists("FlowtimeQueryItems");
+        database.CreateContainerIfNotExists("PomodoroDetails");
+        database.CreateContainerIfNotExists("PomodoroQueryItems");
+        database.CreateContainerIfNotExists("TaskDetails");
         database.CreateContainerIfNotExists("TaskQueryItems");
     }
 
-    private static void CreateContainerIfNotExists(
+    internal static void CreateContainerIfNotExists(
         this Microsoft.Azure.Cosmos.Database database,
         string name,
         string partitionKey = "/id")
@@ -78,5 +76,21 @@ public static class CosmosExtensions
             id: name,
             partitionKeyPath: partitionKey
         ).Wait();
+    }
+
+    internal static async Task DeleteContainerAsync(
+        this Microsoft.Azure.Cosmos.Database database,
+        string name)
+    {
+        try
+        {
+            var container = database.GetContainer(name);
+
+            await container.DeleteContainerAsync();
+        }
+        catch (Exception)
+        {
+            // Fails silently.
+        }
     }
 }

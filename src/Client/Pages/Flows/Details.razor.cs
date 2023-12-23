@@ -93,7 +93,7 @@ public partial class Details
 
         var _ = await Mediator.Send<FlowtimeStartResponse>(request);
 
-        NavigationManager.NavigateTo("flows");
+        Navigation.NavigateTo("flows");
     }
 
     private async Task Stop()
@@ -106,7 +106,7 @@ public partial class Details
 
         var _ = await Mediator.Send<FlowtimeStopResponse>(request);
 
-        NavigationManager.NavigateTo("flows");
+        Navigation.NavigateTo("flows");
     }
 
     private async Task Save()
@@ -143,7 +143,7 @@ public partial class Details
             var _ = await Mediator.Send<TaskDescriptionChangeResponse>(request);
         }
 
-        NavigationManager.NavigateTo("flows");
+        Navigation.NavigateTo("flows");
     }
 
     private async Task Archive()
@@ -163,6 +163,6 @@ public partial class Details
 
         var _ = await Mediator.Send<FlowtimeArchivingResponse>(request);
 
-        NavigationManager.NavigateTo("flows");
+        Navigation.NavigateTo("flows");
     }
 }

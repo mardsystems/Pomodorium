@@ -26,7 +26,11 @@ public class WeatherForecastController : ControllerBase
     [HttpGet]
     public IEnumerable<WeatherForecast> GetWeatherForecast()
     {
-        return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        var items = Enumerable.Range(1, 25);
+
+        _logger.LogInformation("Weather Forecast Items (#{Count}) on {MachineName}", items.Count(), Environment.MachineName);
+
+        return items.Select(index => new WeatherForecast
         {
             Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             TemperatureC = Random.Shared.Next(-20, 55),

@@ -1,11 +1,6 @@
 @inherits LayoutComponentBase
-@using MediatR
-@using Microsoft.AspNetCore.SignalR.Client;
-@using Pomodorium.Features.TaskManager
-@using Pomodorium.Hubs;
 @* @inject HubConnection HubConnection *@
 @* @inject EventHubClient EventHubClient *@
-@inject IStringLocalizer<SharedResource> SharedResource
 
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
 <MudDialogProvider />
@@ -24,11 +19,11 @@
         @* <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Href="https://mudblazor.com/" Target="_blank" /> *@
         @* <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Href="https://github.com/MudBlazor/MudBlazor/" Target="_blank" /> *@
         @* <div Class="d-flex align-center justify-center my-auto">
-            <MudBadge Overlap="true" Color="Color.Success" Origin="Origin.TopRight" Dot="true" Visible="_isHubConnected">
-                <MudToggleIconButton Toggled="@_isHubConnected" ToggledChanged="OnToogleHubConnection"
-                                     Icon="@Icons.Material.Filled.CloudOff" Color="@Color.Inherit" Title="Connect Hub"
-                                     ToggledIcon="@Icons.Material.Filled.CloudQueue" ToggledColor="@Color.Inherit" ToggledTitle="Disconnect Hub" />
-            </MudBadge>
+        <MudBadge Overlap="true" Color="Color.Success" Origin="Origin.TopRight" Dot="true" Visible="_isHubConnected">
+        <MudToggleIconButton Toggled="@_isHubConnected" ToggledChanged="OnToogleHubConnection"
+        Icon="@Icons.Material.Filled.CloudOff" Color="@Color.Inherit" Title="Connect Hub"
+        ToggledIcon="@Icons.Material.Filled.CloudQueue" ToggledColor="@Color.Inherit" ToggledTitle="Disconnect Hub" />
+        </MudBadge>
         </div> *@
         @* <MudSwitch @bind-Checked="@_isDarkMode" Color="Color.Primary" Class="ma-4" T="bool" Label="Toggle Light/Dark Mode" /> *@
     </MudAppBar>
@@ -42,82 +37,6 @@
         @Body
     </MudMainContent>
 </MudLayout>
-
-@code {
-    [Inject] private IMediator Mediator { get; set; }
-
-    private MudTheme _theme = new()
-        {
-            Palette = new PaletteLight()
-            {
-                Primary = Colors.Green.Darken2,
-                Secondary = Colors.Red.Darken2,
-                AppbarBackground = Colors.Red.Darken1
-            }
-        };
-
-    // private bool _isHubConnected;
-
-    private bool _isDarkMode;
-
-    bool _drawerOpen = true;
-
-    // private long NotificationTotal = 0;
-
-    protected override async Task OnInitializedAsync()
-    {
-        // EventHubClient.Notification.Subscribe((e) =>
-        // {
-        //     NotificationTotal += 1;
-
-        //     InvokeAsync(StateHasChanged);
-        // });
-
-        // if (HubConnection.State == HubConnectionState.Connected)
-        // {
-        //     _isHubConnected = true;
-        // }
-        // else
-        // {
-        //     _isHubConnected = false;
-        // }
-
-        await Task.CompletedTask;
-    }
-
-    // private async Task OnToogleHubConnection(bool toogled)
-    // {
-    //     try
-    //     {
-    //         if (HubConnection.State == HubConnectionState.Disconnected)
-    //         {
-    //             await HubConnection.StartAsync();
-
-    //             _isHubConnected = true;
-    //         }
-    //         else if (HubConnection.State == HubConnectionState.Connected)
-    //         {
-    //             await HubConnection.StopAsync();
-
-    //             _isHubConnected = false;
-    //         }
-    //     }
-    //     catch (Exception)
-    //     {
-    //         _isHubConnected = false;
-    //     }
-    // }
-
-    // private async Task DispatchEvents()
-    // {
-    //     await EventHubClient.DispatchEvents();
-    // }
-
-    void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
-}
 
 @* <div class="page">
     <div class="sidebar">

@@ -1,14 +1,12 @@
 ﻿@page "/"
 
-@inject IStringLocalizer<SharedResource> SharedResource;
-
 <PageTitle>Home</PageTitle>
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="my-4">
     <MudText Typo="Typo.h3" GutterBottom="true">@SharedResource["Hello, world!"]</MudText>
     <MudText Class="mb-8">Welcome to your new app, powered by MudBlazor!</MudText>
     <MudAlert Severity="Severity.Normal">You can find documentation and examples on our website here: <MudLink Href="https://mudblazor.com" Typo="Typo.body2" Color="Color.Inherit"><b>www.mudblazor.com</b></MudLink></MudAlert>
-
+    <MudIconButton Icon="@Icons.Material.Filled.RestartAlt" Color="Color.Inherit" OnClick="RebuildIndex" Title="Rebuild Index" />
     <MudNavMenu Class="mt-4">
         <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
         <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>
@@ -16,11 +14,7 @@
     </MudNavMenu>
 </MudContainer>
 
-@code {
-
-}
-
-@* <h1>@SharedResource["Hello, world!"]</h1>
+    @* <h1>@SharedResource["Hello, world!"]</h1>
 
 Welcome to your new app.
 

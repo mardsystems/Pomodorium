@@ -56,21 +56,21 @@ public partial class Index
 
     private async Task Add()
     {
-        NavigationManager.NavigateTo($"/flows/new");
+        Navigation.NavigateTo($"/flows/new");
 
         await Task.CompletedTask;
     }
 
     private async Task Details(Guid id)
     {
-        NavigationManager.NavigateTo($"/flows/{id}");
+        Navigation.NavigateTo($"/flows/{id}");
 
         await Task.CompletedTask;
     }
 
     private async Task Continue(Guid taskId)
     {
-        NavigationManager.NavigateTo($"/flows/continuation?TaskId={taskId}");
+        Navigation.NavigateTo($"/flows/continuation?TaskId={taskId}");
 
         await Task.CompletedTask;
     }
