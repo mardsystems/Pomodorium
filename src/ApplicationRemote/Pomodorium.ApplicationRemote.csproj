@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
     <ProjectReference Include="..\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
     <ProjectReference Include="..\OfficeTimeManagement.ApplicationModel\Pomodorium.OfficeTimeManagement.ApplicationModel.csproj" />
   </ItemGroup>

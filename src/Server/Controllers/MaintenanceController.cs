@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
-using Pomodorium.Features.Timer;
+using Pomodorium.Features.Maintenance;
 
 namespace Pomodorium.Controllers;
 
@@ -10,19 +10,19 @@ namespace Pomodorium.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
-public class TimerController : ControllerBase
+public class MaintenanceController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public TimerController(IMediator mediator)
+    public MaintenanceController(IMediator mediator)
     {
         _mediator = mediator;
     }
 
-    [HttpPost("CheckTimer")]
-    public async Task<CheckTimerResponse> CheckTimer(CheckTimerRequest request)
+    [HttpPost("IndexRebuild")]
+    public async Task<IndexRebuildResponse> PostIndexRebuild(IndexRebuildRequest request)
     {
-        var response = await _mediator.Send<CheckTimerResponse>(request);
+        var response = await _mediator.Send<IndexRebuildResponse>(request);
 
         return response;
     }
