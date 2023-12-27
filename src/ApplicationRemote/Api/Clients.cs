@@ -47,14 +47,14 @@ namespace Pomodorium.Api
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<FlowtimeQueryResponse> GetFlowtimeQueryAsync(int? pageSize, int? pageIndex)
+        public virtual System.Threading.Tasks.Task<FlowtimeQueryResponse> GetFlowtimeQueryAsync(int? pageSize, int? pageIndex, System.Guid? taskId)
         {
-            return GetFlowtimeQueryAsync(pageSize, pageIndex, System.Threading.CancellationToken.None);
+            return GetFlowtimeQueryAsync(pageSize, pageIndex, taskId, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<FlowtimeQueryResponse> GetFlowtimeQueryAsync(int? pageSize, int? pageIndex, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<FlowtimeQueryResponse> GetFlowtimeQueryAsync(int? pageSize, int? pageIndex, System.Guid? taskId, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/FlowTimer/FlowtimeQuery?");
@@ -65,6 +65,10 @@ namespace Pomodorium.Api
             if (pageIndex != null)
             {
                 urlBuilder_.Append(System.Uri.EscapeDataString("PageIndex") + "=").Append(System.Uri.EscapeDataString(ConvertToString(pageIndex, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            if (taskId != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("TaskId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(taskId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
             }
             urlBuilder_.Length--;
 

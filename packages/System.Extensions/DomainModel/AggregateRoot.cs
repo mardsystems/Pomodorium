@@ -35,6 +35,8 @@ public abstract class AggregateRoot : Entity
         foreach (var e in history)
         {
             Mutate(e);
+
+            Version = e.Version;
         }
     }
 
@@ -50,7 +52,7 @@ public abstract class AggregateRoot : Entity
     {
         Mutate(e);
 
-        //Version = e.Version;
+        Version = e.Version;
     }
 
     protected void Apply(Event e)
@@ -70,7 +72,7 @@ public abstract class AggregateRoot : Entity
     {
         ((dynamic)this).When((dynamic)e);
 
-        Version = e.Version;
+        //Version = e.Version;
     }
 
     public virtual void Archive()

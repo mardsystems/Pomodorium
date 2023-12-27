@@ -16,17 +16,21 @@ public class CosmosTaskQueryItemsProjection :
     INotificationHandler<FlowtimeStarted>,
     INotificationHandler<FlowtimeInterrupted>,
     INotificationHandler<FlowtimeStopped>,
-    INotificationHandler<TaskArchivingd>
+    INotificationHandler<FlowtimeArchived>,
+    INotificationHandler<TaskArchived>
 {
     private readonly CosmosClient _cosmosClient;
 
     private readonly Container _container;
+
+    private readonly Repository _repository;
 
     private readonly ILogger<CosmosTaskQueryItemsProjection> _logger;
 
     public CosmosTaskQueryItemsProjection(
         CosmosClient cosmosClient,
         IOptions<CosmosOptions> optionsInterface,
+        Repository repository,
         ILogger<CosmosTaskQueryItemsProjection> logger)
     {
         _cosmosClient = cosmosClient;
@@ -34,6 +38,8 @@ public class CosmosTaskQueryItemsProjection :
         var options = optionsInterface.Value;
 
         _container = _cosmosClient.GetDatabase(options.Database).GetContainer("TaskQueryItems");
+        
+        _repository = repository;
 
         _logger = logger;
     }
@@ -116,6 +122,7 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
         taskQueryItem.IntegrationId = notification.IntegrationId;
         taskQueryItem.IntegrationName = notification.IntegrationName;
         taskQueryItem.ExternalReference = notification.ExternalReference;
+        taskQueryItem.Version = notification.Version;
 
         _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
@@ -138,6 +145,7 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
         var taskQueryItem = itemResponse.Resource ?? throw new EntityNotFoundException();
 
         taskQueryItem.Description = notification.TaskDescription;
+        taskQueryItem.Version = notification.Version;
 
         _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
 
@@ -222,7 +230,70 @@ AND (IS_NULL(@externalReference) = true OR p.ExternalReference = @externalRefere
         _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
-    public async System.Threading.Tasks.Task Handle(TaskArchivingd notification, CancellationToken cancellationToken)
+    public async System.Threading.Tasks.Task Handle(FlowtimeArchived notification, CancellationToken cancellationToken)
+    {
+        if (notification.TaskId == default)
+        {
+            try
+            {
+                var flowtime = await _repository.GetAggregateById<Flowtime>(notification.Id);
+
+                var flowtimeQueryItem = flowtime ?? throw new EntityNotFoundException();
+
+                var itemResponse = await _container.ReadItemAsync<TaskQueryItem>(
+                        id: flowtimeQueryItem.TaskId.ToString(),
+                        partitionKey: new PartitionKey(flowtimeQueryItem.TaskId.ToString()),
+                        cancellationToken: cancellationToken
+                    );
+
+                var taskQueryItem = itemResponse.Resource ?? throw new EntityNotFoundException();
+
+                if (flowtimeQueryItem.Worktime != null)
+                {
+                    taskQueryItem.TotalHours -= flowtimeQueryItem.Worktime.Value.TotalHours;
+                }
+
+                _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
+
+                var response = await _container.UpsertItemAsync(
+                    item: taskQueryItem,
+                    partitionKey: new PartitionKey(taskQueryItem.Id.ToString()),
+                    cancellationToken: cancellationToken);
+
+                _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
+            }
+            catch (Exception)
+            {
+                // Do nothing.
+            }
+        }
+        else
+        {
+            var itemResponse = await _container.ReadItemAsync<TaskQueryItem>(
+                    id: notification.TaskId.ToString(),
+                    partitionKey: new PartitionKey(notification.TaskId.ToString()),
+                    cancellationToken: cancellationToken
+                );
+
+            var taskQueryItem = itemResponse.Resource ?? throw new EntityNotFoundException();
+
+            if (notification.Worktime != null)
+            {
+                taskQueryItem.TotalHours -= notification.Worktime.Value.TotalHours;
+            }
+
+            _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", itemResponse.RequestCharge);
+
+            var response = await _container.UpsertItemAsync(
+                item: taskQueryItem,
+                partitionKey: new PartitionKey(notification.TaskId.ToString()),
+                cancellationToken: cancellationToken);
+
+            _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
+        }
+    }
+
+    public async System.Threading.Tasks.Task Handle(TaskArchived notification, CancellationToken cancellationToken)
     {
         var response = await _container.DeleteItemAsync<TaskQueryItem>(
             notification.TaskId.ToString(),

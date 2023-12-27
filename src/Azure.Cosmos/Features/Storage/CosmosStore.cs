@@ -107,7 +107,7 @@ public class CosmosStore : IAppendOnlyStore
 
     public async Task Append(EventRecord tapeRecord)
     {
-        var version = await GetMaxVersion(tapeRecord.Name, -1);
+        var version = await GetMaxVersion(tapeRecord.Name, EventStore.IRRELEVANT_VERSION);
 
         var @event = new EventRecord(tapeRecord.Name, version + 1, tapeRecord.Date, tapeRecord.TypeName, tapeRecord.Data);
 

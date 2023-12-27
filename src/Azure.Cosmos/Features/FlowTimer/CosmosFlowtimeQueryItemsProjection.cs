@@ -41,7 +41,9 @@ public class CosmosFlowtimeQueryItemsProjection :
         var flowtimeQueryItems = new List<FlowtimeQueryItem>();
 
         var query = new QueryDefinition(
-            query: "SELECT * FROM FlowtimeQueryItems p");
+            query: @"SELECT * FROM FlowtimeQueryItems p WHERE 1 = 1
+AND (IS_NULL(@taskId) = true OR p.TaskId = @taskId)")
+            .WithParameter("@taskId", request.TaskId);
 
         using var feed = _container.GetItemQueryIterator<FlowtimeQueryItem>(queryDefinition: query);
 

@@ -50,6 +50,7 @@
             <MudTd DataLabel="@SharedResource["External Reference"]">@context.ExternalReference</MudTd>
             <MudTd DataLabel="@SharedResource["Creation Date"]">@context.CreationDate</MudTd>
             <MudTd>
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.ArrowRight" OnClick="@(() => QueryFlows(context.Id))"></MudIconButton>
                 <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => Details(context.Id))"></MudIconButton>
                 @if (context.HasFocus == true)
                 {

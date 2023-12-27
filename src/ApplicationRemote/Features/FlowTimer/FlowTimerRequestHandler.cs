@@ -19,7 +19,7 @@ public class FlowTimerRequestHandler :
 
     public async Task<FlowtimeQueryResponse> Handle(FlowtimeQueryRequest request, CancellationToken cancellationToken)
     {
-        var response = await _client.GetFlowtimeQueryAsync(request.PageSize,request.PageIndex, cancellationToken);
+        var response = await _client.GetFlowtimeQueryAsync(request.PageSize, request.PageIndex, request.TaskId, cancellationToken);
 
         return response;
     }

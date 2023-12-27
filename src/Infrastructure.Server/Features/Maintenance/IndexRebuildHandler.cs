@@ -34,6 +34,12 @@ public class IndexRebuildHandler : IRequestHandler<IndexRebuildRequest, IndexReb
 
             var @event = EventStore.DesserializeEvent(type, eventRecord.Data);
 
+            @event.Name = eventRecord.Name;
+
+            @event.Version = eventRecord.Version;
+
+            @event.Date = eventRecord.Date;
+
             await _mediator.Publish(@event, cancellationToken);
         }
 

@@ -190,10 +190,10 @@ public class Flowtime : AggregateRoot
 
     public override void Archive()
     {
-        Apply(new FlowtimeArchived(Id));
+        Apply(new FlowtimeArchived(Id, TaskId, Worktime));
     }
 
-    public void When(FlowtimeArchived e)
+    public void When(FlowtimeArchived _)
     {
         base.Archive();
     }

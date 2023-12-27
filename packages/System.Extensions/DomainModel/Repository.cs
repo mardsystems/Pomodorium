@@ -4,7 +4,7 @@ using System.DomainModel.Storage;
 
 namespace System.DomainModel;
 
-public class Repository    
+public class Repository
 {
     private readonly EventStore _eventStore;
 
@@ -61,6 +61,8 @@ public class Repository
         try
         {
             await _eventStore.AppendToStream(aggregate.Id, originalVersion, aggregate.Changes.ToArray());
+
+            aggregate.Version = originalVersion + aggregate.Changes.Count;
         }
         catch (EventStoreConcurrencyException ex)
         {
@@ -79,7 +81,7 @@ public class Repository
 
             await _eventStore.AppendToStream(aggregate.Id, ex.StoreVersion, aggregate.Changes.ToArray());
 
-            aggregate.Version = ex.StoreVersion;
+            aggregate.Version = ex.StoreVersion + aggregate.Changes.Count;
         }
 
         foreach (var @event in aggregate.Changes)

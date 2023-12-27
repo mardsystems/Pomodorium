@@ -19,6 +19,10 @@ public partial class Index
 
     private HashSet<IndexViewModel.Item> _selectedItems = new();
 
+    [Parameter]
+    [SupplyParameterFromQuery]
+    public Guid? TaskId { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         _model.ItemsChanged.Subscribe((x) =>
@@ -45,7 +49,10 @@ public partial class Index
     {
         _loading = true;
 
-        var request = new FlowtimeQueryRequest();
+        var request = new FlowtimeQueryRequest()
+        {
+            TaskId = TaskId
+        };
 
         var response = await Mediator.Send<FlowtimeQueryResponse>(request);
 

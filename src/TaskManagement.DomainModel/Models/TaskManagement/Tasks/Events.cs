@@ -52,6 +52,7 @@ public class TaskDescriptionChanged : Event
 }
 
 [DataContract]
+[Obsolete("Use TaskArchived", true)]
 public class TaskArchivingd : Event
 {
     [DataMember(Order = 1)]
@@ -65,15 +66,15 @@ public class TaskArchivingd : Event
     private TaskArchivingd() { }
 }
 
-[DataContract]
+[DataContract(Name = "TaskArchivingd")]
 public class TaskArchived : Event
 {
     [DataMember(Order = 1)]
-    public Guid Id { get; private set; }
+    public Guid TaskId { get; private set; }
 
-    public TaskArchived(Guid id)
+    public TaskArchived(Guid taskId)
     {
-        Id = id;
+        TaskId = taskId;
     }
 
     private TaskArchived() { }
