@@ -54,7 +54,7 @@ public class MemoryStore : IAppendOnlyStore
         return await Task.FromResult(events);
     }
 
-    public async Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
+    public async Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = EventStore.IRRELEVANT_VERSION)
     {
         var version = await GetMaxVersion(name, expectedVersion);
 
@@ -100,6 +100,6 @@ public class MemoryStore : IAppendOnlyStore
 
     public void Dispose()
     {
-
+        GC.SuppressFinalize(this);
     }
 }

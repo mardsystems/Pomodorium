@@ -1,27 +1,49 @@
-﻿namespace Pomodorium.Features.TaskManager;
+﻿using Microsoft.Extensions.Logging;
+using System.ApplicationModel;
+
+namespace Pomodorium.Features.TaskManager;
 
 public class TaskArchivingHandler : IRequestHandler<TaskArchivingRequest, TaskArchivingResponse>
 {
+    private readonly IUnitOfWork _unitOfWork;
+
     private readonly Repository _repository;
 
-    public TaskArchivingHandler(Repository repository)
+    private readonly ILogger<TaskArchivingHandler> _logger;
+    
+    public TaskArchivingHandler(IUnitOfWork unitOfWork, Repository repository, ILogger<TaskArchivingHandler> logger)
     {
+        _unitOfWork = unitOfWork;
         _repository = repository;
+        _logger = logger;
     }
 
     public async Task<TaskArchivingResponse> Handle(TaskArchivingRequest request, CancellationToken cancellationToken)
     {
-        var task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId) ?? throw new EntityNotFoundException();
+        var transaction = _unitOfWork.BeginTransactionFor(request, _logger);
 
-        task.Archive();
-
-        await _repository.Save(task, request.TaskVersion ?? -1);
-
-        var response = new TaskArchivingResponse(request.GetCorrelationId())
+        try
         {
-            TaskVersion = task.Version
-        };
+            var task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId) ?? throw new EntityNotFoundException();
 
-        return response;
+            task.Archive();
+
+            await _repository.Save(task, request.TaskVersion ?? -1);
+
+            transaction.Commit();
+
+            var response = new TaskArchivingResponse(request.GetCorrelationId())
+            {
+                TaskVersion = task.Version
+            };
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback(ex);
+
+            throw;
+        }
     }
 }

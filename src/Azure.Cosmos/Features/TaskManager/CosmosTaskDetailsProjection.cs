@@ -10,7 +10,7 @@ public class CosmosTaskDetailsProjection :
     IRequestHandler<TaskDetailsRequest, TaskDetailsResponse>,
     INotificationHandler<TaskCreated>,
     INotificationHandler<TaskDescriptionChanged>,
-    INotificationHandler<TaskArchivingd>
+    INotificationHandler<TaskArchived>
 {
     private readonly CosmosClient _cosmosClient;
 
@@ -102,7 +102,7 @@ public class CosmosTaskDetailsProjection :
         _logger.LogInformation("Request charge:\t{RequestCharge:0.00}", response.RequestCharge);
     }
 
-    public async System.Threading.Tasks.Task Handle(TaskArchivingd notification, CancellationToken cancellationToken)
+    public async System.Threading.Tasks.Task Handle(TaskArchived notification, CancellationToken cancellationToken)
     {
         var response = await _container.DeleteItemAsync<TaskDetails>(
             notification.TaskId.ToString(),

@@ -30,24 +30,9 @@ public class MongoDBStore : IAppendOnlyStore
 
     public async Task<IEnumerable<EventRecord>> ReadRecords(long maxCount)
     {
-        int count;
-
-        if (maxCount > int.MaxValue)
-        {
-            count = int.MaxValue;
-        }
-        else
-        {
-            count = (int)maxCount;
-        }
-
         var builder = Builders<EventRecord>.Filter;
 
         var filter = builder.Empty;
-
-        //var sort = Builders<EventRecord>.Sort
-        //    .Ascending(x => x.Name)
-        //    .Ascending(x => x.Version);
 
         var events = await _mongoCollection.Find(filter).ToListAsync();
 
@@ -87,7 +72,7 @@ public class MongoDBStore : IAppendOnlyStore
         }
     }
 
-    public async Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
+    public async Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = EventStore.IRRELEVANT_VERSION)
     {
         var version = await GetMaxVersion(name, expectedVersion);
 
@@ -156,6 +141,6 @@ public class MongoDBStore : IAppendOnlyStore
 
     public void Dispose()
     {
-
+        GC.SuppressFinalize(this);
     }
 }

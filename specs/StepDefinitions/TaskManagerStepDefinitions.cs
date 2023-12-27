@@ -7,70 +7,101 @@ namespace Pomodorium.StepDefinitions;
 [Binding]
 public class TaskManagerStepDefinitions
 {
+    private readonly ScenarioContext _scenario;
+
     private readonly TaskManagerApiDriver _taskManagerApiDriver;
 
-    private Guid _taskId;
-
-    private string _taskDescription;
-
-    private long _taskVersion;
-
-    public TaskManagerStepDefinitions(TaskManagerApiDriver taskManagerApiDriver)
+    public TaskManagerStepDefinitions(ScenarioContext scenario, TaskManagerApiDriver taskManagerApiDriver)
     {
+        _scenario = scenario;
+
         _taskManagerApiDriver = taskManagerApiDriver;
     }
 
-    [Given(@"that there is any customer")]
-    public void GivenThatThereIsAnyCustomer()
+    [Given(@"User starts a task registration")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
+    public void GivenUserStartsATaskRegistration()
+    {
+        
+    }
+
+    [Given(@"User inputs task description as '([^']*)'")]
+    public void GivenUserInputsTaskAsDescription(string description)
+    {
+        _scenario["Description"] = description;
+    }
+
+    [When(@"User register task")]
+    public void WhenUserRegisterTask()
+    {
+        var description = (string)_scenario["Description"];
+
+        var request = new TaskRegistrationRequest
+        {
+            Description = description
+        };
+
+        var response = _taskManagerApiDriver.CreateTaskAction.Perform(request);
+
+        _scenario["TaskId"] = response.TaskId;
+
+        _scenario["TaskVersion"] = response.TaskVersion;
+    }
+
+    [Then(@"System should create a task as expected")]
+    public void ThenSystemShouldCreateATaskAsExpected()
+    {
+        var taskId = (Guid)_scenario["TaskId"];
+
+        var task = _taskManagerApiDriver.GetTaskAction.Perform(new TaskDetailsRequest(taskId)).TaskDetails;
+
+        var description = (string)_scenario["Description"];
+
+        task.Description.Should().Be(description);
+    }
+
+    [Given(@"User starts a change task description")]
+    public void GivenUserStartsAChangeTaskDescription()
     {
         var request = TaskManagerStubs.CreateTask();
 
         var response = _taskManagerApiDriver.CreateTaskAction.Perform(request, true);
 
-        _taskId = response.TaskId;
+        _scenario["TaskId"] = response.TaskId;
 
-        _taskVersion = response.TaskVersion;
+        _scenario["TaskVersion"] = response.TaskVersion;
     }
 
-    [When(@"Programmer registers a task '([^']*)'")]
-    public void WhenProgrammerRegistersATask(string description)
+    [When(@"User change task description")]
+    public void WhenUserChangeTaskDescription()
     {
-        _taskDescription = description;
+        var taskId = (Guid)_scenario["TaskId"];
 
-        var request = new TaskRegistrationRequest
-        {
-            Description = _taskDescription
-        };
+        var description = (string)_scenario["Description"];
 
-        var response = _taskManagerApiDriver.CreateTaskAction.Perform(request);
-
-        _taskId = response.TaskId;
-
-        _taskVersion = response.TaskVersion;
-    }
-
-    [When(@"Programmer change a task to '([^']*)'")]
-    public void WhenProgrammerChangeATaskTo(string description)
-    {
-        _taskDescription = description;
+        var taskVersion = (long)_scenario["TaskVersion"];
 
         var request = new TaskDescriptionChangeRequest
         {
-            TaskId = _taskId,
-            Description = _taskDescription,
-            TaskVersion = _taskVersion
+            TaskId = taskId,
+            Description = description,
+            TaskVersion = taskVersion
         };
 
         var response = _taskManagerApiDriver.ChangeTaskDescriptionAction.Perform(request);
 
-        _taskVersion = response.TaskVersion;
+        _scenario["TaskVersion"] = response.TaskVersion;
     }
 
-    [Then(@"the task should be registered as expected")]
-    public void ThenTheTaskShouldBeRegisteredAsExpected()
+    [Then(@"System should change task description as expected")]
+    public void ThenSystemShouldChangeTaskDescriptionAsExpected()
     {
-        var task = _taskManagerApiDriver.GetTaskAction.Perform(new TaskDetailsRequest(_taskId)).TaskDetails;
+        var taskId = (Guid)_scenario["TaskId"];
 
-        task.Description.Should().Be(_taskDescription);
+        var task = _taskManagerApiDriver.GetTaskAction.Perform(new TaskDetailsRequest(taskId)).TaskDetails;
+
+        var description = (string)_scenario["Description"];
+
+        task.Description.Should().Be(description);
     }
 }

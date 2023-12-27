@@ -1,4 +1,5 @@
 using Pomodorium.Enums;
+using System.DomainModel;
 
 namespace Pomodorium.Models.FlowtimeTechnique;
 
@@ -14,6 +15,8 @@ public abstract class FlowtimeUnitTest : UnitTest
 
     public Flowtime Flowtime { get; set; } = default!;
 
+    public AuditInterface AuditInterface { get; set; }
+
     public abstract class OnCreateNewFlowtime : FlowtimeUnitTest
     {
         public override void Act()
@@ -27,7 +30,9 @@ public abstract class FlowtimeUnitTest : UnitTest
             {
                 Id = Guid.NewGuid();
 
-                Task = new TaskManagement.Tasks.Task("Test");
+                AuditInterface = new DefaultAudit();
+
+                Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
             }
 
             [Fact]
@@ -50,6 +55,8 @@ public abstract class FlowtimeUnitTest : UnitTest
             protected override void Arrange()
             {
                 Id = Guid.NewGuid();
+
+                AuditInterface = new DefaultAudit();
 
                 Task = null;
 
@@ -84,7 +91,11 @@ public abstract class FlowtimeUnitTest : UnitTest
         {
             protected override void Arrange()
             {
-                Task = new TaskManagement.Tasks.Task("Test");
+                Id = Guid.NewGuid();
+
+                AuditInterface = new DefaultAudit();
+
+                Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
                 StartDateTime = DateTime.Now;
 
@@ -129,7 +140,11 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             protected override void Arrange()
             {
-                Task = new TaskManagement.Tasks.Task("Test");
+                Id = Guid.NewGuid();
+
+                AuditInterface = new DefaultAudit();
+
+                Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
                 Flowtime = new Flowtime(Task);
 
@@ -177,7 +192,11 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             protected override void Arrange()
             {
-                Task = new TaskManagement.Tasks.Task("Test");
+                Id = Guid.NewGuid();
+
+                AuditInterface = new DefaultAudit();
+
+                Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
                 Flowtime = new Flowtime(Task);
 
@@ -225,7 +244,11 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             protected override void Arrange()
             {
-                Task = new TaskManagement.Tasks.Task("Test");
+                Id = Guid.NewGuid();
+
+                AuditInterface = new DefaultAudit();
+
+                Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
                 Flowtime = new Flowtime(Task);
 
@@ -273,7 +296,11 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             protected override void Arrange()
             {
-                Task = new TaskManagement.Tasks.Task("Test");
+                Id = Guid.NewGuid();
+
+                AuditInterface = new DefaultAudit();
+
+                Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
                 Flowtime = new Flowtime(Task);
 
@@ -329,7 +356,11 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             protected override void Arrange()
             {
-                Task = new TaskManagement.Tasks.Task("Test");
+                Id = Guid.NewGuid();
+
+                AuditInterface = new DefaultAudit();
+
+                Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
                 Flowtime = new Flowtime(Task);
 
@@ -377,7 +408,11 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             protected override void Arrange()
             {
-                Task = new TaskManagement.Tasks.Task("Test");
+                Id = Guid.NewGuid();
+
+                AuditInterface = new DefaultAudit();
+
+                Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
                 Flowtime = new Flowtime(Task);
 
@@ -425,7 +460,11 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             protected override void Arrange()
             {
-                Task = new TaskManagement.Tasks.Task("Test");
+                Id = Guid.NewGuid();
+
+                AuditInterface = new DefaultAudit();
+
+                Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
                 Flowtime = new Flowtime(Task);
 
@@ -473,7 +512,11 @@ public abstract class FlowtimeUnitTest : UnitTest
 
             protected override void Arrange()
             {
-                Task = new TaskManagement.Tasks.Task("Test");
+                Id = Guid.NewGuid();
+
+                AuditInterface = new DefaultAudit();
+
+                Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
                 Flowtime = new Flowtime(Task);
 

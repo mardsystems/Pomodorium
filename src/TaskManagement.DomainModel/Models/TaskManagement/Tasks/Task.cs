@@ -4,19 +4,22 @@ public class Task : AggregateRoot
 {
     public string Description { get; private set; } = default!;
 
-    public Task(string description)
+    public Task(Guid id, string description, AuditInterface auditInterface)
+        : base(id, auditInterface)
     {
         if (description == null)
         {
             throw new ArgumentNullException(nameof(description));
         }
 
-        Apply(new TaskCreated(Id, DateTime.Now, description));
+        Apply(new TaskCreated(Id, auditInterface, description));
     }
 
     public void When(TaskCreated e)
     {
         Id = e.TaskId;
+
+        UserId = e.UserId;
 
         CreationDate = e.TaskCreatedAt;
 
@@ -38,7 +41,7 @@ public class Task : AggregateRoot
         Apply(new TaskArchived(Id));
     }
 
-    public void When(TaskArchived e)
+    public void When(TaskArchived _)
     {
         base.Archive();
     }

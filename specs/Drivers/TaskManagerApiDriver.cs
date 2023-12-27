@@ -11,6 +11,8 @@ public class TaskManagerApiDriver
 
     public ActionAttempt<TaskDescriptionChangeRequest, TaskDescriptionChangeResponse> ChangeTaskDescriptionAction { get; }
 
+    public ActionAttempt<TaskQueryRequest, TaskQueryResponse> QueryTasksAction { get; }
+
     public ActionAttempt<TaskDetailsRequest, TaskDetailsResponse> GetTaskAction { get; }
 
     public ActionAttempt<TaskArchivingRequest, TaskArchivingResponse> ArchiveTaskAction { get; }
@@ -22,6 +24,10 @@ public class TaskManagerApiDriver
         CreateTaskAction = actionAttemptFactory.CreateWithStatusCheck<TaskRegistrationRequest, TaskRegistrationResponse>(
             nameof(CreateTaskAction),
             request => _webApi.ExecutePost<TaskRegistrationResponse>("api/TaskManager/TaskRegistration", request));
+
+        QueryTasksAction = actionAttemptFactory.CreateWithStatusCheck<TaskQueryRequest, TaskQueryResponse>(
+            nameof(QueryTasksAction),
+            request => _webApi.ExecuteGet<TaskQueryResponse>($"/api/TaskManager/TaskQuery"));
 
         GetTaskAction = actionAttemptFactory.CreateWithStatusCheck<TaskDetailsRequest, TaskDetailsResponse>(
             nameof(GetTaskAction),

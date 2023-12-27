@@ -88,6 +88,13 @@ public partial class Index
         _loading = false;
     }
 
+    private async Task QueryFlows(Guid id)
+    {
+        Navigation.NavigateTo($"/flows?taskId={id}");
+
+        await Task.CompletedTask;
+    }
+
     private async Task Details(Guid id)
     {
         Navigation.NavigateTo($"/tasks/{id}");

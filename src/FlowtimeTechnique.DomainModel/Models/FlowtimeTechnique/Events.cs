@@ -179,9 +179,17 @@ public class FlowtimeArchived : Event
     [DataMember(Order = 1)]
     public Guid Id { get; private set; }
 
-    public FlowtimeArchived(Guid id)
+    [DataMember(Order = 2)]
+    public Guid TaskId { get; private set; }
+
+    [DataMember(Order = 3)]
+    public TimeSpan? Worktime { get; private set; }
+
+    public FlowtimeArchived(Guid id, Guid taskId, TimeSpan? worktime)
     {
         Id = id;
+        TaskId = taskId;
+        Worktime = worktime;
     }
 
     private FlowtimeArchived() { }

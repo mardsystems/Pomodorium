@@ -29,21 +29,6 @@ public class CosmosStore : IAppendOnlyStore
 
     public async Task<IEnumerable<EventRecord>> ReadRecords(long maxCount)
     {
-        int count;
-
-        if (maxCount > int.MaxValue)
-        {
-            count = int.MaxValue;
-        }
-        else
-        {
-            count = (int)maxCount;
-        }
-
-        //var sort = Builders<EventRecord>.Sort
-        //    .Ascending(x => x.Name)
-        //    .Ascending(x => x.Version);
-
         var query = new QueryDefinition(
             query: "SELECT * FROM EventStore e");
 
@@ -72,17 +57,6 @@ public class CosmosStore : IAppendOnlyStore
 
     public async Task<IEnumerable<EventRecord>> ReadRecords(string name, long afterVersion, long maxCount)
     {
-        int count;
-
-        if (maxCount > int.MaxValue)
-        {
-            count = int.MaxValue;
-        }
-        else
-        {
-            count = (int)maxCount;
-        }
-
         var query = new QueryDefinition(
             query: "SELECT * FROM EventStore e WHERE e.Name = @name AND e.Version > @afterVersion ORDER BY e.Version")
             .WithParameter("@name", name)
@@ -90,8 +64,6 @@ public class CosmosStore : IAppendOnlyStore
 
         try
         {
-            //var events = await _container.Find(filter).Sort(sort).ToListAsync();
-
             using FeedIterator<EventRecord> feed = _container.GetItemQueryIterator<EventRecord>(
                 queryDefinition: query
             );
@@ -122,7 +94,7 @@ public class CosmosStore : IAppendOnlyStore
         }
     }
 
-    public async Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
+    public async Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = EventStore.IRRELEVANT_VERSION)
     {
         var version = await GetMaxVersion(name, expectedVersion);
 
@@ -135,7 +107,7 @@ public class CosmosStore : IAppendOnlyStore
 
     public async Task Append(EventRecord tapeRecord)
     {
-        var version = await GetMaxVersion(tapeRecord.Name, -1);
+        var version = await GetMaxVersion(tapeRecord.Name, EventStore.IRRELEVANT_VERSION);
 
         var @event = new EventRecord(tapeRecord.Name, version + 1, tapeRecord.Date, tapeRecord.TypeName, tapeRecord.Data);
 
@@ -173,7 +145,7 @@ public class CosmosStore : IAppendOnlyStore
                 requestCharge += response.RequestCharge;
             }
 
-            version = versions.Select(x => x.MaxVersion).FirstOrDefault();
+            version = versions.Select(x => x.MaxVersion).FirstOrDefault(EventStore.IRRELEVANT_VERSION);
         }
         catch (Exception)
         {
@@ -204,7 +176,7 @@ public class CosmosStore : IAppendOnlyStore
 
     public void Dispose()
     {
-
+        GC.SuppressFinalize(this);
     }
 }
 

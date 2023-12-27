@@ -1,13 +1,15 @@
 ﻿Feature: Task Manager
 
-Rule: Task name should be at least 2 characters
+Rule: Task description should be at least 2 characters
 
-Scenario: Task registration with description longer than 1 character
-	When Programmer registers a task 'Todo it'
-	Then the task should be registered as expected
+Scenario: User registers task with description longer than 1 character
+	Given User starts a task registration
+	And User inputs task description as 'Todo it'
+	When User register task
+	Then System should create a task as expected
 
-@wip
-Scenario: Change task description with longer than 1 character
-	Given that there is any customer
-	When Programmer change a task to 'Todo it'
-	Then the task should be registered as expected
+Scenario: User changes task description with longer than 1 character
+	Given User starts a change task description
+	And User inputs task description as 'Todo changed'
+	When User change task description
+	Then System should change task description as expected

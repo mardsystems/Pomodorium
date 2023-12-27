@@ -4,29 +4,29 @@ public abstract class AggregateRoot : Entity
 {
     public Guid Id { get; protected set; }
 
-    public string UserId { get; private set; } = default!;
-
-    public bool Archived { get; private set; }
+    public string UserId { get; protected set; } = default!;
 
     public DateTime CreationDate { get; protected set; }
+
+    public bool Archived { get; private set; }
 
     public long Version { get; internal set; }
 
     public ICollection<Event> Changes { get; private set; }
 
-    //public AggregateRoot(Guid id, string userId)
-    //{
-    //    Id = id;
+    protected AggregateRoot(Guid id, AuditInterface auditInterface)
+    {
+        Id = id;
 
-    //    UserId = userId;
+        UserId = auditInterface.GetUserId();
 
-    //    Changes = new HashSet<Event>();
-    //}
+        CreationDate = auditInterface.GetCreationDate();
+
+        Changes = new HashSet<Event>();
+    }
 
     protected AggregateRoot()
     {
-        Id = Guid.NewGuid();
-
         Changes = new HashSet<Event>();
     }
 
@@ -35,6 +35,8 @@ public abstract class AggregateRoot : Entity
         foreach (var e in history)
         {
             Mutate(e);
+
+            Version = e.Version;
         }
     }
 
@@ -50,7 +52,7 @@ public abstract class AggregateRoot : Entity
     {
         Mutate(e);
 
-        //Version = e.Version;
+        Version = e.Version;
     }
 
     protected void Apply(Event e)
@@ -70,7 +72,7 @@ public abstract class AggregateRoot : Entity
     {
         ((dynamic)this).When((dynamic)e);
 
-        Version = e.Version;
+        //Version = e.Version;
     }
 
     public virtual void Archive()

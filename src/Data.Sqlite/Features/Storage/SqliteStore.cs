@@ -110,7 +110,7 @@ LIMIT 0, @take
         return records;
     }
 
-    public async Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
+    public async Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = EventStore.IRRELEVANT_VERSION)
     {
         using var connection = new SqliteConnection(_connectionString);
 

@@ -19,7 +19,7 @@ public class ActivityCreationHandler : IRequestHandler<ActivityCreationRequest, 
             request.StopDateTime,
             request.Description);
 
-        await _repository.Save(activity, -1);
+        await _repository.Save(activity);
 
         var response = new ActivityCreationResponse(request.GetCorrelationId());
 
