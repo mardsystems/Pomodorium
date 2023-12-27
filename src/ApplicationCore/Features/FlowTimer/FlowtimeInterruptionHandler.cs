@@ -1,31 +1,52 @@
-﻿using Pomodorium.Models.FlowtimeTechnique;
+﻿using Microsoft.Extensions.Logging;
+using Pomodorium.Models.FlowtimeTechnique;
+using System.ApplicationModel;
 
 namespace Pomodorium.Features.FlowTimer;
 
 public class FlowtimeInterruptionHandler : IRequestHandler<FlowtimeInterruptionRequest, FlowtimeInterruptionResponse>
 {
+    private readonly IUnitOfWork _unitOfWork;
+
     private readonly Repository _repository;
 
-    public FlowtimeInterruptionHandler(Repository repository)
+    private readonly ILogger<FlowtimeInterruptionHandler> _logger;
+
+    public FlowtimeInterruptionHandler(IUnitOfWork unitOfWork, Repository repository, ILogger<FlowtimeInterruptionHandler> logger)
     {
+        _unitOfWork = unitOfWork;
         _repository = repository;
+        _logger = logger;
     }
 
     public async Task<FlowtimeInterruptionResponse> Handle(FlowtimeInterruptionRequest request, CancellationToken cancellationToken)
     {
-        var flowtime = await _repository.GetAggregateById<Flowtime>(request.FlowtimeId) ?? throw new EntityNotFoundException();
+        var transaction = _unitOfWork.BeginTransactionFor(request, _logger);
 
-        var now = DateTime.Now;
-
-        flowtime.Interrupt(now);
-
-        await _repository.Save(flowtime, request.FlowtimeVersion ?? -1);
-
-        var response = new FlowtimeInterruptionResponse(request.GetCorrelationId())
+        try
         {
-            FlowtimeVersion = flowtime.Version
-        };
+            var flowtime = await _repository.GetAggregateById<Flowtime>(request.FlowtimeId) ?? throw new EntityNotFoundException();
 
-        return response;
+            var now = DateTime.Now;
+
+            flowtime.Interrupt(now);
+
+            await _repository.Save(flowtime, request.FlowtimeVersion ?? -1);
+
+            transaction.Commit();
+
+            var response = new FlowtimeInterruptionResponse(request.GetCorrelationId())
+            {
+                FlowtimeVersion = flowtime.Version
+            };
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback(ex);
+
+            throw;
+        }
     }
 }

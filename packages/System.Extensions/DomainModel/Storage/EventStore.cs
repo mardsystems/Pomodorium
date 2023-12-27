@@ -5,6 +5,8 @@ namespace System.DomainModel.Storage;
 
 public class EventStore
 {
+    public const long IRRELEVANT_VERSION = -1;
+
     private readonly IAppendOnlyStore _appendOnlyStore;
 
     private readonly IMediator _mediator;
@@ -24,12 +26,7 @@ public class EventStore
 
         foreach (var tapeRecord in records)
         {
-            var type = Type.GetType(tapeRecord.TypeName);
-
-            if (type == null)
-            {
-                throw new InvalidOperationException();
-            }
+            var type = Type.GetType(tapeRecord.TypeName) ?? throw new InvalidOperationException();
 
             var @event = DesserializeEvent(type, tapeRecord.Data);
 
@@ -53,12 +50,7 @@ public class EventStore
 
         foreach (var tapeRecord in records)
         {
-            var type = Type.GetType(tapeRecord.TypeName);
-
-            if (type == null)
-            {
-                throw new InvalidOperationException();
-            }
+            var type = Type.GetType(tapeRecord.TypeName) ?? throw new InvalidOperationException();
 
             var @event = DesserializeEvent(type, tapeRecord.Data);
 
@@ -74,20 +66,19 @@ public class EventStore
 
     public static Event DesserializeEvent(Type type, byte[] data)
     {
-        using (var stream = new MemoryStream(data))
+        using var stream = new MemoryStream(data);
+
+        try
         {
-            try
-            {
-                var eventData = Serializer.Deserialize(type, stream);
+            var eventData = Serializer.Deserialize(type, stream);
 
-                var @event = (Event)eventData;
+            var @event = (Event)eventData;
 
-                return @event;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            return @event;
+        }
+        catch (Exception)
+        {
+            throw;
         }
     }
 
@@ -112,12 +103,7 @@ public class EventStore
 
             try
             {
-                var type = @event.GetType();
-
-                if (type == null)
-                {
-                    throw new InvalidOperationException();
-                }
+                var type = @event.GetType() ?? throw new InvalidOperationException();
 
                 if (type.AssemblyQualifiedName == null)
                 {
@@ -145,18 +131,17 @@ public class EventStore
 
     public static byte[] SerializeEvent(Event @event)
     {
-        using (var stream = new MemoryStream())
-        {
-            try
-            {
-                Serializer.Serialize(stream, @event);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+        using var stream = new MemoryStream();
 
-            return stream.ToArray();
+        try
+        {
+            Serializer.Serialize(stream, @event);
         }
+        catch (Exception)
+        {
+            throw;
+        }
+
+        return stream.ToArray();
     }
 }

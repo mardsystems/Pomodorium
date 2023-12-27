@@ -1,14 +1,18 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using Pomodorium.Features.TaskManager;
 using Pomodorium.Integrations.TFS;
 using Pomodorium.Models.TaskManagement.Integrations;
 using Pomodorium.Repositories;
+using System.ApplicationModel;
 using System.DomainModel;
 
 namespace Pomodorium.Features.TaskSynchronizer;
 
 public class TaskSyncFromTfsHandler : IRequestHandler<TaskSyncFromTfsRequest, TaskSyncFromTfsResponse>
 {
+    private readonly IUnitOfWork _unitOfWork;
+
     private readonly IMediator _mediator;
 
     private readonly ITfsIntegrationRepository _tfsIntegrationRepository;
@@ -17,75 +21,91 @@ public class TaskSyncFromTfsHandler : IRequestHandler<TaskSyncFromTfsRequest, Ta
 
     private readonly Repository _repository;
 
+    private readonly ILogger<TaskSyncFromTfsHandler> _logger;
+
     public TaskSyncFromTfsHandler(
+        IUnitOfWork unitOfWork,
         IMediator mediator,
         ITfsIntegrationRepository tfsIntegrationRepository,
         Repository repository,
-        WorkItemAdapter workItemAdapter)
+        WorkItemAdapter workItemAdapter,
+        ILogger<TaskSyncFromTfsHandler> logger)
     {
+        _unitOfWork = unitOfWork;
         _mediator = mediator;
-
         _tfsIntegrationRepository = tfsIntegrationRepository;
-
         _repository = repository;
-
         _workItemAdapter = workItemAdapter;
+        _logger = logger;
     }
 
     public async Task<TaskSyncFromTfsResponse> Handle(TaskSyncFromTfsRequest request, CancellationToken cancellationToken)
     {
-        var tfsIntegrationList = await _tfsIntegrationRepository.GetTfsIntegrationList(cancellationToken: cancellationToken);
+        var transaction = _unitOfWork.BeginTransactionFor(request, _logger);
 
-        foreach (var tfsIntegration in tfsIntegrationList)
+        try
         {
-            var taskInfoList = await _workItemAdapter.GetTaskInfoList(tfsIntegration).ConfigureAwait(false);
+            var tfsIntegrationList = await _tfsIntegrationRepository.GetTfsIntegrationList(cancellationToken: cancellationToken);
 
-            foreach (var taskInfo in taskInfoList)
+            foreach (var tfsIntegration in tfsIntegrationList)
             {
-                var getTasksRequest = new TaskQueryRequest
+                var taskInfoList = await _workItemAdapter.GetTaskInfoList(tfsIntegration).ConfigureAwait(false);
+
+                foreach (var taskInfo in taskInfoList)
                 {
-                    ExternalReference = taskInfo.Reference
-                };
-
-                var getTasksResponse = await _mediator.Send<TaskQueryResponse>(getTasksRequest, cancellationToken);
-
-                var taskQueryItem = getTasksResponse.TaskQueryItems.FirstOrDefault();
-
-                Models.TaskManagement.Tasks.Task task;
-
-                if (taskQueryItem == default)
-                {
-                    task = new Models.TaskManagement.Tasks.Task(taskInfo.Name);
-                }
-                else
-                {
-                    var taskExisting = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(taskQueryItem.Id);
-
-                    if (taskExisting == null)
+                    var getTasksRequest = new TaskQueryRequest
                     {
-                        task = new Models.TaskManagement.Tasks.Task(taskInfo.Name);
+                        ExternalReference = taskInfo.Reference
+                    };
+
+                    var getTasksResponse = await _mediator.Send<TaskQueryResponse>(getTasksRequest, cancellationToken);
+
+                    var taskQueryItem = getTasksResponse.TaskQueryItems.FirstOrDefault();
+
+                    Models.TaskManagement.Tasks.Task task;
+
+                    if (taskQueryItem == default)
+                    {
+                        task = new Models.TaskManagement.Tasks.Task(transaction.CorrelationId, taskInfo.Name, transaction);
                     }
                     else
                     {
-                        task = taskExisting;
+                        var taskExisting = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(taskQueryItem.Id);
 
-                        if (task.Description != taskInfo.Name)
+                        if (taskExisting == null)
                         {
-                            task.ChangeDescription(taskInfo.Name);
+                            task = new Models.TaskManagement.Tasks.Task(transaction.CorrelationId, taskInfo.Name, transaction);
+                        }
+                        else
+                        {
+                            task = taskExisting;
+
+                            if (task.Description != taskInfo.Name)
+                            {
+                                task.ChangeDescription(taskInfo.Name);
+                            }
                         }
                     }
+
+                    await _repository.Save(task);
+
+                    var taskIntegration = new TaskIntegration(task, taskInfo);
+
+                    await _repository.Save(taskIntegration);
                 }
-
-                await _repository.Save(task, -1);
-
-                var taskIntegration = new TaskIntegration(task, taskInfo);
-
-                await _repository.Save(taskIntegration, -1);
             }
+
+            transaction.Commit();
+
+            var response = new TaskSyncFromTfsResponse(request.GetCorrelationId());
+
+            return response;
         }
+        catch (Exception ex)
+        {
+            transaction.Rollback(ex);
 
-        var response = new TaskSyncFromTfsResponse(request.GetCorrelationId());
-
-        return response;
+            throw;
+        }
     }
 }

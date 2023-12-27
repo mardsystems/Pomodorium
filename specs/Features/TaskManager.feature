@@ -8,7 +8,6 @@ Scenario: User registers task with description longer than 1 character
 	When User register task
 	Then System should create a task as expected
 
-@wip
 Scenario: User changes task description with longer than 1 character
 	Given User starts a change task description
 	And User inputs task description as 'Todo changed'

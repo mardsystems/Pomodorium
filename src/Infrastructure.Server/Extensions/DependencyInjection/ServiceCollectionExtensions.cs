@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.ApplicationModel;
 using System.Reflection;
 
 namespace Pomodorium.Extensions.DependencyInjection;
@@ -9,6 +10,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddServerInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSharedInfrastructure();
+
+        services.AddTransient<IUnitOfWork, DefaultUnitOfWork>();
 
         services.AddCosmos(configuration);
 

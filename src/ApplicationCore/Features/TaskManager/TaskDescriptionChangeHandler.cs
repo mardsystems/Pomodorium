@@ -1,27 +1,49 @@
-﻿namespace Pomodorium.Features.TaskManager;
+﻿using Microsoft.Extensions.Logging;
+using System.ApplicationModel;
+
+namespace Pomodorium.Features.TaskManager;
 
 public class TaskDescriptionChangeHandler : IRequestHandler<TaskDescriptionChangeRequest, TaskDescriptionChangeResponse>
 {
+    private readonly IUnitOfWork _unitOfWork;
+
     private readonly Repository _repository;
 
-    public TaskDescriptionChangeHandler(Repository repository)
+    private readonly ILogger<TaskDescriptionChangeHandler> _logger;
+    
+    public TaskDescriptionChangeHandler(IUnitOfWork unitOfWork, Repository repository, ILogger<TaskDescriptionChangeHandler> logger)
     {
+        _unitOfWork = unitOfWork;
         _repository = repository;
+        _logger = logger;
     }
 
     public async Task<TaskDescriptionChangeResponse> Handle(TaskDescriptionChangeRequest request, CancellationToken cancellationToken)
     {
-        var task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId) ?? throw new EntityNotFoundException();
+        var transaction = _unitOfWork.BeginTransactionFor(request, _logger);
 
-        task.ChangeDescription(request.Description);
-
-        await _repository.Save(task, request.TaskVersion ?? -1);
-
-        var response = new TaskDescriptionChangeResponse(request.GetCorrelationId())
+        try
         {
-            TaskVersion = task.Version
-        };
+            var task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId) ?? throw new EntityNotFoundException();
 
-        return response;
+            task.ChangeDescription(request.Description);
+
+            await _repository.Save(task, request.TaskVersion ?? -1);
+
+            transaction.Commit();
+
+            var response = new TaskDescriptionChangeResponse(request.GetCorrelationId())
+            {
+                TaskVersion = task.Version
+            };
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback(ex);
+
+            throw;
+        }
     }
 }

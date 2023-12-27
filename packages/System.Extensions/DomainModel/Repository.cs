@@ -46,7 +46,7 @@ public class Repository
     public async Task<TAggregate> GetAggregateById<TAggregate>(Guid id)
         where TAggregate : AggregateRoot, new()
     {
-        var events = await _eventStore.GetEventsForAggregate(id, 0, long.MaxValue);
+        var events = await _eventStore.GetEventsForAggregate(id, EventStore.IRRELEVANT_VERSION, long.MaxValue);
 
         var aggregate = new TAggregate();
 
@@ -55,7 +55,7 @@ public class Repository
         return aggregate;
     }
 
-    public async Task Save<TAggregate>(TAggregate aggregate, long originalVersion)
+    public async Task Save<TAggregate>(TAggregate aggregate, long originalVersion = EventStore.IRRELEVANT_VERSION)
         where TAggregate : AggregateRoot
     {
         try
@@ -78,6 +78,8 @@ public class Repository
             }
 
             await _eventStore.AppendToStream(aggregate.Id, ex.StoreVersion, aggregate.Changes.ToArray());
+
+            aggregate.Version = ex.StoreVersion;
         }
 
         foreach (var @event in aggregate.Changes)

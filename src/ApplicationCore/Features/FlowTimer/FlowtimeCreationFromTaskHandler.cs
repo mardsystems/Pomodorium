@@ -1,39 +1,61 @@
-﻿using Pomodorium.Models.FlowtimeTechnique;
+﻿using Microsoft.Extensions.Logging;
+using Pomodorium.Features.TaskManager;
+using Pomodorium.Models.FlowtimeTechnique;
+using System.ApplicationModel;
 
 namespace Pomodorium.Features.FlowTimer;
 
 public class FlowtimeCreationFromTaskHandler : IRequestHandler<FlowtimeCreationFromTaskRequest, FlowtimeCreationFromTaskResponse>
 {
+    private readonly IUnitOfWork _unitOfWork;
+
     private readonly Repository _repository;
 
-    public FlowtimeCreationFromTaskHandler(Repository repository)
+    private readonly ILogger<TaskRegistrationHandler> _logger;
+
+    public FlowtimeCreationFromTaskHandler(IUnitOfWork unitOfWork, Repository repository, ILogger<TaskRegistrationHandler> logger)
     {
+        _unitOfWork = unitOfWork;
         _repository = repository;
+        _logger = logger;
     }
 
     public async Task<FlowtimeCreationFromTaskResponse> Handle(FlowtimeCreationFromTaskRequest request, CancellationToken cancellationToken)
     {
-        var task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId);
+        var transaction = _unitOfWork.BeginTransactionFor(request, _logger);
 
-        if (task.Description != request.TaskDescription)
+        try
         {
-            task.ChangeDescription(request.TaskDescription);
+            var task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId);
 
-            await _repository.Save(task, request.TaskVersion ?? -1);
+            if (task.Description != request.TaskDescription)
+            {
+                task.ChangeDescription(request.TaskDescription);
 
-            task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId);
+                await _repository.Save(task, request.TaskVersion ?? -1);
+
+                task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId);
+            }
+
+            var flowtime = new Flowtime(task);
+
+            await _repository.Save(flowtime);
+
+            transaction.Commit();
+
+            var response = new FlowtimeCreationFromTaskResponse(request.GetCorrelationId())
+            {
+                FlowtimeId = flowtime.Id,
+                FlowtimeVersion = flowtime.Version
+            };
+
+            return response;
         }
-
-        var flowtime = new Flowtime(task);
-
-        await _repository.Save(flowtime, -1);
-
-        var response = new FlowtimeCreationFromTaskResponse(request.GetCorrelationId())
+        catch (Exception ex)
         {
-            FlowtimeId = flowtime.Id,
-            FlowtimeVersion = flowtime.Version
-        };
+            transaction.Rollback(ex);
 
-        return response;
+            throw;
+        }
     }
 }

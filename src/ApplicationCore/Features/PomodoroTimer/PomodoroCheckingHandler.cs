@@ -1,26 +1,47 @@
-﻿using Pomodorium.Models.PomodoroTechnique;
+﻿using Microsoft.Extensions.Logging;
+using Pomodorium.Models.PomodoroTechnique;
+using System.ApplicationModel;
 
 namespace Pomodorium.Features.PomodoroTimer;
 
 public class PomodoroCheckingHandler : IRequestHandler<PomodoroCheckingRequest, PomodoroCheckingResponse>
 {
+    private readonly IUnitOfWork _unitOfWork;
+
     private readonly Repository _repository;
 
-    public PomodoroCheckingHandler(Repository pomodoroRepository)
+    private readonly ILogger<PomodoroCheckingHandler> _logger;
+    
+    public PomodoroCheckingHandler(IUnitOfWork unitOfWork, Repository pomodoroRepository, ILogger<PomodoroCheckingHandler> logger)
     {
+        _unitOfWork = unitOfWork;
         _repository = pomodoroRepository;
+        _logger = logger;
     }
 
     public async Task<PomodoroCheckingResponse> Handle(PomodoroCheckingRequest request, CancellationToken cancellationToken)
     {
-        var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id) ?? throw new EntityNotFoundException();
+        var transaction = _unitOfWork.BeginTransactionFor(request, _logger);
 
-        pomodoro.Check();
+        try
+        {
+            var pomodoro = await _repository.GetAggregateById<Pomodoro>(request.Id) ?? throw new EntityNotFoundException();
 
-        await _repository.Save(pomodoro, request.Version);
+            pomodoro.Check();
 
-        var response = new PomodoroCheckingResponse(request.GetCorrelationId()) { };
+            await _repository.Save(pomodoro, request.Version);
 
-        return response;
+            transaction.Commit();
+
+            var response = new PomodoroCheckingResponse(request.GetCorrelationId()) { };
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            transaction.Rollback(ex);
+
+            throw;
+        }
     }
 }

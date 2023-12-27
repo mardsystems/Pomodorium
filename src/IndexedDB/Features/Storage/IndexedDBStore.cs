@@ -58,7 +58,7 @@ public class IndexedDBStore : IAppendOnlyStore
         return eventsSorted;
     }
 
-    public async Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = -1)
+    public async Task<EventRecord> Append(string name, string typeName, DateTime date, byte[] data, long expectedVersion = EventStore.IRRELEVANT_VERSION)
     {
         var version = await GetMaxVersion(name, expectedVersion);
 
@@ -105,6 +105,6 @@ public class IndexedDBStore : IAppendOnlyStore
 
     public void Dispose()
     {
-
+        GC.SuppressFinalize(this);
     }
 }
