@@ -25,11 +25,15 @@ public class FlowtimeCreationHandler : IRequestHandler<FlowtimeCreationRequest, 
 
         try
         {
-            var task = new Models.TaskManagement.Tasks.Task(transaction.CorrelationId, request.TaskDescription, transaction);
+            var taskId = Guid.NewGuid();
+
+            var task = new Models.TaskManagement.Tasks.Task(taskId, request.TaskDescription, transaction);
 
             await _repository.Save(task);
 
-            var flowtime = new Flowtime(task);
+            var flowtimeId = Guid.NewGuid();
+
+            var flowtime = new Flowtime(flowtimeId, task, transaction);
 
             await _repository.Save(flowtime);
 

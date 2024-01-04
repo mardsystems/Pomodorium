@@ -16,20 +16,20 @@ public static class TaskInfoTranslator
 
         if (integrationBase.Id == null)
         {
-            throw new InvalidOperationException();
+            throw new NullReferenceException("Error on translate work item to task info: integrationBase.Id is required.");
         }
 
         if (integrationBase.Name == null)
         {
-            throw new InvalidOperationException();
+            throw new NullReferenceException("Error on translate work item to task info: integrationBase.Name is required.");
         }
 
         if (workItem.Id == null)
         {
-            throw new InvalidOperationException();
+            throw new NullReferenceException("Error on translate work item to task info: workItem.Id is required.");
         }
 
-        var workItemId = workItem.Id.ToString() ?? throw new InvalidOperationException();
+        var workItemId = workItem.Id.ToString() ?? throw new NullReferenceException("Error on translate work item to task info: workItem.Id is required.");
 
         return new TaskInfo(
             IntegrationTypeEnum.TFS,

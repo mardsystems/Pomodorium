@@ -1,6 +1,8 @@
 using Pomodorium.Drivers;
 using Pomodorium.Features.TaskManager;
 using Pomodorium.Features.TaskSynchronizer;
+using Pomodorium.Models;
+using Pomodorium.Support;
 using System;
 using TechTalk.SpecFlow;
 using TechTalk.SpecFlow.Assist;
@@ -16,16 +18,29 @@ public class TaskSynchronizerStepDefinitions
 
     private readonly TaskManagerApiDriver _taskManagerApiDriver;
 
-    private Table _specification;
+    private readonly TaskSynchronizerContext _taskSynchronizer;
 
     public TaskSynchronizerStepDefinitions(
         ScenarioContext scenario,
         TaskSynchronizerApiDriver taskSynchronizerApiDriver,
-        TaskManagerApiDriver taskManagerApiDriver)
+        TaskManagerApiDriver taskManagerApiDriver,
+        TaskSynchronizerContext taskSynchronizer)
     {
         _scenario = scenario;
         _taskSynchronizerApiDriver = taskSynchronizerApiDriver;
         _taskManagerApiDriver = taskManagerApiDriver;
+        _taskSynchronizer = taskSynchronizer;
+    }
+
+    [Given(@"exists a TFS integration settings as")]
+    public void GivenExistsATFSIntegrationSettingsAs(Table table)
+    {
+        var tfsIntegrationList = table.CreateSet<TfsIntegration>();
+
+        foreach (var tfsIntegration in tfsIntegrationList)
+        {
+            var _ = _taskSynchronizerApiDriver.PostTfsIntegrationAction.Perform(tfsIntegration);
+        }        
     }
 
     [Given(@"User starts a task synch with TFS")]
@@ -35,8 +50,16 @@ public class TaskSynchronizerStepDefinitions
 
     }
 
-    [When(@"User request task synch")]
-    public void WhenUserRequestTaskSynch()
+    [Given(@"exists a workitems in TFS as")]
+    public void GivenExistsAWorkitemsInTFSAs(Table table)
+    {
+        _taskSynchronizer.Specification = table;
+
+        var _ = _taskSynchronizer.Specification.CreateSet<WorkItemData>();
+    }
+
+    [When(@"User request task synch with TFS")]
+    public void WhenUserRequestTaskSynchWithTFS()
     {
         var request = new TaskSyncFromTfsRequest
         {
@@ -46,22 +69,22 @@ public class TaskSynchronizerStepDefinitions
         var _ = _taskSynchronizerApiDriver.SynchTasksAction.Perform(request);
     }
 
-    [Then(@"System should get workitems from TFS\. Examples:")]
-    public void ThenSystemShouldGetWorkitemsFromTFS_Examples(Table table)
+    [Then(@"System should get workitems from TFS")]
+    public void ThenSystemShouldGetWorkitemsFromTFS()
     {
-        _specification = table;
 
-        var _ = _specification.CreateSet<WorkItemData>();
     }
 
-    [Then(@"System should create tasks")]
-    public void ThenSystemShouldCreateTasks()
+    [Then(@"System should create tasks as")]
+    public void ThenSystemShouldCreateTasksAs(Table table)
     {
         var tasks = _taskManagerApiDriver.QueryTasksAction.Perform(new TaskQueryRequest()).TaskQueryItems;
 
         tasks.Should().HaveCount(3);
 
         _scenario["Tasks"] = tasks;
+
+        table.CompareToSet(tasks);
     }
 
     [Then(@"System should translates workitem system title to task description")]
@@ -69,7 +92,7 @@ public class TaskSynchronizerStepDefinitions
     {
         var tasks = (IEnumerable<TaskQueryItem>)_scenario["Tasks"];
 
-        var workitems = _specification.CreateSet<WorkItemData>();
+        var workitems = _taskSynchronizer.Specification.CreateSet<WorkItemData>();
 
         workitems.Should().BeEquivalentTo(tasks);
 
@@ -90,9 +113,4 @@ public class TaskSynchronizerStepDefinitions
     {
         
     }
-}
-
-public class WorkItemData
-{
-    public string SystemTitle { get; set; }
 }

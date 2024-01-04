@@ -3,12 +3,17 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Moq;
 using Pomodorium.Data;
+using Pomodorium.Integrations;
+using Pomodorium.Integrations.TFS;
+using Pomodorium.Models;
 using System.Diagnostics;
 using System.Net.Http.Headers;
 
@@ -22,12 +27,22 @@ public class AppHostingContext : IDisposable
 
         private DatabaseContext _database;
 
+        private TaskSynchronizerContext _taskSynchronizer;
+
         public DatabaseContext GetDatabase() => _database;
+
+        public TaskSynchronizerContext GetTaskSynchronizer() => _taskSynchronizer;
 
         protected override IHost CreateHost(IHostBuilder builder)
         {
+            builder.ConfigureHostConfiguration(config =>
+            {
+                config.AddInMemoryCollection(new Dictionary<string, string> { { "ConnectionStrings:EndpointUri", "https://localhost:8081" } });
+                config.AddInMemoryCollection(new Dictionary<string, string> { { "ConnectionStrings:PrimaryKey", "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==" } });
+            });
+
             var host = builder.Build();
-            
+
             _serviceScope = host.Services.CreateScope();
 
             var services = _serviceScope.ServiceProvider;
@@ -62,6 +77,27 @@ public class AppHostingContext : IDisposable
 
             builder.ConfigureServices(services =>
             {
+                var dbContextDescriptor = services.SingleOrDefault(d =>
+                    d.ServiceType == typeof(TfsIntegration));
+
+                services.Remove(dbContextDescriptor);
+
+                var mockOptionsInterface = new Mock<IOptions<TfsIntegrationOptions>>();
+
+                mockOptionsInterface
+                    .Setup(x => x.Value)
+                    .Returns(new TfsIntegrationOptions());
+
+                var mockTfsFacade = new Mock<TfsFacade>(mockOptionsInterface.Object);
+
+                _taskSynchronizer = new();
+
+                mockTfsFacade
+                    .Setup(x => x.GetWorkItems(It.IsAny<TfsIntegration>()))
+                    .ReturnsAsync(_taskSynchronizer.GetWorkItems);
+
+                services.AddScoped(x => mockTfsFacade.Object);
+
                 //var dbContextDescriptor = services.SingleOrDefault(d =>
                 //    d.ServiceType == typeof(DbContextOptions<CosmosClient>));
 
@@ -224,6 +260,13 @@ public class AppHostingContext : IDisposable
         var database = (_webApplicationFactory?.GetDatabase()) ?? throw new InvalidOperationException();
 
         return database;
+    }
+
+    public static TaskSynchronizerContext GetTaskSyncronizer()
+    {
+        var taskSynchronizer = (_webApplicationFactory?.GetTaskSynchronizer()) ?? throw new InvalidOperationException();
+
+        return taskSynchronizer;
     }
 
     public static void StopApp()

@@ -33,8 +33,12 @@ public class WebApiHooks
         AppHostingContext.StartApp();
 
         var database = AppHostingContext.GetDatabase();
+        
+        var taskSyncronizer = AppHostingContext.GetTaskSyncronizer();
 
         objectContainer.RegisterInstanceAs(database);
+
+        objectContainer.RegisterInstanceAs(taskSyncronizer);
 
         Service.Instance.ValueRetrievers.Register(new NullValueRetriever("<null>"));
         Service.Instance.ValueComparers.Register(new NullValueComparer("<null>"));

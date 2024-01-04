@@ -24,7 +24,9 @@ public class TaskRegistrationHandler : IRequestHandler<TaskRegistrationRequest, 
 
         try
         {
-            var task = new Models.TaskManagement.Tasks.Task(transaction.CorrelationId, request.Description, transaction);
+            var taskId = Guid.NewGuid();
+
+            var task = new Models.TaskManagement.Tasks.Task(taskId, request.Description, transaction);
 
             await _repository.Save(task);
 
