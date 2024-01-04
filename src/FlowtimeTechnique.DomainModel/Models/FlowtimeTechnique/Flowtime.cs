@@ -20,7 +20,8 @@ public class Flowtime : AggregateRoot
 
     public FlowtimeStateEnum? State { get; private set; }
 
-    public Flowtime(TaskManagement.Tasks.Task task)
+    public Flowtime(Guid id, TaskManagement.Tasks.Task task, AuditInterface auditInterface)
+        : base(id, auditInterface)
     {
         if (task == null)
         {

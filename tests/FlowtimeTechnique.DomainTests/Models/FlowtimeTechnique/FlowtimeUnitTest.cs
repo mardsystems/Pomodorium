@@ -21,7 +21,7 @@ public abstract class FlowtimeUnitTest : UnitTest
     {
         public override void Act()
         {
-            Flowtime = new Flowtime(Task);
+            Flowtime = new Flowtime(Id, Task, AuditInterface);
         }
 
         public class WithSuccess : OnCreateNewFlowtime
@@ -99,7 +99,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
                 StartDateTime = DateTime.Now;
 
-                Flowtime = new Flowtime(Task);
+                Flowtime = new Flowtime(Id, Task,AuditInterface);
             }
 
             [Fact]
@@ -146,7 +146,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
                 Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
-                Flowtime = new Flowtime(Task);
+                Flowtime = new Flowtime(Id, Task, AuditInterface);
 
                 StopDateTime = DateTime.Now;
 
@@ -198,7 +198,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
                 Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
-                Flowtime = new Flowtime(Task);
+                Flowtime = new Flowtime(Id, Task,AuditInterface);
 
                 StopDateTime = DateTime.Now;
 
@@ -250,7 +250,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
                 Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
-                Flowtime = new Flowtime(Task);
+                Flowtime = new Flowtime(Id, Task,AuditInterface);
 
                 StopDateTime = DateTime.Now;
 
@@ -302,7 +302,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
                 Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
-                Flowtime = new Flowtime(Task);
+                Flowtime = new Flowtime(Id, Task,AuditInterface);
 
                 StopDateTime = DateTime.Now;
 
@@ -362,7 +362,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
                 Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
-                Flowtime = new Flowtime(Task);
+                Flowtime = new Flowtime(Id, Task,AuditInterface);
 
                 StopDateTime = DateTime.Now;
 
@@ -414,7 +414,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
                 Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
-                Flowtime = new Flowtime(Task);
+                Flowtime = new Flowtime(Id, Task,AuditInterface);
 
                 StopDateTime = DateTime.Now;
 
@@ -466,7 +466,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
                 Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
-                Flowtime = new Flowtime(Task);
+                Flowtime = new Flowtime(Id, Task,AuditInterface);
 
                 StopDateTime = DateTime.Now;
 
@@ -518,7 +518,7 @@ public abstract class FlowtimeUnitTest : UnitTest
 
                 Task = new TaskManagement.Tasks.Task(Id, "Test", AuditInterface);
 
-                Flowtime = new Flowtime(Task);
+                Flowtime = new Flowtime(Id, Task,AuditInterface);
 
                 StopDateTime = DateTime.Now;
 

@@ -64,9 +64,11 @@ public class TaskSyncFromTfsHandler : IRequestHandler<TaskSyncFromTfsRequest, Ta
 
                     Models.TaskManagement.Tasks.Task task;
 
+                    var taskId = Guid.NewGuid();
+
                     if (taskQueryItem == default)
                     {
-                        task = new Models.TaskManagement.Tasks.Task(transaction.CorrelationId, taskInfo.Name, transaction);
+                        task = new Models.TaskManagement.Tasks.Task(taskId, taskInfo.Name, transaction);
                     }
                     else
                     {
@@ -74,7 +76,7 @@ public class TaskSyncFromTfsHandler : IRequestHandler<TaskSyncFromTfsRequest, Ta
 
                         if (taskExisting == null)
                         {
-                            task = new Models.TaskManagement.Tasks.Task(transaction.CorrelationId, taskInfo.Name, transaction);
+                            task = new Models.TaskManagement.Tasks.Task(taskId, taskInfo.Name, transaction);
                         }
                         else
                         {
@@ -89,7 +91,7 @@ public class TaskSyncFromTfsHandler : IRequestHandler<TaskSyncFromTfsRequest, Ta
 
                     await _repository.Save(task);
 
-                    var taskIntegration = new TaskIntegration(task, taskInfo);
+                    var taskIntegration = new TaskIntegration(taskId, task, taskInfo, transaction);
 
                     await _repository.Save(taskIntegration);
                 }

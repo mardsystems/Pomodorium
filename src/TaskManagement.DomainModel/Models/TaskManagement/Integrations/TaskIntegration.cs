@@ -6,7 +6,8 @@ public class TaskIntegration : AggregateRoot
 
     public string ExternalReference { get; private set; } = default!;
 
-    public TaskIntegration(Tasks.Task task, TaskInfo taskInfo)
+    public TaskIntegration(Guid id, Tasks.Task task, TaskInfo taskInfo, AuditInterface auditInterface)
+        : base(id, auditInterface)
     {
         if (task == null)
         {

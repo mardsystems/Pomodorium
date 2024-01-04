@@ -20,7 +20,7 @@ namespace Pomodorium.Features
     [System.CodeDom.Compiler.GeneratedCodeAttribute("TechTalk.SpecFlow", "3.9.0.0")]
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [Microsoft.VisualStudio.TestTools.UnitTesting.TestClassAttribute()]
-    public partial class TaskSynchronizerFeature
+    public partial class SettingsFeature
     {
         
         private static TechTalk.SpecFlow.ITestRunner testRunner;
@@ -29,7 +29,7 @@ namespace Pomodorium.Features
         
         private static string[] featureTags = ((string[])(null));
         
-#line 1 "TaskSynchronizer.feature"
+#line 1 "Settings.feature"
 #line hidden
         
         public virtual Microsoft.VisualStudio.TestTools.UnitTesting.TestContext TestContext
@@ -48,7 +48,7 @@ namespace Pomodorium.Features
         public static void FeatureSetup(Microsoft.VisualStudio.TestTools.UnitTesting.TestContext testContext)
         {
             testRunner = TechTalk.SpecFlow.TestRunnerManager.GetTestRunner();
-            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Task Synchronizer", "A short summary of the feature", ProgrammingLanguage.CSharp, featureTags);
+            TechTalk.SpecFlow.FeatureInfo featureInfo = new TechTalk.SpecFlow.FeatureInfo(new System.Globalization.CultureInfo("en-US"), "Features", "Settings", "A short summary of the feature", ProgrammingLanguage.CSharp, featureTags);
             testRunner.OnFeatureStart(featureInfo);
         }
         
@@ -63,9 +63,9 @@ namespace Pomodorium.Features
         public void TestInitialize()
         {
             if (((testRunner.FeatureContext != null) 
-                        && (testRunner.FeatureContext.FeatureInfo.Title != "Task Synchronizer")))
+                        && (testRunner.FeatureContext.FeatureInfo.Title != "Settings")))
             {
-                global::Pomodorium.Features.TaskSynchronizerFeature.FeatureSetup(null);
+                global::Pomodorium.Features.SettingsFeature.FeatureSetup(null);
             }
         }
         
@@ -91,32 +91,17 @@ namespace Pomodorium.Features
             testRunner.CollectScenarioErrors();
         }
         
-        public virtual void FeatureBackground()
-        {
-#line 5
-#line hidden
-            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
-                        "name",
-                        "project name"});
-            table1.AddRow(new string[] {
-                        "TFS Project",
-                        "Project A"});
-#line 6
- testRunner.Given("exists a TFS integration settings as", ((string)(null)), table1, "Given ");
-#line hidden
-        }
-        
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("User requests synch tasks with TFS")]
-        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Task Synchronizer")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("User settings a TFS integration with name filled")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "Settings")]
         [Microsoft.VisualStudio.TestTools.UnitTesting.TestCategoryAttribute("wip")]
-        public void UserRequestsSynchTasksWithTFS()
+        public void UserSettingsATFSIntegrationWithNameFilled()
         {
             string[] tagsOfScenario = new string[] {
                     "wip"};
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User requests synch tasks with TFS", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 13
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("User settings a TFS integration with name filled", null, tagsOfScenario, argumentsOfScenario, featureTags);
+#line 8
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -126,39 +111,20 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 5
-this.FeatureBackground();
+#line 9
+ testRunner.Given("User starts a TFS integration setting", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 14
- testRunner.Given("User starts a task synch with TFS", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line 10
+ testRunner.And("User inputs TFS integration name as \'New TFS Project\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-                TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
-                            "system title"});
-                table2.AddRow(new string[] {
-                            "Todo it A"});
-                table2.AddRow(new string[] {
-                            "Todo it B"});
-                table2.AddRow(new string[] {
-                            "Todo it C"});
-#line 15
- testRunner.And("exists a workitems in TFS as", ((string)(null)), table2, "And ");
+#line 11
+ testRunner.And("User inputs TFS integration project name as \'Project Abc\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
-#line 20
- testRunner.When("User request task synch with TFS", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 12
+ testRunner.When("User post TFS integration setting", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
-#line 21
- testRunner.Then("System should get workitems from TFS", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-                TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
-                            "description"});
-                table3.AddRow(new string[] {
-                            "Todo it A (#1)"});
-                table3.AddRow(new string[] {
-                            "Todo it B (#2)"});
-                table3.AddRow(new string[] {
-                            "Todo it C (#3)"});
-#line 22
- testRunner.And("System should create tasks as", ((string)(null)), table3, "And ");
+#line 13
+ testRunner.Then("System should return TFS integration setting as expected", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

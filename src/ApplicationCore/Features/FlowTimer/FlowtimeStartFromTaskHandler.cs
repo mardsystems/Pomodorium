@@ -27,7 +27,9 @@ public class FlowtimeStartFromTaskHandler : IRequestHandler<FlowtimeStartFromTas
         {
             var task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId);
 
-            var flowtime = new Flowtime(task);
+            var flowtimeId = Guid.NewGuid();
+
+            var flowtime = new Flowtime(flowtimeId, task, transaction);
 
             var now = DateTime.Now;
 
