@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Components;
-using Pomodorium.Features.FlowTimer;
+using FlowtimeTechnique.Features.FlowTimer;
 using Pomodorium.Features.TaskManager;
 using Pomodorium.Features.TaskSynchronizer;
 

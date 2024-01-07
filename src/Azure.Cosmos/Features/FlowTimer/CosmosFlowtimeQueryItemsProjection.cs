@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using FlowtimeTechnique.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pomodorium.Data;
-using Pomodorium.Models.FlowtimeTechnique;
-using Pomodorium.Models.TaskManagement.Tasks;
 using System.DomainModel;
+using TaskManagement.Models.Tasks;
 
-namespace Pomodorium.Features.FlowTimer;
+namespace FlowtimeTechnique.Features.FlowTimer;
 
 public class CosmosFlowtimeQueryItemsProjection :
     IRequestHandler<FlowtimeQueryRequest, FlowtimeQueryResponse>,

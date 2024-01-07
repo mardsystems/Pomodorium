@@ -24,7 +24,7 @@ public class TaskArchivingHandler : IRequestHandler<TaskArchivingRequest, TaskAr
 
         try
         {
-            var task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId) ?? throw new EntityNotFoundException();
+            var task = await _repository.GetAggregateById<TaskManagement.Models.Tasks.Task>(request.TaskId) ?? throw new EntityNotFoundException();
 
             task.Archive();
 

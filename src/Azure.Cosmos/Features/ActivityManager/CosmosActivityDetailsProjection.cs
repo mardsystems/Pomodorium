@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pomodorium.Data;
-using Pomodorium.Models.TaskManagement.Activities;
 using System.DomainModel;
+using TaskManagement.Models.Activities;
 
 namespace Pomodorium.Features.ActivityManager;
 

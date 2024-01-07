@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-using Pomodorium.Models.PomodoroTechnique;
+using PomodoroTechnique.Models;
 using System.ApplicationModel;
 
-namespace Pomodorium.Features.PomodoroTimer;
+namespace PomodoroTechnique.Features.PomodoroTimer;
 
 public class PomodoroTaskRefinementHandler : IRequestHandler<PomodoroTaskRefinementRequest, PomodoroTaskRefinementResponse>
 {

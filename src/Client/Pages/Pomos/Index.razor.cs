@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using Pomodorium.Features.PomodoroTimer;
+using PomodoroTechnique.Features.PomodoroTimer;
 
 namespace Pomodorium.Pages.Pomos;
 

@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Logging;
 using Pomodorium.Features.TaskManager;
 using Pomodorium.Integrations.Trello;
-using Pomodorium.Models.TaskManagement.Integrations;
 using Pomodorium.Repositories;
 using System.ApplicationModel;
 using System.DomainModel;
+using TaskManagement.Models.Integrations;
 
 namespace Pomodorium.Features.TaskSynchronizer;
 
@@ -62,21 +62,21 @@ public class TaskSyncFromTrelloHandler : IRequestHandler<TaskSyncFromTrelloReque
 
                     var taskQueryItem = getTasksResponse.TaskQueryItems.FirstOrDefault();
 
-                    Models.TaskManagement.Tasks.Task task;
+                    TaskManagement.Models.Tasks.Task task;
 
                     var taskId = Guid.NewGuid();
 
                     if (taskQueryItem == default)
                     {
-                        task = new Models.TaskManagement.Tasks.Task(taskId, taskInfo.Name, transaction);
+                        task = new TaskManagement.Models.Tasks.Task(taskId, taskInfo.Name, transaction);
                     }
                     else
                     {
-                        var taskExisting = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(taskQueryItem.Id);
+                        var taskExisting = await _repository.GetAggregateById<TaskManagement.Models.Tasks.Task>(taskQueryItem.Id);
 
                         if (taskExisting == null)
                         {
-                            task = new Models.TaskManagement.Tasks.Task(taskId, taskInfo.Name, transaction);
+                            task = new TaskManagement.Models.Tasks.Task(taskId, taskInfo.Name, transaction);
                         }
                         else
                         {

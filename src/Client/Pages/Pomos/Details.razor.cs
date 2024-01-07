@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components;
-using Pomodorium.Features.PomodoroTimer;
+using PomodoroTechnique.Features.PomodoroTimer;
 using MediatR;
 
 namespace Pomodorium.Pages.Pomos;

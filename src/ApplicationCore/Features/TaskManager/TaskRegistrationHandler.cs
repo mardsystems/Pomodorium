@@ -26,7 +26,7 @@ public class TaskRegistrationHandler : IRequestHandler<TaskRegistrationRequest, 
         {
             var taskId = Guid.NewGuid();
 
-            var task = new Models.TaskManagement.Tasks.Task(taskId, request.Description, transaction);
+            var task = new TaskManagement.Models.Tasks.Task(taskId, request.Description, transaction);
 
             await _repository.Save(task);
 

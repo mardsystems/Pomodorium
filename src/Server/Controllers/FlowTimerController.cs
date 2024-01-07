@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
-using Pomodorium.Features.FlowTimer;
+using FlowtimeTechnique.Features.FlowTimer;
 
 namespace Pomodorium.Controllers;
 

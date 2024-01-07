@@ -1,4 +1,4 @@
-﻿namespace Pomodorium.Features.FlowTimer;
+﻿namespace FlowtimeTechnique.Features.FlowTimer;
 
 public record FlowtimeStartFromTaskRequest : Request<FlowtimeStartFromTaskResponse>
 {

@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using MongoDB.Driver;
-using Pomodorium.Models.PomodoroTechnique;
+using PomodoroTechnique.Models;
 
-namespace Pomodorium.Features.PomodoroTimer;
+namespace PomodoroTechnique.Features.PomodoroTimer;
 
 public class MongoDBPomodoroQueryItemsProjection :
     IRequestHandler<PomodoroQueryRequest, PomodoroQueryResponse>,
