@@ -19,9 +19,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ApplicationModel\Pomodorium.ApplicationModel.csproj" />
+    <ProjectReference Include="..\FlowtimeTechnique.ApplicationModel\Pomodorium.FlowtimeTechnique.ApplicationModel.csproj" />
+    <ProjectReference Include="..\PomodoroTechnique.ApplicationModel\Pomodorium.PomodoroTechnique.ApplicationModel.csproj" />
+    <ProjectReference Include="..\RoutingTracking.ApplicationModel\Pomodorium.RoutingTracking.ApplicationModel.csproj" />
     <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
     <ProjectReference Include="..\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
-    <ProjectReference Include="..\OfficeTimeManagement.ApplicationModel\Pomodorium.OfficeTimeManagement.ApplicationModel.csproj" />
   </ItemGroup>
 
 </Project>
