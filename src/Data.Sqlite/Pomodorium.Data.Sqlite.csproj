@@ -12,6 +12,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
+    <ProjectReference Include="..\ApplicationModel\Pomodorium.ApplicationModel.csproj" />
+    <ProjectReference Include="..\FlowtimeTechnique.ApplicationModel\Pomodorium.FlowtimeTechnique.ApplicationModel.csproj" />
+    <ProjectReference Include="..\PomodoroTechnique.ApplicationModel\Pomodorium.PomodoroTechnique.ApplicationModel.csproj" />
+    <ProjectReference Include="..\RoutingTracking.ApplicationModel\Pomodorium.RoutingTracking.ApplicationModel.csproj" />
   </ItemGroup>
 
 </Project>
