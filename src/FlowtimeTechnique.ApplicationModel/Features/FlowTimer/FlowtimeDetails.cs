@@ -2,7 +2,7 @@
 using Pomodorium.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace Pomodorium.Features.FlowTimer;
+namespace FlowtimeTechnique.Features.FlowTimer;
 
 public record FlowtimeDetailsRequest(Guid FlowtimeId) : Request<FlowtimeDetailsResponse>
 {

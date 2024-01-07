@@ -1,6 +1,6 @@
 ﻿using Pomodorium.Enums;
 using Pomodorium.Models;
-using Pomodorium.Models.TaskManagement.Integrations;
+using TaskManagement.Models.Integrations;
 
 namespace Pomodorium.Integrations.Trello;
 

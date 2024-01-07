@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Pomodorium.Enums;
 
-namespace Pomodorium.Features.PomodoroTimer;
+namespace PomodoroTechnique.Features.PomodoroTimer;
 
 public record PomodoroDetailsRequest : Request<PomodoroDetailsResponse>
 {

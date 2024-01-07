@@ -1,4 +1,4 @@
-﻿namespace Pomodorium.Features.PomodoroTimer;
+﻿namespace PomodoroTechnique.Features.PomodoroTimer;
 
 public record PomodoroArchivingRequest : Request<PomodoroArchivingResponse>
 {

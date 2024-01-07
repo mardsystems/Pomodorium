@@ -29,10 +29,10 @@
     <ProjectReference Include="..\ApplicationModel\Pomodorium.ApplicationModel.csproj" />
     <ProjectReference Include="..\ApplicationRemote\Pomodorium.ApplicationRemote.csproj" />
     <ProjectReference Include="..\Client\Pomodorium.Client.csproj" />
-    <ProjectReference Include="..\FlowtimeTechnique.ApplicationModel\Pomodorium.FlowtimeTechnique.ApplicationModel.csproj" />
+    <ProjectReference Include="..\FlowtimeTechnique.ApplicationModel\FlowtimeTechnique.ApplicationModel.csproj" />
     <ProjectReference Include="..\Infrastructure.Server\Pomodorium.Infrastructure.Server.csproj" />
-    <ProjectReference Include="..\RoutingTracking.ApplicationModel\Pomodorium.RoutingTracking.ApplicationModel.csproj" />
-    <ProjectReference Include="..\TaskManagement.ApplicationModel\Pomodorium.TaskManagement.ApplicationModel.csproj" />
+    <ProjectReference Include="..\RoutineTracking.ApplicationModel\RoutineTracking.ApplicationModel.csproj" />
+    <ProjectReference Include="..\TaskManagement.ApplicationModel\TaskManagement.ApplicationModel.csproj" />
     <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
   </ItemGroup>
 

@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pomodorium.Data;
-using Pomodorium.Models.PomodoroTechnique;
+using PomodoroTechnique.Models;
 using System.DomainModel;
 
-namespace Pomodorium.Features.PomodoroTimer;
+namespace PomodoroTechnique.Features.PomodoroTimer;
 
 public class CosmosPomodoroDetailsProjection :
     IRequestHandler<PomodoroDetailsRequest, PomodoroDetailsResponse>,

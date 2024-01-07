@@ -1,4 +1,4 @@
-﻿namespace Pomodorium.Features.FlowTimer;
+﻿namespace FlowtimeTechnique.Features.FlowTimer;
 
 public record FlowtimeStopRequest : Request<FlowtimeStopResponse>
 {

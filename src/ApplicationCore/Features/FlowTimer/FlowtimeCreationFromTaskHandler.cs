@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using FlowtimeTechnique.Models;
+using Microsoft.Extensions.Logging;
 using Pomodorium.Features.TaskManager;
-using Pomodorium.Models.FlowtimeTechnique;
 using System.ApplicationModel;
 
-namespace Pomodorium.Features.FlowTimer;
+namespace FlowtimeTechnique.Features.FlowTimer;
 
 public class FlowtimeCreationFromTaskHandler : IRequestHandler<FlowtimeCreationFromTaskRequest, FlowtimeCreationFromTaskResponse>
 {
@@ -26,7 +26,7 @@ public class FlowtimeCreationFromTaskHandler : IRequestHandler<FlowtimeCreationF
 
         try
         {
-            var task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId);
+            var task = await _repository.GetAggregateById<TaskManagement.Models.Tasks.Task>(request.TaskId);
 
             if (task.Description != request.TaskDescription)
             {
@@ -34,7 +34,7 @@ public class FlowtimeCreationFromTaskHandler : IRequestHandler<FlowtimeCreationF
 
                 await _repository.Save(task, request.TaskVersion ?? -1);
 
-                task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId);
+                task = await _repository.GetAggregateById<TaskManagement.Models.Tasks.Task>(request.TaskId);
             }
 
             var flowtimeId = Guid.NewGuid();

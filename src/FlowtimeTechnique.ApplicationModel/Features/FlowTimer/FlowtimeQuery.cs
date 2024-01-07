@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Pomodorium.Enums;
 
-namespace Pomodorium.Features.FlowTimer;
+namespace FlowtimeTechnique.Features.FlowTimer;
 
 public record FlowtimeQueryRequest : Request<FlowtimeQueryResponse>
 {

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>FlowtimeTechnique</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
+    <ProjectReference Include="..\TaskManagement.DomainModel\TaskManagement.DomainModel.csproj" />
+  </ItemGroup>
+
+</Project>

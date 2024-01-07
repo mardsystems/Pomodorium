@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using Pomodorium.Models.FlowtimeTechnique;
+﻿using FlowtimeTechnique.Models;
+using Microsoft.Extensions.Logging;
 using System.ApplicationModel;
 
-namespace Pomodorium.Features.FlowTimer;
+namespace FlowtimeTechnique.Features.FlowTimer;
 
 public class FlowtimeStartFromTaskHandler : IRequestHandler<FlowtimeStartFromTaskRequest, FlowtimeStartFromTaskResponse>
 {
@@ -25,7 +25,7 @@ public class FlowtimeStartFromTaskHandler : IRequestHandler<FlowtimeStartFromTas
 
         try
         {
-            var task = await _repository.GetAggregateById<Models.TaskManagement.Tasks.Task>(request.TaskId);
+            var task = await _repository.GetAggregateById<TaskManagement.Models.Tasks.Task>(request.TaskId);
 
             var flowtimeId = Guid.NewGuid();
 

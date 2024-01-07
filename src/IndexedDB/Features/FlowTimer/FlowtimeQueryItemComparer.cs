@@ -1,6 +1,6 @@
 ﻿#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
 
-namespace Pomodorium.Features.FlowTimer;
+namespace FlowtimeTechnique.Features.FlowTimer;
 
 class FlowtimeQueryItemComparer : IEqualityComparer<FlowtimeQueryItem>
 {

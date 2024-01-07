@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Pomodorium.Data;
-using Pomodorium.Models.PomodoroTechnique;
+using PomodoroTechnique.Models;
 using System.DomainModel;
 
-namespace Pomodorium.Features.PomodoroTimer;
+namespace PomodoroTechnique.Features.PomodoroTimer;
 
 
 public class IndexedDBPomodoroQueryItemsProjection :
