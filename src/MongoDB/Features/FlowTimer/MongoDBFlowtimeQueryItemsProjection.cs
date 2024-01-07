@@ -1,9 +1,9 @@
-﻿using MediatR;
+﻿using FlowtimeTechnique.Models;
+using MediatR;
 using MongoDB.Driver;
-using Pomodorium.Models.FlowtimeTechnique;
-using Pomodorium.Models.TaskManagement.Tasks;
+using TaskManagement.Models.Tasks;
 
-namespace Pomodorium.Features.FlowTimer;
+namespace FlowtimeTechnique.Features.FlowTimer;
 
 public class MongoDBFlowtimeQueryItemsProjection :
     IRequestHandler<FlowtimeQueryRequest, FlowtimeQueryResponse>,

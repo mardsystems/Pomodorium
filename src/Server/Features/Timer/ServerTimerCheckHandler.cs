@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using Pomodorium.Hubs;
-using Pomodorium.Models.PomodoroTechnique;
+using PomodoroTechnique.Models;
 
 namespace Pomodorium.Features.Timer;
 

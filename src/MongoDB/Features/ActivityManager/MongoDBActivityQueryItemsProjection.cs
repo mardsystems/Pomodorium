@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using MongoDB.Driver;
-using Pomodorium.Models.TaskManagement.Activities;
+using TaskManagement.Models.Activities;
 
 namespace Pomodorium.Features.ActivityManager;
 

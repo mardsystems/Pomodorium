@@ -1,10 +1,10 @@
-﻿using MediatR;
+﻿using FlowtimeTechnique.Models;
+using MediatR;
 using Pomodorium.Data;
-using Pomodorium.Models.FlowtimeTechnique;
-using Pomodorium.Models.TaskManagement.Tasks;
 using System.DomainModel;
+using TaskManagement.Models.Tasks;
 
-namespace Pomodorium.Features.FlowTimer;
+namespace FlowtimeTechnique.Features.FlowTimer;
 
 public class IndexedDBFlowtimeDetailsProjection :
     IRequestHandler<FlowtimeDetailsRequest, FlowtimeDetailsResponse>,

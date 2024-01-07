@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using Pomodorium.Models.FlowtimeTechnique;
+﻿using FlowtimeTechnique.Models;
+using Microsoft.Extensions.Logging;
 using System.ApplicationModel;
 
-namespace Pomodorium.Features.FlowTimer;
+namespace FlowtimeTechnique.Features.FlowTimer;
 
 public class FlowtimeInterruptionHandler : IRequestHandler<FlowtimeInterruptionRequest, FlowtimeInterruptionResponse>
 {

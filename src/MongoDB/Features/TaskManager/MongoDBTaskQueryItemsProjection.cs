@@ -1,8 +1,8 @@
-﻿using MediatR;
+﻿using FlowtimeTechnique.Models;
+using MediatR;
 using MongoDB.Driver;
-using Pomodorium.Models.FlowtimeTechnique;
-using Pomodorium.Models.TaskManagement.Integrations;
-using Pomodorium.Models.TaskManagement.Tasks;
+using TaskManagement.Models.Integrations;
+using TaskManagement.Models.Tasks;
 
 namespace Pomodorium.Features.TaskManager;
 
