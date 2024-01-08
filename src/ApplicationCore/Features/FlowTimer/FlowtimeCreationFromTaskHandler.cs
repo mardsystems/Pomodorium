@@ -1,6 +1,5 @@
 ﻿using FlowtimeTechnique.Models;
 using Microsoft.Extensions.Logging;
-using Pomodorium.Features.TaskManager;
 using System.ApplicationModel;
 
 namespace FlowtimeTechnique.Features.FlowTimer;
@@ -11,9 +10,9 @@ public class FlowtimeCreationFromTaskHandler : IRequestHandler<FlowtimeCreationF
 
     private readonly Repository _repository;
 
-    private readonly ILogger<TaskRegistrationHandler> _logger;
+    private readonly ILogger<FlowtimeCreationFromTaskHandler> _logger;
 
-    public FlowtimeCreationFromTaskHandler(IUnitOfWork unitOfWork, Repository repository, ILogger<TaskRegistrationHandler> logger)
+    public FlowtimeCreationFromTaskHandler(IUnitOfWork unitOfWork, Repository repository, ILogger<FlowtimeCreationFromTaskHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _repository = repository;

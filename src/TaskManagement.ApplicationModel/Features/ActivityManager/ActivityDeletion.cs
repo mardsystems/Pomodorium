@@ -1,4 +1,4 @@
-﻿namespace Pomodorium.Features.ActivityManager;
+﻿namespace TaskManagement.Features.ActivityManager;
 
 public record ActivityDeletionRequest : Request<ActivityDeletionResponse>
 {

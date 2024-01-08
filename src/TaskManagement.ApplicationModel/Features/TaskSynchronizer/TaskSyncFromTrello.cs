@@ -1,4 +1,4 @@
-﻿namespace Pomodorium.Features.TaskSynchronizer;
+﻿namespace TaskManagement.Features.TaskSynchronizer;
 
 public record TaskSyncFromTrelloRequest : Request<TaskSyncFromTrelloResponse>
 {

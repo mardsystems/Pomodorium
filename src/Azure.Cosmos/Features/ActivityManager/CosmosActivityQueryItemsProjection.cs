@@ -5,7 +5,7 @@ using Pomodorium.Models;
 using System.DomainModel;
 using TaskManagement.Models.Activities;
 
-namespace Pomodorium.Features.ActivityManager;
+namespace TaskManagement.Features.ActivityManager;
 
 public class CosmosActivityQueryItemsProjection :
     IRequestHandler<ActivityQueryRequest, ActivityQueryResponse>,

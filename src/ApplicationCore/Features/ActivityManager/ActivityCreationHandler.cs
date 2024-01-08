@@ -1,6 +1,6 @@
 ﻿using TaskManagement.Models.Activities;
 
-namespace Pomodorium.Features.ActivityManager;
+namespace TaskManagement.Features.ActivityManager;
 
 public class ActivityCreationHandler : IRequestHandler<ActivityCreationRequest, ActivityCreationResponse>
 {
