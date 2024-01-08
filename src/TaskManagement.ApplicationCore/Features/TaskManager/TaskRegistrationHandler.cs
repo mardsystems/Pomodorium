@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.ApplicationModel;
 
-namespace Pomodorium.Features.TaskManager;
+namespace TaskManagement.Features.TaskManager;
 
 public class TaskRegistrationHandler : IRequestHandler<TaskRegistrationRequest, TaskRegistrationResponse>
 {

@@ -1,4 +1,4 @@
-﻿namespace Pomodorium.Features.TaskManager;
+﻿namespace TaskManagement.Features.TaskManager;
 
 public record TaskDescriptionChangeRequest : Request<TaskDescriptionChangeResponse>
 {

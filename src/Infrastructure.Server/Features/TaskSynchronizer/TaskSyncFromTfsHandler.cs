@@ -1,13 +1,13 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using Pomodorium.Features.TaskManager;
+using TaskManagement.Features.TaskManager;
 using Pomodorium.Integrations.TFS;
 using Pomodorium.Repositories;
 using System.ApplicationModel;
 using System.DomainModel;
 using TaskManagement.Models.Integrations;
 
-namespace Pomodorium.Features.TaskSynchronizer;
+namespace TaskManagement.Features.TaskSynchronizer;
 
 public class TaskSyncFromTfsHandler : IRequestHandler<TaskSyncFromTfsRequest, TaskSyncFromTfsResponse>
 {

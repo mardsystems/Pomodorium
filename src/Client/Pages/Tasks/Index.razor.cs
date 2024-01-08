@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Components;
 using FlowtimeTechnique.Features.FlowTimer;
-using Pomodorium.Features.TaskManager;
-using Pomodorium.Features.TaskSynchronizer;
+using TaskManagement.Features.TaskManager;
+using TaskManagement.Features.TaskSynchronizer;
 
 namespace Pomodorium.Pages.Tasks;
 

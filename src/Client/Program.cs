@@ -24,6 +24,8 @@ if (APP_REMOTE)
 }
 else
 {
+    builder.Services.AddTaskManagementCore();
+    
     builder.Services.AddApplicationCore();
 
     builder.Services.AddClientInfrastructure(builder.Configuration);

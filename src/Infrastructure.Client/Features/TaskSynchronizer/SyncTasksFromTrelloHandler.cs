@@ -2,7 +2,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 
-namespace Pomodorium.Features.TaskSynchronizer;
+namespace TaskManagement.Features.TaskSynchronizer;
 
 public class SyncTasksFromTrelloHandler : IRequestHandler<TaskSyncFromTrelloRequest, TaskSyncFromTrelloResponse?>
 {

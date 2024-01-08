@@ -3,7 +3,7 @@ using Pomodorium.Data;
 using System.DomainModel;
 using TaskManagement.Models.Activities;
 
-namespace Pomodorium.Features.ActivityManager;
+namespace TaskManagement.Features.ActivityManager;
 
 public class IndexedDBActivityQueryItemsProjection :
     IRequestHandler<ActivityQueryRequest, ActivityQueryResponse>,

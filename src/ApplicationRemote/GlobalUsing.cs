@@ -1,7 +1,7 @@
 ﻿global using FlowtimeTechnique.Features.FlowTimer;
 global using PomodoroTechnique.Features.PomodoroTimer;
-global using Pomodorium.Features.TaskManager;
-global using Pomodorium.Features.TaskSynchronizer;
+global using TaskManagement.Features.TaskManager;
+global using TaskManagement.Features.TaskSynchronizer;
 global using Pomodorium.Features.Timer;
 global using Pomodorium.Features.Maintenance;
 global using Pomodorium.Models;

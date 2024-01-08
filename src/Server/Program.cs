@@ -28,6 +28,8 @@ public class Program
 
         builder.Services.AddSystem();
 
+        builder.Services.AddTaskManagementCore();
+
         builder.Services.AddApplicationCore();
 
         builder.Services.AddServerInfrastructure(builder.Configuration);

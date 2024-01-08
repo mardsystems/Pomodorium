@@ -6,7 +6,7 @@ using System.DomainModel;
 using TaskManagement.Models.Integrations;
 using TaskManagement.Models.Tasks;
 
-namespace Pomodorium.Features.TaskManager;
+namespace TaskManagement.Features.TaskManager;
 
 public class CosmosTaskQueryItemsProjection :
     IRequestHandler<TaskQueryRequest, TaskQueryResponse>,

@@ -4,7 +4,7 @@ using Pomodorium.Data;
 using System.DomainModel;
 using TaskManagement.Models.Tasks;
 
-namespace Pomodorium.Features.TaskManager;
+namespace TaskManagement.Features.TaskManager;
 
 public class CosmosTaskDetailsProjection :
     IRequestHandler<TaskDetailsRequest, TaskDetailsResponse>,

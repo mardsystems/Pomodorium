@@ -1,4 +1,4 @@
-﻿using Pomodorium.Features.TaskSynchronizer;
+﻿using TaskManagement.Features.TaskSynchronizer;
 using Pomodorium.Models;
 using Pomodorium.Support;
 

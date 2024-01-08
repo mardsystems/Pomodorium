@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Pomodorium.Enums;
 
-namespace Pomodorium.Features.ActivityManager;
+namespace TaskManagement.Features.ActivityManager;
 
 public record ActivityQueryRequest : Request<ActivityQueryResponse>
 {

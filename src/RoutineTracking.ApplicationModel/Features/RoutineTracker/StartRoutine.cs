@@ -1,4 +1,4 @@
-﻿namespace Pomodorium.Features.RoutineTracker;
+﻿namespace RoutineTracking.Features.RoutineTracker;
 
 public record StartRoutineRequest : Request<StartRoutineResponse>
 {

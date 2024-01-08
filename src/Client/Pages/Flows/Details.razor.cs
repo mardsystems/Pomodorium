@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using FlowtimeTechnique.Features.FlowTimer;
-using Pomodorium.Features.TaskManager;
+using TaskManagement.Features.TaskManager;
 
 namespace Pomodorium.Pages.Flows;
 

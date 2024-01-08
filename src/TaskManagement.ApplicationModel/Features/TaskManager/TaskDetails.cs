@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Pomodorium.Features.TaskManager;
+namespace TaskManagement.Features.TaskManager;
 
 public record TaskDetailsRequest(Guid TaskId) : Request<TaskDetailsResponse>
 {
