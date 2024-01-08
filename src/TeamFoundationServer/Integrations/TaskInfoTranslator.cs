@@ -3,7 +3,7 @@ using Pomodorium.Enums;
 using Pomodorium.Models;
 using TaskManagement.Models.Integrations;
 
-namespace Pomodorium.Integrations.TFS;
+namespace TeamFoundationServer.Integrations;
 
 public static class TaskInfoTranslator
 {

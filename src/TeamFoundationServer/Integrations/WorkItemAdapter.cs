@@ -1,7 +1,7 @@
 ﻿using Pomodorium.Models;
 using TaskManagement.Models.Integrations;
 
-namespace Pomodorium.Integrations.TFS;
+namespace TeamFoundationServer.Integrations;
 
 public class WorkItemAdapter
 {

@@ -1,10 +1,7 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using TaskManagement.Features.TaskManager;
-using Pomodorium.Integrations.TFS;
 using Pomodorium.Repositories;
 using System.ApplicationModel;
-using System.DomainModel;
 using TaskManagement.Models.Integrations;
 
 namespace TaskManagement.Features.TaskSynchronizer;
@@ -17,7 +14,7 @@ public class TaskSyncFromTfsHandler : IRequestHandler<TaskSyncFromTfsRequest, Ta
 
     private readonly ITfsIntegrationRepository _tfsIntegrationRepository;
 
-    private readonly WorkItemAdapter _workItemAdapter;
+    private readonly ITfsIntegrationService _tfsIntegrationService;
 
     private readonly Repository _repository;
 
@@ -28,14 +25,14 @@ public class TaskSyncFromTfsHandler : IRequestHandler<TaskSyncFromTfsRequest, Ta
         IMediator mediator,
         ITfsIntegrationRepository tfsIntegrationRepository,
         Repository repository,
-        WorkItemAdapter workItemAdapter,
+        ITfsIntegrationService tfsIntegrationService,
         ILogger<TaskSyncFromTfsHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _mediator = mediator;
         _tfsIntegrationRepository = tfsIntegrationRepository;
         _repository = repository;
-        _workItemAdapter = workItemAdapter;
+        _tfsIntegrationService = tfsIntegrationService;
         _logger = logger;
     }
 
@@ -49,7 +46,7 @@ public class TaskSyncFromTfsHandler : IRequestHandler<TaskSyncFromTfsRequest, Ta
 
             foreach (var tfsIntegration in tfsIntegrationList)
             {
-                var taskInfoList = await _workItemAdapter.GetTaskInfoList(tfsIntegration).ConfigureAwait(false);
+                var taskInfoList = await _tfsIntegrationService.GetTaskInfoList(tfsIntegration).ConfigureAwait(false);
 
                 foreach (var taskInfo in taskInfoList)
                 {

@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.ApplicationModel;
 using System.Reflection;
+using TeamFoundationServer.Extensions.DependencyInjection;
+using Trello.Extensions.DependencyInjection;
 
 namespace Pomodorium.Extensions.DependencyInjection;
 

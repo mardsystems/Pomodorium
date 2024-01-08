@@ -50,9 +50,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.ApplicationRemot
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration Services", "Integration Services", "{F78E4260-150B-4092-98A5-EEAB69D48F2E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.TeamFoundationServer", "src\TeamFoundationServer\Pomodorium.TeamFoundationServer.csproj", "{AD5C1B7C-7269-4138-B043-F4651E2F404D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TeamFoundationServer", "src\TeamFoundationServer\TeamFoundationServer.csproj", "{AD5C1B7C-7269-4138-B043-F4651E2F404D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pomodorium.Trello", "src\Trello\Pomodorium.Trello.csproj", "{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Trello", "src\Trello\Trello.csproj", "{2F4714ED-DDF9-4123-9C31-AD875BB9A26F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Specification", "0 - Specification", "{2ACAAF7C-D461-4B57-8BFC-BACA9330CC2F}"
 EndProject

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Pomodorium.Integrations;
-using Pomodorium.Integrations.Trello;
+using TaskManagement.Models.Integrations;
+using Trello.Integrations;
 
-namespace Pomodorium.Extensions.DependencyInjection;
+namespace Trello.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
@@ -25,6 +25,8 @@ public static class ServiceCollectionExtensions
         {
             client.BaseAddress = new Uri(trelloIntegrationOptions.BaseAddress);
         });
+
+        services.AddScoped<ITrelloIntegrationService, TrelloIntegrationService>();
 
         services.AddScoped<CardAdapter>();
 

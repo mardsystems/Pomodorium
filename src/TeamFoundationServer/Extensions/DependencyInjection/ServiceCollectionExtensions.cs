@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Pomodorium.Integrations;
-using Pomodorium.Integrations.TFS;
+using TaskManagement.Models.Integrations;
+using TeamFoundationServer.Integrations;
 
-namespace Pomodorium.Extensions.DependencyInjection;
+namespace TeamFoundationServer.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
@@ -11,6 +11,8 @@ public static class ServiceCollectionExtensions
     {
         services.AddOptions<TfsIntegrationOptions>()
             .Bind(configuration.GetSection(TfsIntegrationOptions.CONFIGURATION_SECTION_NAME));
+
+        services.AddScoped<ITfsIntegrationService, TfsIntegrationService>();
 
         services.AddScoped<WorkItemAdapter>();
 
