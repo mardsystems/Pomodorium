@@ -11,11 +11,10 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Pomodorium.Data;
-using Pomodorium.Integrations;
-using Pomodorium.Integrations.TFS;
 using Pomodorium.Models;
 using System.Diagnostics;
 using System.Net.Http.Headers;
+using TeamFoundationServer.Integrations;
 
 namespace Pomodorium.Support;
 

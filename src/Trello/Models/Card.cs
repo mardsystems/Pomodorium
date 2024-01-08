@@ -1,8 +1,8 @@
 ﻿#pragma warning disable IDE1006 // Naming Styles
 
-namespace Pomodorium.Integrations.Trello;
+namespace Trello.Models;
 
-public class List
+public class Card
 {
     public string? id { get; set; }
 

@@ -2,8 +2,9 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using TaskManagement.Models.Integrations;
+using Trello.Models;
 
-namespace Pomodorium.Integrations.Trello;
+namespace Trello.Integrations;
 
 public class CardAdapter
 {

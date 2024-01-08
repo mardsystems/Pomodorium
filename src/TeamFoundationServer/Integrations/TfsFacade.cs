@@ -4,7 +4,7 @@ using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
 using Microsoft.VisualStudio.Services.Common;
 using Pomodorium.Models;
 
-namespace Pomodorium.Integrations.TFS;
+namespace TeamFoundationServer.Integrations;
 
 public class TfsFacade
 {
