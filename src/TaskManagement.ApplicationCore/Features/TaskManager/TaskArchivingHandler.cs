@@ -1,24 +1,24 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.ApplicationModel;
 
-namespace Pomodorium.Features.TaskManager;
+namespace TaskManagement.Features.TaskManager;
 
-public class TaskDescriptionChangeHandler : IRequestHandler<TaskDescriptionChangeRequest, TaskDescriptionChangeResponse>
+public class TaskArchivingHandler : IRequestHandler<TaskArchivingRequest, TaskArchivingResponse>
 {
     private readonly IUnitOfWork _unitOfWork;
 
     private readonly Repository _repository;
 
-    private readonly ILogger<TaskDescriptionChangeHandler> _logger;
+    private readonly ILogger<TaskArchivingHandler> _logger;
     
-    public TaskDescriptionChangeHandler(IUnitOfWork unitOfWork, Repository repository, ILogger<TaskDescriptionChangeHandler> logger)
+    public TaskArchivingHandler(IUnitOfWork unitOfWork, Repository repository, ILogger<TaskArchivingHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _repository = repository;
         _logger = logger;
     }
 
-    public async Task<TaskDescriptionChangeResponse> Handle(TaskDescriptionChangeRequest request, CancellationToken cancellationToken)
+    public async Task<TaskArchivingResponse> Handle(TaskArchivingRequest request, CancellationToken cancellationToken)
     {
         var transaction = _unitOfWork.BeginTransactionFor(request, _logger);
 
@@ -26,13 +26,13 @@ public class TaskDescriptionChangeHandler : IRequestHandler<TaskDescriptionChang
         {
             var task = await _repository.GetAggregateById<TaskManagement.Models.Tasks.Task>(request.TaskId) ?? throw new EntityNotFoundException();
 
-            task.ChangeDescription(request.Description);
+            task.Archive();
 
             await _repository.Save(task, request.TaskVersion ?? -1);
 
             transaction.Commit();
 
-            var response = new TaskDescriptionChangeResponse(request.GetCorrelationId())
+            var response = new TaskArchivingResponse(request.GetCorrelationId())
             {
                 TaskVersion = task.Version
             };

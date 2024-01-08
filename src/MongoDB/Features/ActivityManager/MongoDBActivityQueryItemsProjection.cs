@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 using TaskManagement.Models.Activities;
 
-namespace Pomodorium.Features.ActivityManager;
+namespace TaskManagement.Features.ActivityManager;
 
 public class MongoDBActivityQueryItemsProjection :
     IRequestHandler<ActivityQueryRequest, ActivityQueryResponse>,

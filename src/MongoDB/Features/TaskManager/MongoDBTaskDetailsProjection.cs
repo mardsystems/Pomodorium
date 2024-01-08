@@ -3,7 +3,7 @@ using MongoDB.Driver;
 using System.DomainModel;
 using TaskManagement.Models.Tasks;
 
-namespace Pomodorium.Features.TaskManager;
+namespace TaskManagement.Features.TaskManager;
 
 public class MongoDBTaskDetailsProjection :
     IRequestHandler<TaskDetailsRequest, TaskDetailsResponse>,

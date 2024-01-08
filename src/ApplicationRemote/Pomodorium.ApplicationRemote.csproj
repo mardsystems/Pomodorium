@@ -22,7 +22,7 @@
     <ProjectReference Include="..\ApplicationModel\Pomodorium.ApplicationModel.csproj" />
     <ProjectReference Include="..\FlowtimeTechnique.ApplicationModel\FlowtimeTechnique.ApplicationModel.csproj" />
     <ProjectReference Include="..\PomodoroTechnique.ApplicationModel\PomodoroTechnique.ApplicationModel.csproj" />
-    <ProjectReference Include="..\RoutingTracking.ApplicationModel\RoutineTracking.ApplicationModel.csproj" />
+    <ProjectReference Include="..\RoutineTracking.ApplicationModel\RoutineTracking.ApplicationModel.csproj" />
     <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
     <ProjectReference Include="..\TaskManagement.ApplicationModel\TaskManagement.ApplicationModel.csproj" />
   </ItemGroup>

@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
-using Pomodorium.Features.TaskSynchronizer;
+using TaskManagement.Features.TaskSynchronizer;
 
 namespace Pomodorium.Controllers;
 

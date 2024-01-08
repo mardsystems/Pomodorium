@@ -36,6 +36,7 @@
     <ProjectReference Include="..\PomodoroTechnique.ApplicationModel\PomodoroTechnique.ApplicationModel.csproj" />
     <ProjectReference Include="..\RoutineTracking.ApplicationModel\RoutineTracking.ApplicationModel.csproj" />
     <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
+    <ProjectReference Include="..\TaskManagement.ApplicationCore\TaskManagement.ApplicationCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>
