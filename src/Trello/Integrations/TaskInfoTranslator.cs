@@ -1,8 +1,9 @@
 ﻿using Pomodorium.Enums;
 using Pomodorium.Models;
 using TaskManagement.Models.Integrations;
+using Trello.Models;
 
-namespace Pomodorium.Integrations.Trello;
+namespace Trello.Integrations;
 
 public static class TaskInfoTranslator
 {

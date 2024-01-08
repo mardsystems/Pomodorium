@@ -1,10 +1,7 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using TaskManagement.Features.TaskManager;
-using Pomodorium.Integrations.Trello;
 using Pomodorium.Repositories;
 using System.ApplicationModel;
-using System.DomainModel;
 using TaskManagement.Models.Integrations;
 
 namespace TaskManagement.Features.TaskSynchronizer;
@@ -17,7 +14,7 @@ public class TaskSyncFromTrelloHandler : IRequestHandler<TaskSyncFromTrelloReque
 
     private readonly ITrelloIntegrationRepository _trelloIntegrationRepository;
 
-    private readonly CardAdapter _listsAdapter;
+    private readonly ITrelloIntegrationService _trelloIntegrationService;
 
     private readonly Repository _repository;
 
@@ -28,14 +25,14 @@ public class TaskSyncFromTrelloHandler : IRequestHandler<TaskSyncFromTrelloReque
         IMediator mediator,
         ITrelloIntegrationRepository trelloIntegrationRepository,
         Repository repository,
-        CardAdapter listsAdapter,
+        ITrelloIntegrationService trelloIntegrationService,
         ILogger<TaskSyncFromTrelloHandler> logger)
     {
         _unitOfWork = unitOfWork;
         _mediator = mediator;
         _trelloIntegrationRepository = trelloIntegrationRepository;
         _repository = repository;
-        _listsAdapter = listsAdapter;
+        _trelloIntegrationService = trelloIntegrationService;
         _logger = logger;
     }
 
@@ -49,7 +46,7 @@ public class TaskSyncFromTrelloHandler : IRequestHandler<TaskSyncFromTrelloReque
 
             foreach (var trelloIntegration in trelloIntegrationList)
             {
-                var taskInfoList = await _listsAdapter.GetTaskInfoList(trelloIntegration).ConfigureAwait(false);
+                var taskInfoList = await _trelloIntegrationService.GetTaskInfoList(trelloIntegration).ConfigureAwait(false);
 
                 foreach (var taskInfo in taskInfoList)
                 {
