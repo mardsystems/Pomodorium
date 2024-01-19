@@ -25,7 +25,9 @@ if (APP_REMOTE)
 else
 {
     builder.Services.AddTaskManagementCore();
-    
+
+    builder.Services.AddFlowtimeTechnique();
+
     builder.Services.AddApplicationCore();
 
     builder.Services.AddClientInfrastructure(builder.Configuration);

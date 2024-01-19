@@ -30,6 +30,8 @@ public class Program
 
         builder.Services.AddTaskManagementCore();
 
+        builder.Services.AddFlowtimeTechnique();
+
         builder.Services.AddApplicationCore();
 
         builder.Services.AddServerInfrastructure(builder.Configuration);
