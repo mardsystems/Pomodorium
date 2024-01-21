@@ -86,9 +86,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RoutineTracking", "RoutineT
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TaskManagement", "TaskManagement", "{01116369-E4F3-4067-8E1A-DC3B636B899E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlowtimeTechnique.ApplicationCore", "src\FlowtimeTechnique.ApplicationCore\FlowtimeTechnique.ApplicationCore.csproj", "{BC8666F6-0764-4103-BB86-0931EE0DE1AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FlowtimeTechnique.ApplicationCore", "src\FlowtimeTechnique.ApplicationCore\FlowtimeTechnique.ApplicationCore.csproj", "{BC8666F6-0764-4103-BB86-0931EE0DE1AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagement.ApplicationCore", "src\TaskManagement.ApplicationCore\TaskManagement.ApplicationCore.csproj", "{7E5DB000-615E-4C2A-8A51-2C0D19A2F35D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagement.ApplicationCore", "src\TaskManagement.ApplicationCore\TaskManagement.ApplicationCore.csproj", "{7E5DB000-615E-4C2A-8A51-2C0D19A2F35D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PomodoroTechnique.ApplicationCore", "src\PomodoroTechnique.ApplicationCore\PomodoroTechnique.ApplicationCore.csproj", "{E96F07D8-8758-4FCF-A8FA-C0DF8F67F8BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -472,6 +474,18 @@ Global
 		{7E5DB000-615E-4C2A-8A51-2C0D19A2F35D}.Release|x64.Build.0 = Release|Any CPU
 		{7E5DB000-615E-4C2A-8A51-2C0D19A2F35D}.Release|x86.ActiveCfg = Release|Any CPU
 		{7E5DB000-615E-4C2A-8A51-2C0D19A2F35D}.Release|x86.Build.0 = Release|Any CPU
+		{E96F07D8-8758-4FCF-A8FA-C0DF8F67F8BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E96F07D8-8758-4FCF-A8FA-C0DF8F67F8BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E96F07D8-8758-4FCF-A8FA-C0DF8F67F8BA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E96F07D8-8758-4FCF-A8FA-C0DF8F67F8BA}.Debug|x64.Build.0 = Debug|Any CPU
+		{E96F07D8-8758-4FCF-A8FA-C0DF8F67F8BA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E96F07D8-8758-4FCF-A8FA-C0DF8F67F8BA}.Debug|x86.Build.0 = Debug|Any CPU
+		{E96F07D8-8758-4FCF-A8FA-C0DF8F67F8BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E96F07D8-8758-4FCF-A8FA-C0DF8F67F8BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E96F07D8-8758-4FCF-A8FA-C0DF8F67F8BA}.Release|x64.ActiveCfg = Release|Any CPU
+		{E96F07D8-8758-4FCF-A8FA-C0DF8F67F8BA}.Release|x64.Build.0 = Release|Any CPU
+		{E96F07D8-8758-4FCF-A8FA-C0DF8F67F8BA}.Release|x86.ActiveCfg = Release|Any CPU
+		{E96F07D8-8758-4FCF-A8FA-C0DF8F67F8BA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -514,6 +528,7 @@ Global
 		{01116369-E4F3-4067-8E1A-DC3B636B899E} = {0FF60C80-9251-4544-BB52-078EBE53A5F5}
 		{BC8666F6-0764-4103-BB86-0931EE0DE1AF} = {9D70AF7F-18AF-4FC0-ACE7-74A687C0A9B3}
 		{7E5DB000-615E-4C2A-8A51-2C0D19A2F35D} = {01116369-E4F3-4067-8E1A-DC3B636B899E}
+		{E96F07D8-8758-4FCF-A8FA-C0DF8F67F8BA} = {80481254-ACF5-4BF1-99DD-3B7D5754585F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {882EBB42-21F4-4BC0-805A-088422CBB28C}

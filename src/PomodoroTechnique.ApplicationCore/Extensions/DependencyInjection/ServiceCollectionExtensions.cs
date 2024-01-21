@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace FlowtimeTechnique.Extensions.DependencyInjection;
+namespace PomodoroTechnique.Extensions.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddFlowtimeTechnique(this IServiceCollection services)
+    public static IServiceCollection AddPomodoroTechnique(this IServiceCollection services)
     {
         services.AddMediatR(config =>
         {
