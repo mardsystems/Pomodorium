@@ -1,4 +1,6 @@
 using Pomodorium.Extensions.DependencyInjection;
+using FlowtimeTechnique.Extensions.DependencyInjection;
+using PomodoroTechnique.Extensions.DependencyInjection;
 using Pomodorium.Extensions.Infrastructure;
 using Pomodorium.Hubs;
 using System.Extensions.DependencyInjection;
@@ -31,6 +33,8 @@ public class Program
         builder.Services.AddTaskManagementCore();
 
         builder.Services.AddFlowtimeTechnique();
+
+        builder.Services.AddPomodoroTechnique();
 
         builder.Services.AddApplicationCore();
 

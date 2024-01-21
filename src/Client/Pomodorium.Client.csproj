@@ -34,6 +34,7 @@
     <ProjectReference Include="..\FlowtimeTechnique.ApplicationCore\FlowtimeTechnique.ApplicationCore.csproj" />
     <ProjectReference Include="..\FlowtimeTechnique.ApplicationModel\FlowtimeTechnique.ApplicationModel.csproj" />
     <ProjectReference Include="..\Infrastructure.Client\Pomodorium.Infrastructure.Client.csproj" />
+    <ProjectReference Include="..\PomodoroTechnique.ApplicationCore\PomodoroTechnique.ApplicationCore.csproj" />
     <ProjectReference Include="..\PomodoroTechnique.ApplicationModel\PomodoroTechnique.ApplicationModel.csproj" />
     <ProjectReference Include="..\RoutineTracking.ApplicationModel\RoutineTracking.ApplicationModel.csproj" />
     <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />

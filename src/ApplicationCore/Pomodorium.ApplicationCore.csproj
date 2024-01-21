@@ -35,4 +35,8 @@
     <ProjectReference Include="..\RoutineTracking.DomainModel\RoutineTracking.DomainModel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\" />
+  </ItemGroup>
+
 </Project>
