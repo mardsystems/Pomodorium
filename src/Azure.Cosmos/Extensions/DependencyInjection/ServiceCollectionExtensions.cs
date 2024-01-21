@@ -4,8 +4,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pomodorium.Data;
 using Pomodorium.Features.Maintenance;
-using Pomodorium.Features.Settings;
-using Pomodorium.Features.Storage;
 using Pomodorium.Repositories;
 using System.DomainModel.Storage;
 using System.Reflection;
