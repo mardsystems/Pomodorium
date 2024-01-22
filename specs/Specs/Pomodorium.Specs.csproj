@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Server\Pomodorium.Server.csproj" />
+    <ProjectReference Include="..\..\src\Server\Pomodorium.Server.csproj" />
   </ItemGroup>
 
   <ItemGroup>
