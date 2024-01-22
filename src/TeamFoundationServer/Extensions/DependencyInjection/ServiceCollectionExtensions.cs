@@ -15,6 +15,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ITfsIntegrationService, TfsIntegrationService>();
 
         services.AddScoped<WorkItemAdapter>();
+        
+        services.AddScoped<TfsFacade>();
 
         return services;
     }
