@@ -95,14 +95,14 @@ namespace Pomodorium.Features
         {
 #line 5
 #line hidden
-            TechTalk.SpecFlow.Table table1 = new TechTalk.SpecFlow.Table(new string[] {
+            TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
                         "name",
                         "project name"});
-            table1.AddRow(new string[] {
+            table2.AddRow(new string[] {
                         "TFS Project",
                         "Project A"});
 #line 6
- testRunner.Given("exists a TFS integration settings as", ((string)(null)), table1, "Given ");
+ testRunner.Given("exists a TFS integration settings as", ((string)(null)), table2, "Given ");
 #line hidden
         }
         
@@ -130,16 +130,16 @@ this.FeatureBackground();
 #line 13
  testRunner.Given("User starts a task synch with TFS", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-                TechTalk.SpecFlow.Table table2 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
                             "system title"});
-                table2.AddRow(new string[] {
+                table3.AddRow(new string[] {
                             "Todo it A"});
-                table2.AddRow(new string[] {
+                table3.AddRow(new string[] {
                             "Todo it B"});
-                table2.AddRow(new string[] {
+                table3.AddRow(new string[] {
                             "Todo it C"});
 #line 14
- testRunner.And("exists a workitems in TFS as", ((string)(null)), table2, "And ");
+ testRunner.And("exists a workitems in TFS as", ((string)(null)), table3, "And ");
 #line hidden
 #line 19
  testRunner.When("User request task synch with TFS", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
@@ -147,16 +147,16 @@ this.FeatureBackground();
 #line 20
  testRunner.Then("System should get workitems from TFS", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-                TechTalk.SpecFlow.Table table3 = new TechTalk.SpecFlow.Table(new string[] {
+                TechTalk.SpecFlow.Table table4 = new TechTalk.SpecFlow.Table(new string[] {
                             "description"});
-                table3.AddRow(new string[] {
+                table4.AddRow(new string[] {
                             "Todo it A (#1)"});
-                table3.AddRow(new string[] {
+                table4.AddRow(new string[] {
                             "Todo it B (#2)"});
-                table3.AddRow(new string[] {
+                table4.AddRow(new string[] {
                             "Todo it C (#3)"});
 #line 21
- testRunner.And("System should create tasks as", ((string)(null)), table3, "And ");
+ testRunner.And("System should create tasks as", ((string)(null)), table4, "And ");
 #line hidden
             }
             this.ScenarioCleanup();

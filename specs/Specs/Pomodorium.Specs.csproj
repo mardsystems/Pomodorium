@@ -39,4 +39,11 @@
     </SpecFlowFeatureFiles>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Modules\FlowtimeTechnique\Features\" />
+    <Folder Include="Modules\PomodoroTechnique\Features\" />
+    <Folder Include="Modules\RoutineTracking\Features\" />
+    <Folder Include="Modules\TaskManagement\Features\" />
+  </ItemGroup>
+
 </Project>
