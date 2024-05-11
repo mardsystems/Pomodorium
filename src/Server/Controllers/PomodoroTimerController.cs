@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web.Resource;
-using PomodoroTechnique.Features.PomodoroTimer;
+using Pomodorium.Features.PomodoroTimer;
 
 namespace Pomodorium.Controllers;
 

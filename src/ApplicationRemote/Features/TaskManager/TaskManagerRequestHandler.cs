@@ -1,4 +1,4 @@
-﻿namespace TaskManagement.Features.TaskManager;
+﻿namespace Pomodorium.Features.TaskManager;
 
 public class TaskManagerRequestHandler :
     IRequestHandler<TaskQueryRequest, TaskQueryResponse>,

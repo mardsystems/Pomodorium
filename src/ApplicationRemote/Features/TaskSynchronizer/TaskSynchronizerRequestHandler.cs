@@ -1,4 +1,4 @@
-﻿namespace TaskManagement.Features.TaskSynchronizer;
+﻿namespace Pomodorium.Features.TaskSynchronizer;
 
 public class TaskSynchronizerRequestHandler :
     IRequestHandler<TaskSyncFromTfsRequest, TaskSyncFromTfsResponse>,

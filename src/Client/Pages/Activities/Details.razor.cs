@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
-using TaskManagement.Features.ActivityManager;
+using Pomodorium.Features.ActivityManager;
 using MediatR;
 
 namespace Pomodorium.Pages.Activities;

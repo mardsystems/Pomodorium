@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System.DomainModel;
-using TaskManagement.Features.TaskManager;
-using TaskManagement.Models.Tasks;
+using Pomodorium.Features.TaskManager;
+using Pomodorium.Models.Tasks;
 
 namespace Pomodorium.Data;
 

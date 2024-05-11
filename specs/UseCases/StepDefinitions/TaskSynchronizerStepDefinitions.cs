@@ -1,6 +1,6 @@
 using Pomodorium.Drivers;
-using TaskManagement.Features.TaskManager;
-using TaskManagement.Features.TaskSynchronizer;
+using Pomodorium.Features.TaskManager;
+using Pomodorium.Features.TaskSynchronizer;
 using Pomodorium.Models;
 using Pomodorium.Support;
 using System;

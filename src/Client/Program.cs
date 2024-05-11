@@ -6,8 +6,6 @@ using MudBlazor.Services;
 using Pomodorium;
 using Pomodorium.Data;
 using Pomodorium.Extensions.DependencyInjection;
-using FlowtimeTechnique.Extensions.DependencyInjection;
-using PomodoroTechnique.Extensions.DependencyInjection;
 using Pomodorium.Hubs;
 using System.Extensions.DependencyInjection;
 using System.Reflection;
@@ -26,12 +24,6 @@ if (APP_REMOTE)
 }
 else
 {
-    builder.Services.AddTaskManagementCore();
-
-    builder.Services.AddFlowtimeTechnique();
-
-    builder.Services.AddPomodoroTechnique();
-
     builder.Services.AddApplicationCore();
 
     builder.Services.AddClientInfrastructure(builder.Configuration);

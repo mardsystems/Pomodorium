@@ -1,4 +1,4 @@
-﻿namespace FlowtimeTechnique.Features.FlowTimer;
+﻿namespace Pomodorium.Features.FlowTimer;
 
 public class FlowTimerRequestHandler :
     IRequestHandler<FlowtimeQueryRequest, FlowtimeQueryResponse>,

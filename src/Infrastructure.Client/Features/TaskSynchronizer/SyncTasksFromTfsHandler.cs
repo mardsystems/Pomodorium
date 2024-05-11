@@ -2,7 +2,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 
-namespace TaskManagement.Features.TaskSynchronizer;
+namespace Pomodorium.Features.TaskSynchronizer;
 
 public class SyncTasksFromTfsHandler : IRequestHandler<TaskSyncFromTfsRequest, TaskSyncFromTfsResponse?>
 {

@@ -15,9 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ApplicationModel\Pomodorium.ApplicationModel.csproj" />
+    <ProjectReference Include="..\DomainModel\Pomodorium.DomainModel.csproj" />
     <ProjectReference Include="..\Shared\Pomodorium.Shared.csproj" />
-    <ProjectReference Include="..\TaskManagement.ApplicationModel\TaskManagement.ApplicationModel.csproj" />
-    <ProjectReference Include="..\TaskManagement.DomainModel\TaskManagement.DomainModel.csproj" />
   </ItemGroup>
 
 </Project>

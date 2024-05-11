@@ -26,14 +26,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\packages\System.Extensions\System.Extensions.csproj" />
     <ProjectReference Include="..\ApplicationModel\Pomodorium.ApplicationModel.csproj" />
-    <ProjectReference Include="..\FlowtimeTechnique.ApplicationModel\FlowtimeTechnique.ApplicationModel.csproj" />
-    <ProjectReference Include="..\FlowtimeTechnique.DomainModel\FlowtimeTechnique.DomainModel.csproj" />
-    <ProjectReference Include="..\PomodoroTechnique.ApplicationModel\PomodoroTechnique.ApplicationModel.csproj" />
-    <ProjectReference Include="..\PomodoroTechnique.DomainModel\PomodoroTechnique.DomainModel.csproj" />
-    <ProjectReference Include="..\RoutineTracking.ApplicationModel\RoutineTracking.ApplicationModel.csproj" />
-    <ProjectReference Include="..\RoutineTracking.DomainModel\RoutineTracking.DomainModel.csproj" />
-    <ProjectReference Include="..\TaskManagement.ApplicationModel\TaskManagement.ApplicationModel.csproj" />
-    <ProjectReference Include="..\TaskManagement.DomainModel\TaskManagement.DomainModel.csproj" />
+    <ProjectReference Include="..\DomainModel\Pomodorium.DomainModel.csproj" />
   </ItemGroup>
 
 </Project>

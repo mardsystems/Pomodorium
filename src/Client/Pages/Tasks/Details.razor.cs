@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components;
-using TaskManagement.Features.TaskManager;
+using Pomodorium.Features.TaskManager;
 using MediatR;
 
 namespace Pomodorium.Pages.Tasks;
