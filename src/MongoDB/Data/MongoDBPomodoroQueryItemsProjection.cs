@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using MongoDB.Driver;
-using PomodoroTechnique.Features.PomodoroTimer;
-using PomodoroTechnique.Models;
+using Pomodorium.Features.PomodoroTimer;
+using Pomodorium.Models.Pomos;
 
 namespace Pomodorium.Data;
 

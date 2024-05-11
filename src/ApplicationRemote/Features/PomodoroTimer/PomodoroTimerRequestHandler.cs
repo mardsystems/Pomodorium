@@ -1,4 +1,4 @@
-﻿namespace PomodoroTechnique.Features.PomodoroTimer;
+﻿namespace Pomodorium.Features.PomodoroTimer;
 
 public class PomodoroTimerRequestHandler :
     IRequestHandler<PomodoroQueryRequest, PomodoroQueryResponse>,

@@ -1,7 +1,7 @@
 ﻿using Pomodorium.Models;
 using System.Net.Http.Json;
 using System.Text.Json;
-using TaskManagement.Models.Integrations;
+using Pomodorium.Models.Tasks.Integrations;
 using Trello.Models;
 
 namespace Trello.Integrations;

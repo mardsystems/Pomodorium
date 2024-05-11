@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TaskManagement.Models.Integrations;
+using Pomodorium.Models.Tasks.Integrations;
 using TeamFoundationServer.Integrations;
 
 namespace TeamFoundationServer.Extensions.DependencyInjection;

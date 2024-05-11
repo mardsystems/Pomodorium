@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Components;
-using FlowtimeTechnique.Features.FlowTimer;
+using Pomodorium.Features.FlowTimer;
 
 namespace Pomodorium.Pages.Flows;
 

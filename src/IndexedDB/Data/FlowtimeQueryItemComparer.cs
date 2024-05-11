@@ -1,6 +1,6 @@
 ﻿#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
 
-using FlowtimeTechnique.Features.FlowTimer;
+using Pomodorium.Features.FlowTimer;
 
 namespace Pomodorium.Data;
 

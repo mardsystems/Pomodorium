@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TaskManagement.Models.Integrations;
+using Pomodorium.Models.Tasks.Integrations;
 using Trello.Integrations;
 
 namespace Trello.Extensions.DependencyInjection;

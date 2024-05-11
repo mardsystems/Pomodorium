@@ -22,11 +22,8 @@ jobs:
           dotnet-version: '7.x'
           include-prerelease: false
 
-      - name: Test FlowtimeTechnique Domain
-        run: dotnet test tests/FlowtimeTechnique.DomainTests/Pomodorium.FlowtimeTechnique.DomainTests.csproj --configuration Release --verbosity normal
-
-      - name: Test PomodoroTechnique Domain
-        run: dotnet test tests/PomodoroTechnique.DomainTests/Pomodorium.PomodoroTechnique.DomainTests.csproj --configuration Release --verbosity normal
+      - name: Test Domain
+        run: dotnet test tests/DomainTests/Pomodorium.DomainTests.csproj --configuration Release --verbosity normal
 
       - name: Build Server
         run: dotnet build src/Server/Pomodorium.Server.csproj --configuration Release

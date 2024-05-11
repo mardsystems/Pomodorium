@@ -1,9 +1,9 @@
-﻿using FlowtimeTechnique.Models;
+﻿using Pomodorium.Models.Flows;
 using MediatR;
 using System.DomainModel;
-using TaskManagement.Features.TaskManager;
-using TaskManagement.Models.Integrations;
-using TaskManagement.Models.Tasks;
+using Pomodorium.Features.TaskManager;
+using Pomodorium.Models.Tasks.Integrations;
+using Pomodorium.Models.Tasks;
 
 namespace Pomodorium.Data;
 

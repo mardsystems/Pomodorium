@@ -1,6 +1,4 @@
 using Pomodorium.Extensions.DependencyInjection;
-using FlowtimeTechnique.Extensions.DependencyInjection;
-using PomodoroTechnique.Extensions.DependencyInjection;
 using Pomodorium.Extensions.Infrastructure;
 using Pomodorium.Hubs;
 using System.Extensions.DependencyInjection;
@@ -29,12 +27,6 @@ public class Program
         //    .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
 
         builder.Services.AddSystem();
-
-        builder.Services.AddTaskManagementCore();
-
-        builder.Services.AddFlowtimeTechnique();
-
-        builder.Services.AddPomodoroTechnique();
 
         builder.Services.AddApplicationCore();
 

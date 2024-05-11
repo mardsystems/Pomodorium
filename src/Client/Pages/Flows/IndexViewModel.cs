@@ -1,5 +1,5 @@
 ﻿using Pomodorium.Enums;
-using FlowtimeTechnique.Features.FlowTimer;
+using Pomodorium.Features.FlowTimer;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Reactive;

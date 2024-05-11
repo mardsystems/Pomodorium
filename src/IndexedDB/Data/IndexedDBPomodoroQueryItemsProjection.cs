@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using PomodoroTechnique.Features.PomodoroTimer;
-using PomodoroTechnique.Models;
+using Pomodorium.Features.PomodoroTimer;
+using Pomodorium.Models.Pomos;
 using System.DomainModel;
 
 namespace Pomodorium.Data;
